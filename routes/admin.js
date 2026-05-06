@@ -6,16 +6,13 @@ const fs = require('fs');
 const { v4: uuidv4 } = require('uuid');
 const { readJSON, writeJSON } = require('../utils/fileHandler');
 
-// Konfigurasi multer untuk Vercel (gunakan /tmp)
-const isVercel = process.env.VERCEL === '1';
-const uploadDir = isVercel ? '/tmp/uploads/profiles' : path.join(__dirname, '..', 'public', 'uploads', 'profiles');
-
-if (!fs.existsSync(uploadDir)) {
-    fs.mkdirSync(uploadDir, { recursive: true });
-}
-
+// Configure multer for file upload
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
+        const uploadDir = path.join(__dirname, '..', 'public', 'uploads', 'profiles');
+        if (!fs.existsSync(uploadDir)) {
+            fs.mkdirSync(uploadDir, { recursive: true });
+        }
         cb(null, uploadDir);
     },
     filename: function (req, file, cb) {
@@ -31,8 +28,11 @@ const upload = multer({
         const allowedTypes = /jpeg|jpg|png|gif|webp/;
         const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
         const mimetype = allowedTypes.test(file.mimetype);
-        if (mimetype && extname) return cb(null, true);
-        cb(new Error('Only image files are allowed!'));
+        if (mimetype && extname) {
+            return cb(null, true);
+        } else {
+            cb(new Error('Only image files are allowed!'));
+        }
     }
 });
 
@@ -47,36 +47,46 @@ const requireAuth = (req, res, next) => {
 
 router.use(requireAuth);
 
-// Dashboard
+// ==================== DASHBOARD ====================
 router.get('/', (req, res) => {
     res.render('admin/dashboard', { title: 'Admin Dashboard' });
 });
 
-// Profile - GET
-router.get('/profile', async (req, res) => {
-    const profile = await readJSON('profile.json');
+// ==================== PROFILE ====================
+router.get('/profile', (req, res) => {
+    const profile = readJSON('profile.json');
     res.render('admin/profile', { profile, title: 'Edit Profile' });
 });
 
-// Profile - POST
-router.post('/profile', upload.single('avatar'), async (req, res) => {
+router.post('/profile', upload.single('avatar'), (req, res) => {
     try {
-        const profile = await readJSON('profile.json');
+        console.log('=== FORM DATA RECEIVED ===');
+        console.log('Body keys:', Object.keys(req.body));
+        console.log('Full body:', req.body);
+        
+        const profile = readJSON('profile.json');
         const { name, bio } = req.body;
         
+        // Handle avatar
         let avatar_url = profile.avatar_url || '/img/avatar.png';
         if (req.file) {
             if (profile.avatar_url && profile.avatar_url.includes('/uploads/profiles/')) {
-                const oldPath = path.join(uploadDir, path.basename(profile.avatar_url));
+                const oldPath = path.join(__dirname, '..', 'public', profile.avatar_url);
                 if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
             }
             avatar_url = '/uploads/profiles/' + req.file.filename;
         }
         
-        // Process social links
+        // BUILD SOCIAL LINKS MANUALLY
         const socials = [];
+        
+        // Get all keys from body
         const allKeys = Object.keys(req.body);
+        console.log('All keys:', allKeys);
+        
+        // Find social name keys (social_name_0, social_name_1, etc.)
         const nameKeys = allKeys.filter(key => key.startsWith('social_name_'));
+        console.log('Name keys found:', nameKeys);
         
         nameKeys.sort().forEach(key => {
             const index = key.replace('social_name_', '');
@@ -86,31 +96,125 @@ router.post('/profile', upload.single('avatar'), async (req, res) => {
             const type = req.body['social_type_' + index] ? req.body['social_type_' + index].trim() : 'social';
             const iconType = req.body['social_icon_type_' + index] ? req.body['social_icon_type_' + index].trim() : 'fontawesome';
             
+            console.log(`Link ${index}:`, { name, url, icon, type, iconType });
+            
             if (name && url) {
-                socials.push({ name, url, icon, type, icon_type: iconType });
+                socials.push({
+                    name: name,
+                    url: url,
+                    icon: icon,
+                    type: type,
+                    icon_type: iconType
+                });
             }
         });
         
-        const updatedProfile = { avatar_url, name: name || 'Nuxy MC', bio: bio || '', socials };
-        await writeJSON('profile.json', updatedProfile);
+        console.log('Final socials:', socials);
+        console.log('=== END ===');
+        
+        const updatedProfile = {
+            avatar_url: avatar_url,
+            name: name || 'Nuxy MC',
+            bio: bio || '',
+            socials: socials
+        };
+        
+        writeJSON('profile.json', updatedProfile);
         req.flash('success_msg', 'Profile berhasil disimpan!');
     } catch (error) {
         console.error('Error:', error);
         req.flash('error_msg', 'Error: ' + error.message);
     }
+    
     res.redirect('/admin/profile');
 });
 
-// Servers - GET
-router.get('/servers', async (req, res) => {
-    const servers = await readJSON('servers.json');
+router.post('/profile/delete-avatar', (req, res) => {
+    try {
+        const profile = readJSON('profile.json');
+        if (profile.avatar_url && profile.avatar_url.includes('/uploads/profiles/')) {
+            const avatarPath = path.join(__dirname, '..', 'public', profile.avatar_url);
+            if (fs.existsSync(avatarPath)) fs.unlinkSync(avatarPath);
+        }
+        profile.avatar_url = '/img/avatar.png';
+        writeJSON('profile.json', profile);
+        req.flash('success_msg', 'Avatar dihapus, menggunakan default.');
+    } catch (error) {
+        req.flash('error_msg', 'Error: ' + error.message);
+    }
+    res.redirect('/admin/profile');
+});
+
+// ==================== MODS ====================
+router.get('/mods', (req, res) => {
+    const mods = readJSON('mods.json');
+    res.render('admin/mods', { mods, title: 'Manage Modpacks' });
+});
+
+router.post('/mods/add', (req, res) => {
+    try {
+        const mods = readJSON('mods.json');
+        const newMod = {
+            id: Date.now().toString(),
+            name: req.body.name || '',
+            mc_version: req.body.mc_version || '',
+            description: req.body.description || '',
+            download_url: req.body.download_url || '',
+            release_date: req.body.release_date || new Date().toISOString().split('T')[0]
+        };
+        mods.push(newMod);
+        writeJSON('mods.json', mods);
+        req.flash('success_msg', 'Modpack berhasil ditambahkan!');
+    } catch (error) {
+        req.flash('error_msg', 'Error: ' + error.message);
+    }
+    res.redirect('/admin/mods');
+});
+
+router.post('/mods/edit/:id', (req, res) => {
+    try {
+        const mods = readJSON('mods.json');
+        const index = mods.findIndex(m => m.id === req.params.id);
+        if (index !== -1) {
+            mods[index] = {
+                ...mods[index],
+                name: req.body.name || mods[index].name,
+                mc_version: req.body.mc_version || mods[index].mc_version,
+                description: req.body.description || mods[index].description,
+                download_url: req.body.download_url || mods[index].download_url,
+                release_date: req.body.release_date || mods[index].release_date
+            };
+            writeJSON('mods.json', mods);
+            req.flash('success_msg', 'Modpack berhasil diupdate!');
+        }
+    } catch (error) {
+        req.flash('error_msg', 'Error: ' + error.message);
+    }
+    res.redirect('/admin/mods');
+});
+
+// Gunakan GET untuk delete biar lebih simple
+router.get('/mods/delete/:id', (req, res) => {
+    try {
+        let mods = readJSON('mods.json');
+        mods = mods.filter(m => m.id !== req.params.id);
+        writeJSON('mods.json', mods);
+        req.flash('success_msg', 'Modpack berhasil dihapus!');
+    } catch (error) {
+        req.flash('error_msg', 'Error: ' + error.message);
+    }
+    res.redirect('/admin/mods');
+});
+
+// ==================== SERVERS ====================
+router.get('/servers', (req, res) => {
+    const servers = readJSON('servers.json');
     res.render('admin/servers', { servers, title: 'Manage Servers' });
 });
 
-// Servers - ADD
-router.post('/servers/add', async (req, res) => {
+router.post('/servers/add', (req, res) => {
     try {
-        const servers = await readJSON('servers.json');
+        const servers = readJSON('servers.json');
         const hasJava = req.body.has_java === 'on';
         const hasBedrock = req.body.has_bedrock === 'on';
         
@@ -123,23 +227,19 @@ router.post('/servers/add', async (req, res) => {
             bedrock_ip: hasBedrock ? (req.body.bedrock_ip || '') : '',
             bedrock_port: hasBedrock ? (parseInt(req.body.bedrock_port) || 19132) : 19132
         };
-        
         servers.push(newServer);
-        await writeJSON('servers.json', servers);
+        writeJSON('servers.json', servers);
         req.flash('success_msg', 'Server berhasil ditambahkan!');
     } catch (error) {
-        console.error('Error adding server:', error);
         req.flash('error_msg', 'Error: ' + error.message);
     }
     res.redirect('/admin/servers');
 });
 
-// Servers - EDIT
-router.post('/servers/edit/:id', async (req, res) => {
+router.post('/servers/edit/:id', (req, res) => {
     try {
-        const servers = await readJSON('servers.json');
+        const servers = readJSON('servers.json');
         const index = servers.findIndex(s => s.id === req.params.id);
-        
         if (index !== -1) {
             const hasJava = req.body.has_java === 'on';
             const hasBedrock = req.body.has_bedrock === 'on';
@@ -153,108 +253,26 @@ router.post('/servers/edit/:id', async (req, res) => {
                 bedrock_ip: hasBedrock ? (req.body.bedrock_ip || '') : '',
                 bedrock_port: hasBedrock ? (parseInt(req.body.bedrock_port) || 19132) : 19132
             };
-            
-            await writeJSON('servers.json', servers);
+            writeJSON('servers.json', servers);
             req.flash('success_msg', 'Server berhasil diupdate!');
         }
     } catch (error) {
-        console.error('Error updating server:', error);
         req.flash('error_msg', 'Error: ' + error.message);
     }
     res.redirect('/admin/servers');
 });
 
-// Servers - DELETE
-router.get('/servers/delete/:id', async (req, res) => {
+// Gunakan GET untuk delete
+router.get('/servers/delete/:id', (req, res) => {
     try {
-        let servers = await readJSON('servers.json');
+        let servers = readJSON('servers.json');
         servers = servers.filter(s => s.id !== req.params.id);
-        await writeJSON('servers.json', servers);
+        writeJSON('servers.json', servers);
         req.flash('success_msg', 'Server berhasil dihapus!');
     } catch (error) {
         req.flash('error_msg', 'Error: ' + error.message);
     }
     res.redirect('/admin/servers');
-});
-
-// Mods - GET
-router.get('/mods', async (req, res) => {
-    const mods = await readJSON('mods.json');
-    res.render('admin/mods', { mods, title: 'Manage Modpacks' });
-});
-
-// Mods - ADD
-router.post('/mods/add', async (req, res) => {
-    try {
-        const mods = await readJSON('mods.json');
-        const newMod = {
-            id: Date.now().toString(),
-            name: req.body.name || '',
-            mc_version: req.body.mc_version || '',
-            description: req.body.description || '',
-            download_url: req.body.download_url || '',
-            release_date: req.body.release_date || new Date().toISOString().split('T')[0]
-        };
-        mods.push(newMod);
-        await writeJSON('mods.json', mods);
-        req.flash('success_msg', 'Modpack berhasil ditambahkan!');
-    } catch (error) {
-        req.flash('error_msg', 'Error: ' + error.message);
-    }
-    res.redirect('/admin/mods');
-});
-
-// Mods - EDIT
-router.post('/mods/edit/:id', async (req, res) => {
-    try {
-        const mods = await readJSON('mods.json');
-        const index = mods.findIndex(m => m.id === req.params.id);
-        if (index !== -1) {
-            mods[index] = {
-                ...mods[index],
-                name: req.body.name || mods[index].name,
-                mc_version: req.body.mc_version || mods[index].mc_version,
-                description: req.body.description || mods[index].description,
-                download_url: req.body.download_url || mods[index].download_url,
-                release_date: req.body.release_date || mods[index].release_date
-            };
-            await writeJSON('mods.json', mods);
-            req.flash('success_msg', 'Modpack berhasil diupdate!');
-        }
-    } catch (error) {
-        req.flash('error_msg', 'Error: ' + error.message);
-    }
-    res.redirect('/admin/mods');
-});
-
-// Mods - DELETE
-router.get('/mods/delete/:id', async (req, res) => {
-    try {
-        let mods = await readJSON('mods.json');
-        mods = mods.filter(m => m.id !== req.params.id);
-        await writeJSON('mods.json', mods);
-        req.flash('success_msg', 'Modpack berhasil dihapus!');
-    } catch (error) {
-        req.flash('error_msg', 'Error: ' + error.message);
-    }
-    res.redirect('/admin/mods');
-});
-
-// Delete Avatar
-router.post('/profile/delete-avatar', async (req, res) => {
-    try {
-        const profile = await readJSON('profile.json');
-        if (profile.avatar_url && profile.avatar_url.includes('/uploads/profiles/')) {
-            const avatarPath = path.join(uploadDir, path.basename(profile.avatar_url));
-            if (fs.existsSync(avatarPath)) fs.unlinkSync(avatarPath);
-        }
-        profile.avatar_url = '/img/avatar.png';
-        await writeJSON('profile.json', profile);
-        req.flash('success_msg', 'Avatar dihapus!');
-    } catch (error) {
-        req.flash('error_msg', 'Error: ' + error.message);
-    }
-    res.redirect('/admin/profile');
 });
 
 module.exports = router;

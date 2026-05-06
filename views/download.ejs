@@ -3,9 +3,6 @@
 <head>
     <%- include('partials/head') %>
     
-    <!-- Monetag Tag -->
-    <script src="https://quge5.com/88/tag.min.js" data-zone="236660" async data-cfasync="false"></script>
-    
     <style>
         .ad-container {
             min-height: 100px;
@@ -157,12 +154,21 @@
             <p class="text-gray-400 text-sm">MC <%= mod.mc_version %> • <%= mod.release_date %></p>
         </div>
 
-        <!-- Ad Area 1 - Monetag akan otomatis menampilkan iklan di sini -->
+        <!-- Iklan 1: Banner 300x250 -->
         <div class="text-center mb-3">
             <span class="ad-label">Advertisement</span>
         </div>
-        <div class="ad-container mb-6" id="ad-area-1">
-            <!-- Monetag akan mengisi area ini secara otomatis -->
+        <div class="ad-container mb-6">
+            <script>
+              atOptions = {
+                'key' : '2e1952b53273e3e02a9b3e3d312f61cf',
+                'format' : 'iframe',
+                'height' : 250,
+                'width' : 300,
+                'params' : {}
+              };
+            </script>
+            <script src="https://www.highperformanceformat.com/2e1952b53273e3e02a9b3e3d312f61cf/invoke.js"></script>
         </div>
 
         <!-- Countdown Circle & Status -->
@@ -186,12 +192,13 @@
             </div>
         </div>
 
-        <!-- Ad Area 2 -->
+        <!-- Iklan 2: Native Banner -->
         <div class="text-center mb-3">
             <span class="ad-label">Advertisement</span>
         </div>
-        <div class="ad-container mb-4" id="ad-area-2">
-            <!-- Monetag akan mengisi area ini secara otomatis -->
+        <div class="ad-container mb-4">
+            <script async="async" data-cfasync="false" src="https://pl29351551.profitablecpmratenetwork.com/067d68146a19f8ada3b8e745ff802f3c/invoke.js"></script>
+            <div id="container-067d68146a19f8ada3b8e745ff802f3c"></div>
         </div>
 
         <!-- Download Info Card -->
@@ -221,6 +228,14 @@
             Tombol download akan aktif setelah countdown selesai
         </p>
 
+        <!-- Iklan 3: Social Bar -->
+        <div class="text-center mb-3">
+            <span class="ad-label">Advertisement</span>
+        </div>
+        <div class="ad-container mb-8">
+            <script src="https://pl29351553.profitablecpmratenetwork.com/29/9c/0a/299c0a97fe579e4863897f90bc0a8194.js"></script>
+        </div>
+
         <!-- Back Link -->
         <div class="text-center">
             <a href="/mods" class="text-gray-600 hover:text-gray-400 transition text-sm">
@@ -232,6 +247,8 @@
             Dengan mendownload, Anda menyetujui Syarat & Ketentuan kami.
         </p>
     </main>
+
+    <!-- Social Bar akan tampil di pojok secara otomatis -->
 
     <script>
         const totalTime = 30;

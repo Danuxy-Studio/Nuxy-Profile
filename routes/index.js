@@ -2,33 +2,76 @@ const express = require('express');
 const router = express.Router();
 const { readJSON } = require('../utils/fileHandler');
 
-router.get('/', async (req, res) => {
-    const profile = await readJSON('profile.json');
-    res.render('home', { profile, title: profile.name });
+// Halaman verifikasi AdSense
+router.get('/ads', (req, res) => {
+    const mods = readJSON('mods.json');
+    const firstMod = mods.length > 0 ? mods[0] : {
+        id: '0',
+        name: 'Nuxy MC Modpack',
+        mc_version: '1.20.1',
+        description: 'Download modpack terbaik dari Nuxy MC',
+        download_url: '#',
+        release_date: new Date().toISOString().split('T')[0]
+    };
+    
+    res.render('ads-verify', {
+        mod: firstMod,
+        title: 'Download Modpack'
+    });
 });
 
-router.get('/mods', async (req, res) => {
-    const mods = await readJSON('mods.json');
-    res.render('mods', { mods, title: 'Modpacks' });
+// Home page
+router.get('/', (req, res) => {
+    const profile = readJSON('profile.json');
+    res.render('home', { 
+        profile,
+        title: profile.name
+    });
 });
 
-router.get('/download/:id', async (req, res) => {
-    const mods = await readJSON('mods.json');
+// Mods page
+router.get('/mods', (req, res) => {
+    const mods = readJSON('mods.json');
+    res.render('mods', { 
+        mods,
+        title: 'Modpacks'
+    });
+});
+
+// Download interstitial page
+router.get('/download/:id', (req, res) => {
+    const mods = readJSON('mods.json');
     const mod = mods.find(m => m.id === req.params.id);
-    if (!mod) return res.redirect('/mods');
-    res.render('download', { mod, title: 'Download - ' + mod.name });
+    
+    if (!mod) {
+        return res.redirect('/mods');
+    }
+    
+    res.render('download', {
+        mod,
+        title: 'Download - ' + mod.name
+    });
 });
 
-router.get('/go/:id', async (req, res) => {
-    const mods = await readJSON('mods.json');
+// Direct download redirect
+router.get('/go/:id', (req, res) => {
+    const mods = readJSON('mods.json');
     const mod = mods.find(m => m.id === req.params.id);
-    if (!mod) return res.redirect('/mods');
+    
+    if (!mod) {
+        return res.redirect('/mods');
+    }
+    
     res.redirect(mod.download_url);
 });
 
-router.get('/servers', async (req, res) => {
-    const servers = await readJSON('servers.json');
-    res.render('servers', { servers, title: 'Servers' });
+// Servers page
+router.get('/servers', (req, res) => {
+    const servers = readJSON('servers.json');
+    res.render('servers', { 
+        servers,
+        title: 'Servers'
+    });
 });
 
 module.exports = router;
