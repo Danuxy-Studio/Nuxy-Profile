@@ -16,6 +16,13 @@
       "icon": "fab fa-discord",
       "type": "social",
       "icon_type": "fontawesome"
+    },
+    {
+      "name": "Group Zen SMP",
+      "url": "https://chat.whatsapp.com/K7izoN822k4GSi07ATIhPw",
+      "icon": "fas fa-globe",
+      "type": "social",
+      "icon_type": "fontawesome"
     }
   ]
 }
