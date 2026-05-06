@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('partials/head') %>
+    
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3823355315282437" crossorigin="anonymous"></script>
+    
+    <style>
+        .ad-container {
+            min-height: 100px;
+            background: rgba(139, 92, 246, 0.03);
+            border: 1px solid rgba(139, 92, 246, 0.1);
+            border-radius: 16px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .ad-label {
+            background: rgba(245,158,11,0.15);
+            color: #f59e0b;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            padding: 5px 10px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-[#0a0a14]">
+    <main class="max-w-2xl mx-auto px-4 py-12">
+        <div class="text-center mb-8">
+            <h1 class="text-2xl font-bold text-white mb-2">Download Modpack</h1>
+            <p class="text-gray-400"><%= typeof mod !== 'undefined' ? mod.name : 'Nuxy MC' %></p>
+        </div>
+
+        <!-- Ad Unit -->
+        <div class="text-center mb-3">
+            <span class="ad-label">Advertisement</span>
+        </div>
+        <div class="ad-container mb-8">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-3823355315282437"
+                 data-ad-slot="8112511072"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+    </main>
+</body>
+</html>

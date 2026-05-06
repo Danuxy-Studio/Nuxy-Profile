@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('partials/head') %>
+    <style>
+        .server-card {
+            word-break: break-word;
+            overflow-wrap: break-word;
+        }
+        
+        .ip-box {
+            word-break: break-all;
+            overflow-wrap: anywhere;
+        }
+        
+        .ip-box code {
+            word-break: break-all;
+            overflow-wrap: anywhere;
+            white-space: normal;
+            line-height: 1.5;
+        }
+        
+        .copy-btn {
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+        
+        .copy-btn.copied {
+            background: rgba(34, 197, 94, 0.2) !important;
+            border-color: rgba(34, 197, 94, 0.4) !important;
+            color: #4ade80 !important;
+        }
+        
+        .toast {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(34, 197, 94, 0.95);
+            backdrop-filter: blur(8px);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 12px;
+            z-index: 1000;
+            font-size: 14px;
+            animation: slideUp 0.3s ease;
+            white-space: nowrap;
+        }
+        
+        @keyframes slideUp {
+            from { transform: translate(-50%, 100%); opacity: 0; }
+            to { transform: translate(-50%, 0); opacity: 1; }
+        }
+    </style>
+</head>
+<body class="min-h-screen pb-20 md:pb-0">
+    <%- include('partials/header') %>
+    
+    <main class="max-w-2xl mx-auto px-4 py-6 md:py-10">
+        <!-- Header -->
+        <div class="text-center mb-6 md:mb-8">
+            <h1 class="text-2xl md:text-3xl font-bold gradient-text mb-1">Servers</h1>
+            <p class="text-gray-400 text-sm">Join our Minecraft servers! Tap IP to copy</p>
+        </div>
+
+        <% if (servers && servers.length > 0) { %>
+            <div class="space-y-4">
+                <% servers.forEach(function(server) { %>
+                    <div class="server-card glass-card rounded-2xl p-4 md:p-6">
+                        <!-- Server Name -->
+                        <h3 class="text-lg md:text-xl font-bold text-white mb-4 flex items-center gap-2">
+                            <span class="w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-server text-purple-400 text-sm"></i>
+                            </span>
+                            <%= server.name %>
+                        </h3>
+                        
+                        <!-- Server Info -->
+                        <div class="space-y-3">
+                            <!-- Java -->
+                            <% if (server.has_java) { %>
+                                <div class="bg-gray-800/30 rounded-xl p-3 md:p-4">
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <i class="fab fa-java text-lg text-orange-400"></i>
+                                        <span class="text-white font-medium text-sm">Java Edition</span>
+                                    </div>
+                                    <div class="ip-box bg-gray-900/50 rounded-lg p-3 flex items-start justify-between gap-2">
+                                        <code class="text-purple-400 font-mono text-sm flex-1 min-w-0" onclick="copyText('<%= server.java_ip %>', this)"><%= server.java_ip %></code>
+                                        <button onclick="copyText('<%= server.java_ip %>', this)" 
+                                                class="copy-btn text-gray-500 hover:text-purple-400 p-1.5 rounded-lg hover:bg-purple-500/10 transition flex-shrink-0">
+                                            <i class="fas fa-copy text-sm"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            <% } %>
+                            
+                            <!-- Bedrock -->
+                            <% if (server.has_bedrock) { %>
+                                <div class="bg-gray-800/30 rounded-xl p-3 md:p-4">
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <i class="fas fa-cube text-lg text-blue-400"></i>
+                                        <span class="text-white font-medium text-sm">Bedrock Edition</span>
+                                    </div>
+                                    <div class="space-y-2">
+                                        <div class="ip-box bg-gray-900/50 rounded-lg p-3 flex items-start justify-between gap-2">
+                                            <div class="flex-1 min-w-0">
+                                                <p class="text-gray-500 text-xs mb-0.5">IP Address</p>
+                                                <code class="text-purple-400 font-mono text-sm" onclick="copyText('<%= server.bedrock_ip %>', this)"><%= server.bedrock_ip %></code>
+                                            </div>
+                                            <button onclick="copyText('<%= server.bedrock_ip %>', this)" 
+                                                    class="copy-btn text-gray-500 hover:text-purple-400 p-1.5 rounded-lg hover:bg-purple-500/10 transition flex-shrink-0 mt-4">
+                                                <i class="fas fa-copy text-sm"></i>
+                                            </button>
+                                        </div>
+                                        <div class="ip-box bg-gray-900/50 rounded-lg p-3 flex items-start justify-between gap-2">
+                                            <div class="flex-1 min-w-0">
+                                                <p class="text-gray-500 text-xs mb-0.5">Port</p>
+                                                <code class="text-purple-400 font-mono text-sm" onclick="copyText('<%= server.bedrock_port %>', this)"><%= server.bedrock_port %></code>
+                                            </div>
+                                            <button onclick="copyText('<%= server.bedrock_port %>', this)" 
+                                                    class="copy-btn text-gray-500 hover:text-purple-400 p-1.5 rounded-lg hover:bg-purple-500/10 transition flex-shrink-0 mt-4">
+                                                <i class="fas fa-copy text-sm"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            <% } %>
+                        </div>
+                        
+                        <!-- No editions -->
+                        <% if (!server.has_java && !server.has_bedrock) { %>
+                            <div class="text-center text-gray-500 py-4 text-sm">
+                                <i class="fas fa-exclamation-triangle mr-1"></i>
+                                No editions configured
+                            </div>
+                        <% } %>
+                    </div>
+                <% }); %>
+            </div>
+        <% } else { %>
+            <div class="glass-card rounded-2xl p-12 text-center">
+                <i class="fas fa-server text-5xl text-gray-700 mb-4"></i>
+                <h3 class="text-lg font-bold text-gray-400 mb-1">No Servers Available</h3>
+                <p class="text-gray-600 text-sm">Check back later!</p>
+            </div>
+        <% } %>
+    </main>
+
+    <%- include('partials/mobileNav') %>
+
+    <script>
+        function copyText(text, element) {
+            navigator.clipboard.writeText(text).then(() => {
+                // Find the nearest copy button
+                const copyBtn = element.closest('.ip-box')?.querySelector('.copy-btn');
+                if (copyBtn) {
+                    copyBtn.classList.add('copied');
+                    const icon = copyBtn.querySelector('i');
+                    if (icon) icon.className = 'fas fa-check text-sm';
+                    
+                    setTimeout(() => {
+                        copyBtn.classList.remove('copied');
+                        if (icon) icon.className = 'fas fa-copy text-sm';
+                    }, 1500);
+                }
+                
+                // Show toast
+                showToast('Copied: ' + text);
+            }).catch(() => {
+                // Fallback for older browsers
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                textarea.style.position = 'fixed';
+                textarea.style.opacity = '0';
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                showToast('Copied!');
+            });
+        }
+        
+        function showToast(message) {
+            const existing = document.querySelector('.toast');
+            if (existing) existing.remove();
+            
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerHTML = '<i class="fas fa-check mr-2"></i>' + message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transition = 'opacity 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, 2000);
+        }
+    </script>
+</body>
+</html>

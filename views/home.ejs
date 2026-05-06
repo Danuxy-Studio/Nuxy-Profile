@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('partials/head') %>
+    <style>
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+        }
+        
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 15px rgba(139, 92, 246, 0.2); }
+            50% { box-shadow: 0 0 30px rgba(139, 92, 246, 0.4); }
+        }
+        
+        @keyframes slideInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .avatar-container { animation: float 3s ease-in-out infinite; }
+        .avatar-ring { animation: pulse-glow 2s ease-in-out infinite; }
+        
+        .animate-slide-up {
+            opacity: 0;
+            animation: slideInUp 0.5s ease forwards;
+        }
+        
+        .link-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            word-break: break-word;
+            overflow-wrap: break-word;
+        }
+        
+        .link-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(139, 92, 246, 0.12);
+        }
+        
+        .link-card[data-type="donate"]:hover {
+            border-color: rgba(245, 158, 11, 0.4) !important;
+            box-shadow: 0 8px 30px rgba(245, 158, 11, 0.12);
+        }
+    </style>
+</head>
+<body class="min-h-screen pb-20 md:pb-0">
+    <%- include('partials/header') %>
+    
+    <main class="max-w-xl mx-auto px-4 py-6 md:py-10">
+        <!-- Profile Header -->
+        <div class="text-center mb-6 md:mb-8 animate-slide-up" style="animation-delay: 0.1s;">
+            <!-- Avatar -->
+            <div class="avatar-container relative inline-block mb-4">
+                <div class="avatar-ring w-24 h-24 md:w-28 md:h-28 rounded-full p-0.5 bg-gradient-to-br from-purple-500 to-purple-700">
+                    <div class="w-full h-full rounded-full overflow-hidden border-3 border-gray-900">
+                        <img src="<%= profile.avatar_url || '/img/avatar.png' %>" 
+                             alt="<%= profile.name %>" 
+                             class="w-full h-full object-cover"
+                             onerror="this.src='/img/avatar.png'">
+                    </div>
+                </div>
+                <div class="absolute bottom-0.5 right-0.5 bg-green-500 w-3.5 h-3.5 md:w-4 md:h-4 rounded-full border-2 border-gray-900"></div>
+            </div>
+            
+            <!-- Name -->
+            <h1 class="text-xl md:text-2xl font-bold text-white mb-1.5 px-2">
+                <%= profile.name %>
+            </h1>
+            
+            <!-- Bio -->
+            <% if (profile.bio) { %>
+                <p class="text-gray-400 text-sm md:text-base max-w-md mx-auto leading-relaxed px-4">
+                    <%= profile.bio %>
+                </p>
+            <% } %>
+        </div>
+
+        <!-- Links List -->
+        <div class="space-y-2.5 md:space-y-3">
+            <% if (profile.socials && profile.socials.length > 0) { %>
+                <% profile.socials.forEach(function(link, index) { %>
+                    <a href="<%= link.url %>" 
+                       target="_blank" 
+                       rel="noopener noreferrer"
+                       data-type="<%= link.type || 'social' %>"
+                       class="link-card glass-card rounded-2xl p-3.5 md:p-4 flex items-center gap-3 animate-slide-up"
+                       style="animation-delay: <%= 0.1 + (index * 0.05) %>s">
+                        
+                        <!-- Icon -->
+                        <div class="w-10 h-10 md:w-11 md:h-11 rounded-xl bg-gray-800/50 flex items-center justify-center flex-shrink-0">
+                            <% if (link.icon_type === 'emoji') { %>
+                                <span class="text-xl"><%= link.icon %></span>
+                            <% } else { %>
+                                <i class="<%= link.icon %> text-lg"></i>
+                            <% } %>
+                        </div>
+                        
+                        <!-- Text -->
+                        <div class="flex-1 min-w-0">
+                            <p class="text-white font-medium text-sm md:text-base truncate">
+                                <%= link.name %>
+                            </p>
+                            <p class="text-gray-500 text-xs">
+                                <%= link.type === 'donate' ? '💛 Donate' : 'Follow me' %>
+                            </p>
+                        </div>
+                        
+                        <!-- Arrow -->
+                        <i class="fas fa-arrow-up-right-from-square text-gray-600 text-xs flex-shrink-0"></i>
+                    </a>
+                <% }); %>
+            <% } else { %>
+                <div class="glass-card rounded-2xl p-8 text-center animate-slide-up">
+                    <i class="fas fa-link text-3xl text-gray-600 mb-3"></i>
+                    <p class="text-gray-500 text-sm">No links yet</p>
+                </div>
+            <% } %>
+        </div>
+
+        <!-- Footer -->
+        <p class="text-center text-gray-700 text-xs mt-8 animate-slide-up" style="animation-delay: 0.5s;">
+            &copy; <%= new Date().getFullYear() %> <%= profile.name %>
+        </p>
+    </main>
+
+    <%- include('partials/mobileNav') %>
+</body>
+</html>

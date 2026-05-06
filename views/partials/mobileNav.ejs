@@ -1,0 +1,26 @@
+<!-- Mobile Bottom Navigation -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 bg-gray-900/90 backdrop-blur-lg border-t border-purple-500/20 z-50">
+    <div class="flex justify-around items-center h-16">
+        <a href="/" class="flex flex-col items-center text-gray-400 hover:text-purple-400 transition">
+            <i class="fas fa-home text-xl"></i>
+            <span class="text-xs mt-1">Home</span>
+        </a>
+        <a href="/mods" class="flex flex-col items-center text-gray-400 hover:text-purple-400 transition">
+            <i class="fas fa-cubes text-xl"></i>
+            <span class="text-xs mt-1">Mods</span>
+        </a>
+        <a href="/servers" class="flex flex-col items-center text-gray-400 hover:text-purple-400 transition">
+            <i class="fas fa-server text-xl"></i>
+            <span class="text-xs mt-1">Servers</span>
+        </a>
+        <% if (user) { %>
+        <a href="/admin" class="flex flex-col items-center text-gray-400 hover:text-purple-400 transition">
+            <i class="fas fa-cog text-xl"></i>
+            <span class="text-xs mt-1">Admin</span>
+        </a>
+        <% } %>
+    </div>
+</nav>
+
+<!-- Spacer for mobile nav -->
+<div class="md:hidden h-16"></div>

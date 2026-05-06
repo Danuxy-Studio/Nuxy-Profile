@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head') %>
+</head>
+<body class="min-h-screen bg-[#0a0a14]">
+    <%- include('../partials/header') %>
+    
+    <main class="max-w-4xl mx-auto px-4 py-6 md:py-8">
+        <!-- Header -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-3">
+            <div>
+                <h1 class="text-2xl md:text-3xl font-bold gradient-text mb-1">Edit Profile</h1>
+                <p class="text-gray-400 text-sm">Manage your profile info & links</p>
+            </div>
+            <div class="flex gap-2">
+                <a href="/" target="_blank" class="bg-gray-700/50 text-gray-300 px-3 py-2 rounded-lg text-xs md:text-sm hover:bg-gray-700/70 transition flex items-center">
+                    <i class="fas fa-eye mr-1.5"></i>View
+                </a>
+                <a href="/admin" class="bg-gray-700/50 text-gray-300 px-3 py-2 rounded-lg text-xs md:text-sm hover:bg-gray-700/70 transition flex items-center">
+                    <i class="fas fa-arrow-left mr-1.5"></i>Dashboard
+                </a>
+            </div>
+        </div>
+
+        <!-- Toast Notification -->
+        <% if (typeof success_msg !== 'undefined' && success_msg && success_msg.length > 0) { %>
+            <div class="fixed top-4 right-4 z-50 bg-emerald-500/90 backdrop-blur text-white px-5 py-3 rounded-xl shadow-lg flex items-center gap-2 animate-slide-in" id="toast">
+                <i class="fas fa-check-circle"></i>
+                <span class="text-sm"><%= success_msg %></span>
+                <button onclick="this.parentElement.remove()" class="ml-2 hover:text-white/70"><i class="fas fa-times"></i></button>
+            </div>
+        <% } %>
+        
+        <% if (typeof error_msg !== 'undefined' && error_msg && error_msg.length > 0) { %>
+            <div class="fixed top-4 right-4 z-50 bg-red-500/90 backdrop-blur text-white px-5 py-3 rounded-xl shadow-lg flex items-center gap-2 animate-slide-in" id="toast">
+                <i class="fas fa-exclamation-circle"></i>
+                <span class="text-sm"><%= error_msg %></span>
+                <button onclick="this.parentElement.remove()" class="ml-2 hover:text-white/70"><i class="fas fa-times"></i></button>
+            </div>
+        <% } %>
+
+        <form action="/admin/profile" method="POST" enctype="multipart/form-data" id="profileForm">
+            <!-- Foto Profil Section -->
+            <div class="glass-card rounded-2xl p-5 md:p-6 mb-4 md:mb-6">
+                <h2 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                    <span class="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center">
+                        <i class="fas fa-camera text-purple-400 text-sm"></i>
+                    </span>
+                    Profile Photo
+                </h2>
+                
+                <div class="flex flex-col md:flex-row items-center gap-6">
+                    <!-- Preview -->
+                    <div class="text-center flex-shrink-0">
+                        <div class="w-28 h-28 md:w-36 md:h-36 rounded-full p-0.5 bg-gradient-to-br from-purple-500 to-purple-700 mx-auto mb-2">
+                            <img src="<%= profile.avatar_url || '/img/avatar.png' %>" 
+                                 alt="Avatar" 
+                                 class="w-full h-full rounded-full object-cover border-2 border-gray-900"
+                                 id="avatarPreview"
+                                 onerror="this.src='/img/avatar.png'">
+                        </div>
+                        <p class="text-gray-400 text-xs">
+                            <%= (profile.avatar_url && profile.avatar_url !== '/img/avatar.png') ? 'Custom photo' : 'Default photo' %>
+                        </p>
+                    </div>
+                    
+                    <!-- Upload Area -->
+                    <div class="flex-1 w-full space-y-3">
+                        <label for="avatarUpload" class="block border-2 border-dashed border-purple-500/20 rounded-xl p-5 text-center cursor-pointer hover:border-purple-500/40 hover:bg-purple-500/5 transition" id="uploadArea">
+                            <i class="fas fa-cloud-upload-alt text-3xl text-purple-400 mb-2"></i>
+                            <p class="text-white font-medium text-sm mb-1">Upload Photo</p>
+                            <p class="text-gray-500 text-xs">JPG, PNG, GIF, WebP • Max 5MB</p>
+                            <input type="file" id="avatarUpload" name="avatar" accept="image/*" class="hidden" onchange="handleFileSelect(event)">
+                        </label>
+                        
+                        <div id="fileInfo" class="hidden bg-gray-800/50 rounded-xl p-3 flex items-center justify-between">
+                            <span class="text-gray-300 text-sm truncate mr-2">
+                                <i class="fas fa-image text-purple-400 mr-2"></i><span id="fileName"></span>
+                            </span>
+                            <button type="button" onclick="clearFile()" class="text-red-400 hover:text-red-300 flex-shrink-0"><i class="fas fa-times"></i></button>
+                        </div>
+                        
+                        <% if (profile.avatar_url && profile.avatar_url !== '/img/avatar.png') { %>
+                            <button type="button" onclick="confirmDeleteAvatar()" 
+                                    class="bg-red-500/10 text-red-400 border border-red-500/20 px-4 py-2 rounded-xl text-sm hover:bg-red-500/20 transition">
+                                <i class="fas fa-trash mr-2"></i>Remove Photo
+                            </button>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Info Dasar Section -->
+            <div class="glass-card rounded-2xl p-5 md:p-6 mb-4 md:mb-6">
+                <h2 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                    <span class="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center">
+                        <i class="fas fa-user text-purple-400 text-sm"></i>
+                    </span>
+                    Basic Info
+                </h2>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-gray-300 mb-1.5 text-sm font-medium">Name <span class="text-red-400">*</span></label>
+                        <input type="text" name="name" value="<%= profile.name %>" required 
+                               placeholder="Your name"
+                               class="w-full bg-gray-800/50 border border-purple-500/20 rounded-xl px-4 py-2.5 text-white text-sm focus:border-purple-500 focus:outline-none transition">
+                    </div>
+                    <div>
+                        <label class="block text-gray-300 mb-1.5 text-sm font-medium">Bio</label>
+                        <textarea name="bio" rows="3" maxlength="200" placeholder="Short bio..."
+                                  class="w-full bg-gray-800/50 border border-purple-500/20 rounded-xl px-4 py-2.5 text-white text-sm focus:border-purple-500 focus:outline-none transition resize-none"><%= profile.bio || '' %></textarea>
+                        <p class="text-gray-500 text-xs mt-1 flex justify-between">
+                            <span>Brief description for your profile</span>
+                            <span id="bioCount"><%= profile.bio ? profile.bio.length : 0 %>/200</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Links Section -->
+            <div class="glass-card rounded-2xl p-5 md:p-6 mb-6">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-3">
+                    <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                        <span class="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center">
+                            <i class="fas fa-link text-purple-400 text-sm"></i>
+                        </span>
+                        Links
+                    </h2>
+                    <div class="flex gap-2">
+                        <button type="button" onclick="addLink('social')" 
+                                class="btn-primary text-white px-3 py-2 rounded-lg text-xs md:text-sm font-medium">
+                            <i class="fas fa-plus mr-1"></i>Social
+                        </button>
+                        <button type="button" onclick="addLink('donate')" 
+                                class="bg-amber-500/20 text-amber-400 border border-amber-500/30 px-3 py-2 rounded-lg text-xs md:text-sm font-medium hover:bg-amber-500/30 transition">
+                            <i class="fas fa-heart mr-1"></i>Donate
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="linksContainer" class="space-y-3">
+                    <% if (profile.socials && profile.socials.length > 0) { %>
+                        <% profile.socials.forEach(function(link, index) { %>
+                            <div class="social-link-item bg-gray-800/30 rounded-xl p-3 md:p-4 border border-purple-500/10" data-index="<%= index %>">
+                                <!-- Header -->
+                                <div class="flex items-center gap-2 mb-3">
+                                    <span class="badge text-xs font-medium px-2.5 py-1 rounded-full <%= link.type === 'donate' ? 'bg-amber-500/20 text-amber-400' : 'bg-purple-500/20 text-purple-400' %>">
+                                        <%= link.type === 'donate' ? 'Donate' : 'Social' %>
+                                    </span>
+                                    <select name="social_type_<%= index %>" class="type-select bg-gray-800/50 border border-purple-500/20 rounded-lg px-2 py-1 text-white text-xs focus:outline-none" onchange="updateBadge(this)">
+                                        <option value="social" <%= link.type === 'social' ? 'selected' : '' %>>Social</option>
+                                        <option value="donate" <%= link.type === 'donate' ? 'selected' : '' %>>Donate</option>
+                                    </select>
+                                    <button type="button" onclick="removeLink(this)" class="text-red-400 hover:text-red-300 p-1.5 hover:bg-red-500/10 rounded-lg ml-auto transition">
+                                        <i class="fas fa-trash text-sm"></i>
+                                    </button>
+                                </div>
+                                
+                                <!-- Inputs -->
+                                <div class="space-y-2 md:space-y-0 md:grid md:grid-cols-3 md:gap-3">
+                                    <div>
+                                        <label class="text-gray-500 text-xs mb-1 block">Name</label>
+                                        <input type="text" name="social_name_<%= index %>" value="<%= link.name %>" 
+                                               placeholder="YouTube, Saweria..."
+                                               class="w-full bg-gray-800/50 border border-purple-500/20 rounded-lg px-3 py-2 text-white text-sm focus:border-purple-500 focus:outline-none transition">
+                                    </div>
+                                    <div>
+                                        <label class="text-gray-500 text-xs mb-1 block">URL</label>
+                                        <input type="text" name="social_url_<%= index %>" value="<%= link.url %>" 
+                                               placeholder="https://..."
+                                               class="w-full bg-gray-800/50 border border-purple-500/20 rounded-lg px-3 py-2 text-white text-sm focus:border-purple-500 focus:outline-none transition">
+                                    </div>
+                                    <div>
+                                        <label class="text-gray-500 text-xs mb-1 block">Icon</label>
+                                        <select name="social_icon_<%= index %>" 
+                                                class="w-full bg-gray-800/50 border border-purple-500/20 rounded-lg px-3 py-2 text-white text-sm focus:border-purple-500 focus:outline-none transition">
+                                            <optgroup label="── Social Media ──">
+                                                <option value="fab fa-youtube" <%= link.icon === 'fab fa-youtube' ? 'selected' : '' %>>🎬 YouTube</option>
+                                                <option value="fab fa-discord" <%= link.icon === 'fab fa-discord' ? 'selected' : '' %>>💬 Discord</option>
+                                                <option value="fab fa-tiktok" <%= link.icon === 'fab fa-tiktok' ? 'selected' : '' %>>🎵 TikTok</option>
+                                                <option value="fab fa-instagram" <%= link.icon === 'fab fa-instagram' ? 'selected' : '' %>>📷 Instagram</option>
+                                                <option value="fab fa-twitter" <%= link.icon === 'fab fa-twitter' ? 'selected' : '' %>>🐦 Twitter/X</option>
+                                                <option value="fab fa-twitch" <%= link.icon === 'fab fa-twitch' ? 'selected' : '' %>>🎮 Twitch</option>
+                                                <option value="fab fa-facebook" <%= link.icon === 'fab fa-facebook' ? 'selected' : '' %>>📘 Facebook</option>
+                                                <option value="fab fa-github" <%= link.icon === 'fab fa-github' ? 'selected' : '' %>>💻 GitHub</option>
+                                                <option value="fab fa-spotify" <%= link.icon === 'fab fa-spotify' ? 'selected' : '' %>>🎧 Spotify</option>
+                                                <option value="fab fa-telegram" <%= link.icon === 'fab fa-telegram' ? 'selected' : '' %>>✈️ Telegram</option>
+                                                <option value="fab fa-whatsapp" <%= link.icon === 'fab fa-whatsapp' ? 'selected' : '' %>>📱 WhatsApp</option>
+                                                <option value="fas fa-globe" <%= link.icon === 'fas fa-globe' ? 'selected' : '' %>>🌐 Website</option>
+                                                <option value="fas fa-envelope" <%= link.icon === 'fas fa-envelope' ? 'selected' : '' %>>📧 Email</option>
+                                            </optgroup>
+                                            <optgroup label="── Donate / Support ──">
+                                                <option value="fas fa-heart" <%= link.icon === 'fas fa-heart' ? 'selected' : '' %>>❤️ Heart</option>
+                                                <option value="fas fa-coffee" <%= link.icon === 'fas fa-coffee' ? 'selected' : '' %>>☕ Coffee</option>
+                                                <option value="fas fa-gift" <%= link.icon === 'fas fa-gift' ? 'selected' : '' %>>🎁 Gift</option>
+                                                <option value="fas fa-star" <%= link.icon === 'fas fa-star' ? 'selected' : '' %>>⭐ Star</option>
+                                                <option value="fas fa-crown" <%= link.icon === 'fas fa-crown' ? 'selected' : '' %>>👑 Crown</option>
+                                                <option value="fas fa-comment-dollar" <%= link.icon === 'fas fa-comment-dollar' ? 'selected' : '' %>>💵 Dollar</option>
+                                                <option value="fas fa-donate" <%= link.icon === 'fas fa-donate' ? 'selected' : '' %>>🎗️ Donate</option>
+                                                <option value="fas fa-hand-holding-heart" <%= link.icon === 'fas fa-hand-holding-heart' ? 'selected' : '' %>>🤲 Support</option>
+                                            </optgroup>
+                                            <optgroup label="── Emoji ──">
+                                                <option value="💛" <%= link.icon === '💛' ? 'selected' : '' %>>💛 Yellow Heart</option>
+                                                <option value="☕" <%= link.icon === '☕' ? 'selected' : '' %>>☕ Coffee</option>
+                                                <option value="💰" <%= link.icon === '💰' ? 'selected' : '' %>>💰 Money</option>
+                                                <option value="🎁" <%= link.icon === '🎁' ? 'selected' : '' %>>🎁 Gift</option>
+                                                <option value="⭐" <%= link.icon === '⭐' ? 'selected' : '' %>>⭐ Star</option>
+                                                <option value="❤️" <%= link.icon === '❤️' ? 'selected' : '' %>>❤️ Red Heart</option>
+                                                <option value="🔥" <%= link.icon === '🔥' ? 'selected' : '' %>>🔥 Fire</option>
+                                                <option value="👑" <%= link.icon === '👑' ? 'selected' : '' %>>👑 Crown</option>
+                                                <option value="🎮" <%= link.icon === '🎮' ? 'selected' : '' %>>🎮 Game</option>
+                                                <option value="📺" <%= link.icon === '📺' ? 'selected' : '' %>>📺 TV</option>
+                                                <option value="🎯" <%= link.icon === '🎯' ? 'selected' : '' %>>🎯 Target</option>
+                                                <option value="💎" <%= link.icon === '💎' ? 'selected' : '' %>>💎 Diamond</option>
+                                                <option value="🪙" <%= link.icon === '🪙' ? 'selected' : '' %>>🪙 Coin</option>
+                                                <option value="🤝" <%= link.icon === '🤝' ? 'selected' : '' %>>🤝 Handshake</option>
+                                            </optgroup>
+                                        </select>
+                                        <input type="hidden" name="social_icon_type_<%= index %>" value="<%= link.icon_type || 'fontawesome' %>">
+                                    </div>
+                                </div>
+                            </div>
+                        <% }); %>
+                    <% } else { %>
+                        <div class="text-center py-12" id="noLinksMsg">
+                            <i class="fas fa-link text-5xl text-gray-700 mb-4"></i>
+                            <p class="text-gray-500 text-lg">No links yet</p>
+                            <p class="text-gray-600 text-sm mt-1">Add your first link above</p>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+
+            <!-- Submit -->
+            <div class="flex gap-3">
+                <button type="submit" class="btn-primary text-white px-6 py-3 rounded-xl font-semibold text-sm flex items-center gap-2">
+                    <i class="fas fa-save"></i>Save Changes
+                </button>
+                <a href="/admin" class="bg-gray-700/50 text-gray-300 px-6 py-3 rounded-xl font-semibold text-sm hover:bg-gray-700/70 transition flex items-center gap-2">
+                    <i class="fas fa-times"></i>Cancel
+                </a>
+            </div>
+        </form>
+    </main>
+
+    <!-- Delete Avatar Modal -->
+    <div id="deleteAvatarModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeAvatarModal()"></div>
+        <div class="glass-card rounded-2xl p-6 max-w-sm w-full relative z-10 text-center">
+            <div class="w-14 h-14 rounded-full bg-red-500/10 flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-user-slash text-2xl text-red-400"></i>
+            </div>
+            <h3 class="text-white font-bold text-lg mb-2">Remove Photo?</h3>
+            <p class="text-gray-400 text-sm mb-6">Your profile will use the default avatar.</p>
+            <div class="flex gap-2 justify-center">
+                <button onclick="closeAvatarModal()" class="bg-gray-700 text-gray-300 px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-gray-600 transition">Cancel</button>
+                <button onclick="document.getElementById('deleteAvatarForm').submit()" class="bg-red-500 text-white px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-red-600 transition">Remove</button>
+            </div>
+        </div>
+    </div>
+
+    <form id="deleteAvatarForm" action="/admin/profile/delete-avatar" method="POST" class="hidden"></form>
+
+    <style>
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        .animate-slide-in { animation: slideIn 0.3s ease; }
+        
+        .social-link-item { transition: all 0.3s ease; }
+    </style>
+
+    <script>
+        // Toast auto-hide
+        setTimeout(() => {
+            const toast = document.getElementById('toast');
+            if (toast) { 
+                toast.style.opacity = '0'; 
+                toast.style.transition = 'opacity 0.3s ease'; 
+                setTimeout(() => { if (toast && toast.parentElement) toast.remove(); }, 300); 
+            }
+        }, 3500);
+
+        // Avatar functions
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            if (file.size > 5 * 1024 * 1024) { 
+                showToast('File too large! Max 5MB.', 'error'); 
+                return; 
+            }
+            const reader = new FileReader();
+            reader.onload = e => {
+                const preview = document.getElementById('avatarPreview');
+                if (preview) preview.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+            document.getElementById('fileName').textContent = file.name;
+            document.getElementById('fileInfo').classList.remove('hidden');
+        }
+        
+        function clearFile() {
+            document.getElementById('avatarUpload').value = '';
+            document.getElementById('fileInfo').classList.add('hidden');
+            document.getElementById('avatarPreview').src = '<%= profile.avatar_url || "/img/avatar.png" %>';
+        }
+        
+        function confirmDeleteAvatar() {
+            document.getElementById('deleteAvatarModal').classList.remove('hidden');
+        }
+        
+        function closeAvatarModal() {
+            document.getElementById('deleteAvatarModal').classList.add('hidden');
+        }
+        
+        // Link functions
+        function addLink(type) {
+            const container = document.getElementById('linksContainer');
+            const noMsg = document.getElementById('noLinksMsg');
+            if (noMsg) noMsg.remove();
+            
+            const allItems = container.querySelectorAll('.social-link-item');
+            const index = allItems.length;
+            const typeLabel = type === 'donate' ? 'Donate' : 'Social';
+            const typeBadge = type === 'donate' ? 'bg-amber-500/20 text-amber-400' : 'bg-purple-500/20 text-purple-400';
+            
+            const div = document.createElement('div');
+            div.className = 'social-link-item bg-gray-800/30 rounded-xl p-3 md:p-4 border border-purple-500/10';
+            div.setAttribute('data-index', index);
+            div.style.opacity = '0';
+            div.style.transform = 'translateY(10px)';
+            div.innerHTML = `
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="badge text-xs font-medium px-2.5 py-1 rounded-full ${typeBadge}">${typeLabel}</span>
+                    <select name="social_type_${index}" class="type-select bg-gray-800/50 border border-purple-500/20 rounded-lg px-2 py-1 text-white text-xs focus:outline-none" onchange="updateBadge(this)">
+                        <option value="social" ${type === 'social' ? 'selected' : ''}>Social</option>
+                        <option value="donate" ${type === 'donate' ? 'selected' : ''}>Donate</option>
+                    </select>
+                    <button type="button" onclick="removeLink(this)" class="text-red-400 hover:text-red-300 p-1.5 hover:bg-red-500/10 rounded-lg ml-auto transition">
+                        <i class="fas fa-trash text-sm"></i>
+                    </button>
+                </div>
+                <div class="space-y-2 md:space-y-0 md:grid md:grid-cols-3 md:gap-3">
+                    <div>
+                        <label class="text-gray-500 text-xs mb-1 block">Name</label>
+                        <input type="text" name="social_name_${index}" placeholder="YouTube, Saweria..."
+                               class="w-full bg-gray-800/50 border border-purple-500/20 rounded-lg px-3 py-2 text-white text-sm focus:border-purple-500 focus:outline-none transition">
+                    </div>
+                    <div>
+                        <label class="text-gray-500 text-xs mb-1 block">URL</label>
+                        <input type="text" name="social_url_${index}" placeholder="https://..."
+                               class="w-full bg-gray-800/50 border border-purple-500/20 rounded-lg px-3 py-2 text-white text-sm focus:border-purple-500 focus:outline-none transition">
+                    </div>
+                    <div>
+                        <label class="text-gray-500 text-xs mb-1 block">Icon</label>
+                        <select name="social_icon_${index}" 
+                                class="w-full bg-gray-800/50 border border-purple-500/20 rounded-lg px-3 py-2 text-white text-sm focus:border-purple-500 focus:outline-none transition">
+                            <optgroup label="── Social Media ──">
+                                <option value="fab fa-youtube">🎬 YouTube</option>
+                                <option value="fab fa-discord">💬 Discord</option>
+                                <option value="fab fa-tiktok">🎵 TikTok</option>
+                                <option value="fab fa-instagram">📷 Instagram</option>
+                                <option value="fab fa-twitter">🐦 Twitter/X</option>
+                                <option value="fab fa-twitch">🎮 Twitch</option>
+                                <option value="fab fa-facebook">📘 Facebook</option>
+                                <option value="fab fa-github">💻 GitHub</option>
+                                <option value="fas fa-globe">🌐 Website</option>
+                                <option value="fas fa-envelope">📧 Email</option>
+                            </optgroup>
+                            <optgroup label="── Donate / Support ──">
+                                <option value="fas fa-heart">❤️ Heart</option>
+                                <option value="fas fa-coffee">☕ Coffee</option>
+                                <option value="fas fa-gift">🎁 Gift</option>
+                                <option value="fas fa-star">⭐ Star</option>
+                                <option value="fas fa-crown">👑 Crown</option>
+                                <option value="fas fa-comment-dollar">💵 Dollar</option>
+                                <option value="fas fa-donate">🎗️ Donate</option>
+                            </optgroup>
+                            <optgroup label="── Emoji ──">
+                                <option value="💛">💛 Yellow Heart</option>
+                                <option value="☕">☕ Coffee</option>
+                                <option value="💰">💰 Money</option>
+                                <option value="🎁">🎁 Gift</option>
+                                <option value="⭐">⭐ Star</option>
+                                <option value="❤️">❤️ Red Heart</option>
+                                <option value="🔥">🔥 Fire</option>
+                                <option value="👑">👑 Crown</option>
+                                <option value="🎮">🎮 Game</option>
+                                <option value="📺">📺 TV</option>
+                            </optgroup>
+                        </select>
+                        <input type="hidden" name="social_icon_type_${index}" value="fontawesome">
+                    </div>
+                </div>
+            `;
+            container.appendChild(div);
+            
+            // Animate in
+            setTimeout(() => {
+                div.style.opacity = '1';
+                div.style.transform = 'translateY(0)';
+                div.style.transition = 'all 0.3s ease';
+            }, 10);
+            
+            // Scroll to new element
+            setTimeout(() => {
+                div.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 150);
+        }
+        
+        function removeLink(btn) {
+            const item = btn.closest('.social-link-item');
+            item.style.opacity = '0';
+            item.style.transform = 'translateY(-10px)';
+            item.style.transition = 'all 0.3s ease';
+            
+            setTimeout(() => {
+                item.remove();
+                checkEmpty();
+                reindexLinks();
+            }, 300);
+        }
+        
+        function updateBadge(select) {
+            const badge = select.parentElement.querySelector('.badge');
+            if (!badge) return;
+            if (select.value === 'donate') {
+                badge.className = 'badge text-xs font-medium px-2.5 py-1 rounded-full bg-amber-500/20 text-amber-400';
+                badge.textContent = 'Donate';
+            } else {
+                badge.className = 'badge text-xs font-medium px-2.5 py-1 rounded-full bg-purple-500/20 text-purple-400';
+                badge.textContent = 'Social';
+            }
+        }
+        
+        function checkEmpty() {
+            const container = document.getElementById('linksContainer');
+            if (container.querySelectorAll('.social-link-item').length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-12" id="noLinksMsg">
+                        <i class="fas fa-link text-5xl text-gray-700 mb-4"></i>
+                        <p class="text-gray-500 text-lg">No links yet</p>
+                        <p class="text-gray-600 text-sm mt-1">Add your first link above</p>
+                    </div>
+                `;
+            }
+        }
+        
+        function reindexLinks() {
+            const items = document.querySelectorAll('.social-link-item');
+            items.forEach((item, newIndex) => {
+                item.setAttribute('data-index', newIndex);
+                const inputs = item.querySelectorAll('input, select');
+                inputs.forEach(input => {
+                    const name = input.getAttribute('name');
+                    if (name) {
+                        input.setAttribute('name', name.replace(/_\d+$/, '_' + newIndex));
+                    }
+                });
+            });
+        }
+        
+        function showToast(message, type) {
+            const existing = document.getElementById('toast');
+            if (existing) existing.remove();
+            
+            const bgColor = type === 'error' ? 'bg-red-500/90' : 'bg-emerald-500/90';
+            const icon = type === 'error' ? 'fa-exclamation-circle' : 'fa-check-circle';
+            
+            const toast = document.createElement('div');
+            toast.id = 'toast';
+            toast.className = `fixed top-4 right-4 z-50 ${bgColor} backdrop-blur text-white px-5 py-3 rounded-xl shadow-lg flex items-center gap-2 animate-slide-in`;
+            toast.innerHTML = `
+                <i class="fas ${icon}"></i>
+                <span class="text-sm">${message}</span>
+                <button onclick="this.parentElement.remove()" class="ml-2 hover:text-white/70"><i class="fas fa-times"></i></button>
+            `;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transition = 'opacity 0.3s ease';
+                setTimeout(() => { if (toast && toast.parentElement) toast.remove(); }, 300);
+            }, 3500);
+        }
+        
+        // Bio counter
+        const bioArea = document.querySelector('textarea[name="bio"]');
+        const bioCount = document.getElementById('bioCount');
+        if (bioArea && bioCount) {
+            bioCount.textContent = bioArea.value.length;
+            bioArea.addEventListener('input', function() {
+                bioCount.textContent = this.value.length;
+            });
+        }
+        
+        // Drag & drop
+        const uploadArea = document.getElementById('uploadArea');
+        if (uploadArea) {
+            ['dragenter','dragover'].forEach(e => {
+                uploadArea.addEventListener(e, () => {
+                    uploadArea.style.borderColor = 'rgba(139,92,246,0.6)';
+                    uploadArea.style.background = 'rgba(139,92,246,0.08)';
+                });
+            });
+            ['dragleave','drop'].forEach(e => {
+                uploadArea.addEventListener(e, () => {
+                    uploadArea.style.borderColor = 'rgba(139,92,246,0.2)';
+                    uploadArea.style.background = 'transparent';
+                });
+            });
+            uploadArea.addEventListener('drop', e => {
+                e.preventDefault();
+                if (e.dataTransfer.files.length > 0) {
+                    document.getElementById('avatarUpload').files = e.dataTransfer.files;
+                    handleFileSelect({ target: { files: e.dataTransfer.files } });
+                }
+            });
+            ['dragenter','dragover','dragleave','drop'].forEach(e => {
+                uploadArea.addEventListener(e, e.preventDefault());
+            });
+        }
+        
+        // Close modals with ESC
+        document.addEventListener('keydown', e => { 
+            if (e.key === 'Escape') {
+                closeAvatarModal();
+                document.getElementById('toast')?.remove();
+            }
+        });
+    </script>
+</body>
+</html>

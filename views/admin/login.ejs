@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head') %>
+    <style>
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+        
+        .login-card {
+            width: 100%;
+            max-width: 400px;
+            animation: fadeInUp 0.5s ease;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .input-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6b7280;
+            font-size: 16px;
+        }
+        
+        .input-field {
+            padding-left: 42px !important;
+        }
+        
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            border-radius: 14px;
+            font-weight: 600;
+            font-size: 15px;
+            letter-spacing: 0.3px;
+            transition: all 0.3s ease;
+        }
+        
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(139, 92, 246, 0.35);
+        }
+        
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #6b7280;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        
+        .back-link:hover {
+            color: #a78bfa;
+        }
+    </style>
+</head>
+<body class="bg-[#0a0a14]">
+    <div class="login-container">
+        <div class="login-card">
+            <!-- Header -->
+            <div class="text-center mb-8">
+                <!-- Logo/Icon -->
+                <div class="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-gradient-to-br from-purple-600 to-purple-800 flex items-center justify-center mx-auto mb-4 shadow-lg shadow-purple-500/20">
+                    <i class="fas fa-shield-alt text-2xl md:text-3xl text-white"></i>
+                </div>
+                <h1 class="text-2xl md:text-3xl font-bold gradient-text mb-1">Nuxy MC</h1>
+                <p class="text-gray-500 text-sm">Admin Panel</p>
+            </div>
+            
+            <!-- Toast Error -->
+            <% if (typeof error_msg !== 'undefined' && error_msg && error_msg.length > 0) { %>
+                <div class="bg-red-500/10 border border-red-500/30 text-red-400 px-4 py-3 rounded-xl mb-5 flex items-center gap-2 animate-fade-in">
+                    <i class="fas fa-exclamation-circle text-sm flex-shrink-0"></i>
+                    <span class="text-sm"><%= error_msg %></span>
+                </div>
+            <% } %>
+            
+            <% if (typeof success_msg !== 'undefined' && success_msg && success_msg.length > 0) { %>
+                <div class="bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 px-4 py-3 rounded-xl mb-5 flex items-center gap-2 animate-fade-in">
+                    <i class="fas fa-check-circle text-sm flex-shrink-0"></i>
+                    <span class="text-sm"><%= success_msg %></span>
+                </div>
+            <% } %>
+            
+            <!-- Login Form -->
+            <div class="glass-card rounded-2xl p-6 md:p-8">
+                <form action="/auth/login" method="POST" class="space-y-4">
+                    <!-- Username -->
+                    <div>
+                        <label class="block text-gray-400 text-xs font-medium mb-1.5 ml-1">Username</label>
+                        <div class="relative">
+                            <i class="fas fa-user input-icon"></i>
+                            <input type="text" 
+                                   name="username" 
+                                   required 
+                                   placeholder="Enter username"
+                                   autocomplete="username"
+                                   class="input-field w-full bg-gray-800/50 border border-purple-500/20 rounded-xl py-3 text-white text-sm focus:border-purple-500 focus:outline-none transition placeholder-gray-600">
+                        </div>
+                    </div>
+                    
+                    <!-- Password -->
+                    <div>
+                        <label class="block text-gray-400 text-xs font-medium mb-1.5 ml-1">Password</label>
+                        <div class="relative">
+                            <i class="fas fa-lock input-icon"></i>
+                            <input type="password" 
+                                   name="password" 
+                                   required 
+                                   placeholder="Enter password"
+                                   autocomplete="current-password"
+                                   class="input-field w-full bg-gray-800/50 border border-purple-500/20 rounded-xl py-3 text-white text-sm focus:border-purple-500 focus:outline-none transition placeholder-gray-600">
+                        </div>
+                    </div>
+                    
+                    <!-- Submit -->
+                    <button type="submit" class="btn-primary text-white login-btn mt-2">
+                        <i class="fas fa-sign-in-alt mr-2"></i>Sign In
+                    </button>
+                </form>
+            </div>
+            
+            <!-- Back Link -->
+            <div class="text-center mt-6">
+                <a href="/" class="back-link">
+                    <i class="fas fa-arrow-left"></i>
+                    Back to Home
+                </a>
+            </div>
+            
+            <!-- Footer -->
+            <p class="text-center text-gray-700 text-xs mt-8">
+                &copy; <%= new Date().getFullYear() %> Nuxy MC. All rights reserved.
+            </p>
+        </div>
+    </div>
+
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in { animation: fadeIn 0.3s ease; }
+    </style>
+</body>
+</html>

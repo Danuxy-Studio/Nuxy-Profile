@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('partials/head') %>
+    
+    <!-- Monetag Tag -->
+    <script src="https://quge5.com/88/tag.min.js" data-zone="236660" async data-cfasync="false"></script>
+    
+    <style>
+        .ad-container {
+            min-height: 100px;
+            background: rgba(139, 92, 246, 0.03);
+            border: 1px solid rgba(139, 92, 246, 0.1);
+            border-radius: 16px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .ad-label {
+            background: rgba(245,158,11,0.15);
+            color: #f59e0b;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            padding: 5px 10px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+        
+        .countdown-display {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: rgba(139, 92, 246, 0.1);
+            border: 3px solid rgba(139, 92, 246, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        .countdown-display.ready {
+            border-color: #4ade80;
+            background: rgba(34, 197, 94, 0.1);
+            animation: pulse-green 1.5s ease infinite;
+        }
+        
+        @keyframes pulse-green {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.3); }
+            50% { box-shadow: 0 0 0 15px rgba(34, 197, 94, 0); }
+        }
+        
+        .countdown-number {
+            font-size: 32px;
+            font-weight: 800;
+            color: #a78bfa;
+        }
+        
+        .ready .countdown-number {
+            color: #4ade80;
+        }
+        
+        .progress-ring {
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            width: calc(100% + 6px);
+            height: calc(100% + 6px);
+            border-radius: 50%;
+            border: 3px solid transparent;
+            border-top-color: #8B5CF6;
+            animation: spin 2s linear infinite;
+        }
+        
+        .ready .progress-ring {
+            display: none;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .btn-download {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            opacity: 0.4;
+            pointer-events: none;
+            cursor: not-allowed;
+        }
+        
+        .btn-download.active {
+            opacity: 1;
+            pointer-events: auto;
+            cursor: pointer;
+            animation: glow 1.5s ease infinite;
+        }
+        
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(139, 92, 246, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(139, 92, 246, 0.6); }
+        }
+        
+        .btn-download.active:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(139, 92, 246, 0.4);
+        }
+        
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 6px 14px;
+            border-radius: 20px;
+        }
+        
+        .status-waiting {
+            background: rgba(245, 158, 11, 0.15);
+            color: #f59e0b;
+        }
+        
+        .status-ready {
+            background: rgba(34, 197, 94, 0.15);
+            color: #4ade80;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(139, 92, 246, 0.15);
+            border-radius: 2px;
+            overflow: hidden;
+            margin: 16px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #8B5CF6, #7C3AED, #6D28D9);
+            border-radius: 2px;
+            transition: width 1s linear;
+            width: 0%;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-[#0a0a14]">
+    <main class="max-w-2xl mx-auto px-4 py-6 md:py-12">
+        <!-- Header -->
+        <div class="text-center mb-6">
+            <p class="text-gray-500 text-xs mb-3">DOWNLOAD MODPACK</p>
+            <h1 class="text-xl md:text-2xl font-bold text-white mb-1"><%= mod.name %></h1>
+            <p class="text-gray-400 text-sm">MC <%= mod.mc_version %> • <%= mod.release_date %></p>
+        </div>
+
+        <!-- Ad Area 1 - Monetag akan otomatis menampilkan iklan di sini -->
+        <div class="text-center mb-3">
+            <span class="ad-label">Advertisement</span>
+        </div>
+        <div class="ad-container mb-6" id="ad-area-1">
+            <!-- Monetag akan mengisi area ini secara otomatis -->
+        </div>
+
+        <!-- Countdown Circle & Status -->
+        <div class="glass-card rounded-2xl p-6 md:p-8 mb-6 text-center">
+            <div class="countdown-display mb-4" id="countdownDisplay">
+                <div class="progress-ring" id="progressRing"></div>
+                <span class="countdown-number" id="countdownNumber">30</span>
+            </div>
+            
+            <div class="status-badge status-waiting mb-2" id="statusBadge">
+                <i class="fas fa-clock"></i>
+                <span id="statusText">Mohon tunggu...</span>
+            </div>
+            
+            <p class="text-gray-500 text-sm" id="statusDesc">
+                Link download akan muncul dalam <strong><span id="timeLeft">30</span> detik</strong>
+            </p>
+            
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+
+        <!-- Ad Area 2 -->
+        <div class="text-center mb-3">
+            <span class="ad-label">Advertisement</span>
+        </div>
+        <div class="ad-container mb-4" id="ad-area-2">
+            <!-- Monetag akan mengisi area ini secara otomatis -->
+        </div>
+
+        <!-- Download Info Card -->
+        <div class="glass-card rounded-2xl p-4 md:p-5 mb-4">
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center flex-shrink-0">
+                    <i class="fas fa-cube text-xl text-purple-400"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <h3 class="text-white font-bold text-base truncate"><%= mod.name %></h3>
+                    <p class="text-gray-500 text-xs mt-0.5 line-clamp-2"><%= mod.description %></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Download Button -->
+        <a href="/go/<%= mod.id %>" 
+           class="btn-download w-full bg-gradient-to-r from-purple-600 to-purple-700 text-white py-4 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 mb-3"
+           id="downloadButton"
+           onclick="return handleDownload(event)">
+            <i class="fas fa-lock" id="btnIcon"></i>
+            <span id="btnText">Tunggu 30 detik...</span>
+        </a>
+        
+        <p class="text-center text-gray-600 text-xs mb-8" id="hintText">
+            <i class="fas fa-info-circle mr-1"></i>
+            Tombol download akan aktif setelah countdown selesai
+        </p>
+
+        <!-- Back Link -->
+        <div class="text-center">
+            <a href="/mods" class="text-gray-600 hover:text-gray-400 transition text-sm">
+                <i class="fas fa-arrow-left mr-1"></i>Kembali ke daftar modpack
+            </a>
+        </div>
+        
+        <p class="text-center text-gray-700 text-xs mt-6">
+            Dengan mendownload, Anda menyetujui Syarat & Ketentuan kami.
+        </p>
+    </main>
+
+    <script>
+        const totalTime = 30;
+        let timeLeft = totalTime;
+        let downloadReady = false;
+        
+        const countdownNumber = document.getElementById('countdownNumber');
+        const countdownDisplay = document.getElementById('countdownDisplay');
+        const progressFill = document.getElementById('progressFill');
+        const statusBadge = document.getElementById('statusBadge');
+        const statusText = document.getElementById('statusText');
+        const statusDesc = document.getElementById('statusDesc');
+        const timeLeftSpan = document.getElementById('timeLeft');
+        const downloadButton = document.getElementById('downloadButton');
+        const btnIcon = document.getElementById('btnIcon');
+        const btnText = document.getElementById('btnText');
+        const hintText = document.getElementById('hintText');
+        
+        function updateCountdown() {
+            if (timeLeft <= 0) {
+                downloadReady = true;
+                
+                countdownNumber.textContent = '✓';
+                countdownDisplay.classList.add('ready');
+                progressFill.style.width = '100%';
+                
+                statusBadge.className = 'status-badge status-ready';
+                statusText.textContent = 'Siap download!';
+                statusDesc.innerHTML = '<span class="text-green-400">Link download sudah tersedia!</span>';
+                
+                downloadButton.classList.add('active');
+                downloadButton.href = '/go/<%= mod.id %>';
+                btnIcon.className = 'fas fa-download';
+                btnText.textContent = 'Download <%= mod.name %>';
+                hintText.innerHTML = '<i class="fas fa-check-circle mr-1 text-green-400"></i> Klik tombol di atas untuk memulai download';
+                
+                return;
+            }
+            
+            countdownNumber.textContent = timeLeft;
+            if (timeLeftSpan) timeLeftSpan.textContent = timeLeft;
+            
+            const progress = ((totalTime - timeLeft) / totalTime) * 100;
+            progressFill.style.width = progress + '%';
+            
+            if (timeLeft <= 5) {
+                statusDesc.innerHTML = 'Hampir siap! <strong>' + timeLeft + ' detik</strong> lagi';
+            }
+            
+            timeLeft--;
+        }
+        
+        updateCountdown();
+        const timer = setInterval(updateCountdown, 1000);
+        
+        function handleDownload(event) {
+            if (!downloadReady) {
+                event.preventDefault();
+                return false;
+            }
+            
+            downloadButton.classList.remove('active');
+            downloadButton.style.pointerEvents = 'none';
+            downloadButton.style.opacity = '0.7';
+            btnIcon.className = 'fas fa-spinner fa-spin';
+            btnText.textContent = 'Mengarahkan ke download...';
+            
+            return true;
+        }
+    </script>
+</body>
+</html>

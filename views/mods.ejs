@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('partials/head') %>
+    <style>
+        .mod-card {
+            word-break: break-word;
+            overflow-wrap: break-word;
+        }
+        .download-btn {
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body class="min-h-screen pb-20 md:pb-0">
+    <%- include('partials/header') %>
+    
+    <main class="max-w-6xl mx-auto px-4 py-6 md:py-10">
+        <div class="text-center mb-6 md:mb-8">
+            <h1 class="text-2xl md:text-3xl font-bold gradient-text mb-1">Modpacks</h1>
+            <p class="text-gray-400 text-sm">Koleksi modpack dari Nuxy MC</p>
+        </div>
+
+        <% if (mods && mods.length > 0) { %>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <% mods.forEach(function(mod) { %>
+                    <div class="mod-card glass-card rounded-2xl p-4 md:p-5 flex flex-col">
+                        <div class="flex items-start justify-between mb-3">
+                            <h3 class="text-base md:text-lg font-bold text-white leading-snug pr-2"><%= mod.name %></h3>
+                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs bg-purple-600/20 text-purple-400 border border-purple-500/30 flex-shrink-0">
+                                <%= mod.mc_version %>
+                            </span>
+                        </div>
+                        
+                        <p class="text-gray-400 text-sm mb-4 leading-relaxed flex-1"><%= mod.description %></p>
+                        
+                        <div class="flex items-center justify-between mt-auto pt-3 border-t border-purple-500/10">
+                            <span class="text-gray-600 text-xs">
+                                <i class="far fa-calendar mr-1"></i><%= mod.release_date %>
+                            </span>
+                            <!-- Link ke halaman download interstitial -->
+                            <a href="/download/<%= mod.id %>" 
+                               class="download-btn btn-primary text-white px-4 py-2 rounded-xl text-xs font-medium flex items-center gap-1.5">
+                                <i class="fas fa-download"></i>Download
+                            </a>
+                        </div>
+                    </div>
+                <% }); %>
+            </div>
+        <% } else { %>
+            <div class="glass-card rounded-2xl p-12 text-center">
+                <i class="fas fa-cubes text-5xl text-gray-700 mb-4"></i>
+                <h3 class="text-lg font-bold text-gray-400 mb-1">No Modpacks Yet</h3>
+                <p class="text-gray-600 text-sm">Check back later!</p>
+            </div>
+        <% } %>
+    </main>
+
+    <%- include('partials/mobileNav') %>
+</body>
+</html>

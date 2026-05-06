@@ -1,0 +1,18 @@
+[
+  {
+    "id": "1",
+    "name": "Nuxy's Adventure Pack",
+    "mc_version": "1.20.1",
+    "description": "Epic adventure modpack with 200+ mods including dungeons, new biomes, and magical creatures!",
+    "download_url": "https://drive.google.com/example",
+    "release_date": "2024-05-01"
+  },
+  {
+    "id": "2",
+    "name": "Nuxy's Tech Revolution",
+    "mc_version": "1.19.2",
+    "description": "Technology-focused modpack featuring Mekanism, Thermal Expansion, and Applied Energistics 2.",
+    "download_url": "https://mediafire.com/example",
+    "release_date": "2024-03-15"
+  }
+]

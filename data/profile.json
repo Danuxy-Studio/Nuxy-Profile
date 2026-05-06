@@ -1,0 +1,49 @@
+{
+  "avatar_url": "/img/avatar.png",
+  "name": "Nuxy MC",
+  "bio": "Minecraft Streamer & Modpack Creator",
+  "socials": [
+    {
+      "name": "YouTube",
+      "url": "https://youtube.com/@nuxymc",
+      "icon": "fab fa-youtube",
+      "type": "social",
+      "icon_type": "fontawesome"
+    },
+    {
+      "name": "Discord",
+      "url": "https://discord.gg/nuxymc",
+      "icon": "fab fa-discord",
+      "type": "social",
+      "icon_type": "fontawesome"
+    },
+    {
+      "name": "TikTok",
+      "url": "https://tiktok.com/@nuxymc",
+      "icon": "fab fa-tiktok",
+      "type": "social",
+      "icon_type": "fontawesome"
+    },
+    {
+      "name": "Instagram",
+      "url": "https://instagram.com/nuxymc",
+      "icon": "fab fa-instagram",
+      "type": "social",
+      "icon_type": "fontawesome"
+    },
+    {
+      "name": "Saweria",
+      "url": "https://saweria.co/nuxymc",
+      "icon": "💛",
+      "type": "donate",
+      "icon_type": "emoji"
+    },
+    {
+      "name": "Trakteer",
+      "url": "https://trakteer.id/nuxymc",
+      "icon": "☕",
+      "type": "donate",
+      "icon_type": "emoji"
+    }
+  ]
+}
