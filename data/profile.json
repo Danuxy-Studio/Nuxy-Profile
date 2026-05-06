@@ -1,49 +1,21 @@
 {
   "avatar_url": "/img/avatar.png",
   "name": "Nuxy MC",
-  "bio": "Minecraft Streamer & Modpack Creator",
+  "bio": "Minecraft Streamer",
   "socials": [
     {
-      "name": "YouTube",
-      "url": "https://youtube.com/@nuxymc",
-      "icon": "fab fa-youtube",
-      "type": "social",
+      "name": "SociaBuzz",
+      "url": "https://sociabuzz.com/nuxy_mc/tribe",
+      "icon": "fas fa-gift",
+      "type": "donate",
       "icon_type": "fontawesome"
     },
     {
-      "name": "Discord",
-      "url": "https://discord.gg/nuxymc",
+      "name": "Discord NiloCraft",
+      "url": "https://discord.gg/2TBkCQjbCp",
       "icon": "fab fa-discord",
       "type": "social",
       "icon_type": "fontawesome"
-    },
-    {
-      "name": "TikTok",
-      "url": "https://tiktok.com/@nuxymc",
-      "icon": "fab fa-tiktok",
-      "type": "social",
-      "icon_type": "fontawesome"
-    },
-    {
-      "name": "Instagram",
-      "url": "https://instagram.com/nuxymc",
-      "icon": "fab fa-instagram",
-      "type": "social",
-      "icon_type": "fontawesome"
-    },
-    {
-      "name": "Saweria",
-      "url": "https://saweria.co/nuxymc",
-      "icon": "💛",
-      "type": "donate",
-      "icon_type": "emoji"
-    },
-    {
-      "name": "Trakteer",
-      "url": "https://trakteer.id/nuxymc",
-      "icon": "☕",
-      "type": "donate",
-      "icon_type": "emoji"
     }
   ]
 }

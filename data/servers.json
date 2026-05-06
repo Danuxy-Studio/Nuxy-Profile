@@ -1,20 +1,11 @@
 [
   {
-    "id": "1",
-    "name": "Nuxy SMP",
+    "id": "1777989567953",
+    "name": "Zen Smp S4",
     "has_java": true,
-    "java_ip": "play.nuxy.my.id",
+    "java_ip": "zensmpfun.my.id",
     "has_bedrock": true,
-    "bedrock_ip": "play.nuxy.my.id",
+    "bedrock_ip": "bedrock.zensmpfun.my.id",
     "bedrock_port": 19132
-  },
-  {
-    "id": "2",
-    "name": "Nuxy Creative",
-    "has_java": false,
-    "java_ip": "",
-    "has_bedrock": true,
-    "bedrock_ip": "creative.nuxy.my.id",
-    "bedrock_port": 19133
   }
 ]

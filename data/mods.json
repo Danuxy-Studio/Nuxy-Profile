@@ -1,18 +1,18 @@
 [
   {
-    "id": "1",
-    "name": "Nuxy's Adventure Pack",
-    "mc_version": "1.20.1",
-    "description": "Epic adventure modpack with 200+ mods including dungeons, new biomes, and magical creatures!",
-    "download_url": "https://drive.google.com/example",
-    "release_date": "2024-05-01"
+    "id": "1777997325595",
+    "name": "Mods Pack",
+    "mc_version": "1.21.11",
+    "description": "Mods Pack yang aku pake di versi 1.21.11",
+    "download_url": "https://www.mediafire.com/file/dsihmav4xpyxrq5/Mods-1.21.11.zip/file",
+    "release_date": "2026-05-05"
   },
   {
-    "id": "2",
-    "name": "Nuxy's Tech Revolution",
-    "mc_version": "1.19.2",
-    "description": "Technology-focused modpack featuring Mekanism, Thermal Expansion, and Applied Energistics 2.",
-    "download_url": "https://mediafire.com/example",
-    "release_date": "2024-03-15"
+    "id": "1777997395660",
+    "name": "EmoteCraft Pack ",
+    "mc_version": "All",
+    "description": "Semua Emote yang aku pake",
+    "download_url": "https://www.mediafire.com/file/ir692ws9gqncrrg/Emote-Pack.zip/file",
+    "release_date": "2026-05-05"
   }
 ]
