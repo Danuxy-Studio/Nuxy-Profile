@@ -7,5 +7,14 @@
     "has_bedrock": true,
     "bedrock_ip": "bedrock.zensmpfun.my.id",
     "bedrock_port": 19132
+  },
+  {
+    "id": "178898986653",
+    "name": "Mabar Server Vanilla",
+    "has_java": true,
+    "java_ip": "mabar.nilocraft.fun",
+    "has_bedrock": true,
+    "bedrock_ip": "mabar.nilocraft.fun",
+    "bedrock_port": 25580
   }
 ]
