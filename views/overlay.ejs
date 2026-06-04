@@ -12,6 +12,7 @@
             box-sizing: border-box;
         }
         
+        /* Body sebagai container fleksibel */
         body {
             background: transparent !important;
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -19,29 +20,46 @@
             align-items: center;
             justify-content: center;
             min-height: 100vh;
+            width: 100%;
+            overflow: visible;
         }
         
-        /* Container utama - gaya kotak penuh */
+        /* Wrapper untuk scaling */
+        .overlay-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            min-height: 100vh;
+        }
+        
+        /* Base container - ukuran dasar 400px */
+        .overlay-base {
+            width: 400px;
+            transform-origin: center center;
+            transition: transform 0.1s ease-out;
+        }
+        
+        /* Kotak utama - gaya penuh kaya SociaBuzz */
         .overlay-box {
             background: rgba(0, 0, 0, 0.85);
             backdrop-filter: blur(12px);
             border-radius: 20px;
-            width: 340px;
             border: 1px solid rgba(139, 92, 246, 0.3);
             overflow: hidden;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
         }
         
-        /* Header - kaya socibuzz */
+        /* Header */
         .overlay-header {
             background: linear-gradient(135deg, #1a1a2e, #16213e);
-            padding: 14px 16px;
+            padding: 16px 20px;
             text-align: center;
             border-bottom: 1px solid rgba(139, 92, 246, 0.3);
         }
         
         .overlay-header h1 {
-            font-size: 16px;
+            font-size: 18px;
             font-weight: 700;
             color: white;
             letter-spacing: 1px;
@@ -49,11 +67,11 @@
         
         .overlay-header h1 i {
             color: #F59E0B;
-            margin-right: 6px;
+            margin-right: 8px;
         }
         
         .overlay-header .sub {
-            font-size: 9px;
+            font-size: 10px;
             color: #9ca3af;
             margin-top: 4px;
             letter-spacing: 0.5px;
@@ -61,39 +79,40 @@
         
         /* List container */
         .challenge-list {
-            padding: 12px;
+            padding: 16px;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 10px;
         }
         
-        /* Item challenge - kotak penuh, bukan tabel */
+        /* Item challenge - card penuh */
         .challenge-card {
             background: rgba(255, 255, 255, 0.05);
             border-radius: 14px;
-            padding: 10px 14px;
+            padding: 12px 16px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             transition: all 0.2s ease;
-            border-left: 3px solid;
+            border-left: 4px solid;
         }
         
         .challenge-card:hover {
             background: rgba(255, 255, 255, 0.08);
-            transform: translateX(2px);
+            transform: translateX(3px);
         }
         
-        /* Bagian kiri: icon + amount */
+        /* Bagian kiri */
         .card-left {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
         }
         
+        /* Icon */
         .card-icon {
-            width: 30px;
-            height: 30px;
+            width: 36px;
+            height: 36px;
             background: rgba(139, 92, 246, 0.15);
             border-radius: 10px;
             display: flex;
@@ -102,25 +121,27 @@
         }
         
         .card-icon i {
-            font-size: 14px;
+            font-size: 16px;
         }
         
+        /* Amount */
         .card-amount {
-            font-size: 15px;
+            font-size: 18px;
             font-weight: 800;
             font-family: monospace;
+            min-width: 55px;
         }
         
         /* Panah */
         .card-arrow {
             color: #6b7280;
-            font-size: 12px;
-            margin: 0 8px;
+            font-size: 14px;
+            margin: 0 10px;
         }
         
         /* Action text */
         .card-action {
-            font-size: 12px;
+            font-size: 14px;
             font-weight: 500;
             color: #e5e7eb;
             text-align: right;
@@ -130,17 +151,18 @@
             text-overflow: ellipsis;
         }
         
-        /* Footer kecil */
+        /* Footer */
         .overlay-footer {
             background: rgba(0, 0, 0, 0.4);
-            padding: 8px 12px;
+            padding: 10px 16px;
             text-align: center;
             border-top: 1px solid rgba(139, 92, 246, 0.15);
         }
         
         .overlay-footer p {
-            font-size: 8px;
+            font-size: 9px;
             color: #6b7280;
+            letter-spacing: 0.5px;
         }
         
         /* Animasi masuk */
@@ -167,141 +189,157 @@
         .challenge-card:nth-child(5) { animation-delay: 0.15s; }
         .challenge-card:nth-child(6) { animation-delay: 0.18s; }
         .challenge-card:nth-child(7) { animation-delay: 0.21s; }
-        
-        /* Responsive untuk OBS ukuran kecil */
-        @media (max-width: 360px) {
-            .overlay-box {
-                width: 300px;
-            }
-            
-            .card-amount {
-                font-size: 13px;
-            }
-            
-            .card-action {
-                font-size: 10px;
-            }
-            
-            .card-icon {
-                width: 26px;
-                height: 26px;
-            }
-            
-            .card-icon i {
-                font-size: 12px;
-            }
-        }
     </style>
 </head>
 <body>
-    <div class="overlay-box">
-        <!-- Header kaya SociaBuzz -->
-        <div class="overlay-header">
-            <h1>
-                <i class="fas fa-crown"></i> MINECRAFT CHALLENGE
-            </h1>
-            <div class="sub">DONATION GOALS</div>
-        </div>
-        
-        <!-- List Challenges -->
-        <div class="challenge-list">
-            <% if (challenges && challenges.length > 0) { %>
-                <% challenges.forEach(function(challenge) { %>
-                    <div class="challenge-card" style="border-left-color: <%= challenge.color %>;">
-                        <div class="card-left">
-                            <div class="card-icon" style="background: <%= challenge.color %>15;">
-                                <i class="fas fa-trophy" style="color: <%= challenge.color %>;"></i>
+    <div class="overlay-wrapper">
+        <div class="overlay-base" id="overlayBase">
+            <div class="overlay-box">
+                <!-- Header -->
+                <div class="overlay-header">
+                    <h1>
+                        <i class="fas fa-crown"></i> MINECRAFT CHALLENGE
+                    </h1>
+                    <div class="sub">DONATION GOALS</div>
+                </div>
+                
+                <!-- List Challenges -->
+                <div class="challenge-list">
+                    <% if (challenges && challenges.length > 0) { %>
+                        <% challenges.forEach(function(challenge) { %>
+                            <div class="challenge-card" style="border-left-color: <%= challenge.color %>;">
+                                <div class="card-left">
+                                    <div class="card-icon" style="background: <%= challenge.color %>15;">
+                                        <i class="fas fa-trophy" style="color: <%= challenge.color %>;"></i>
+                                    </div>
+                                    <span class="card-amount" style="color: <%= challenge.color %>;">
+                                        <%= challenge.amount %>
+                                    </span>
+                                </div>
+                                <span class="card-arrow">➜</span>
+                                <span class="card-action">
+                                    <%= challenge.action %>
+                                </span>
                             </div>
-                            <span class="card-amount" style="color: <%= challenge.color %>;">
-                                <%= challenge.amount %>
-                            </span>
+                        <% }); %>
+                    <% } else { %>
+                        <div class="challenge-card" style="border-left-color: #8B5CF6;">
+                            <div class="card-left">
+                                <div class="card-icon" style="background: #8B5CF615;">
+                                    <i class="fas fa-trophy" style="color: #8B5CF6;"></i>
+                                </div>
+                                <span class="card-amount" style="color: #8B5CF6;">5K</span>
+                            </div>
+                            <span class="card-arrow">➜</span>
+                            <span class="card-action">Buang Item Dipegang</span>
                         </div>
-                        <span class="card-arrow">➜</span>
-                        <span class="card-action">
-                            <%= challenge.action %>
-                        </span>
-                    </div>
-                <% }); %>
-            <% } else { %>
-                <div class="challenge-card" style="border-left-color: #8B5CF6;">
-                    <div class="card-left">
-                        <div class="card-icon" style="background: #8B5CF615;">
-                            <i class="fas fa-trophy" style="color: #8B5CF6;"></i>
+                        <div class="challenge-card" style="border-left-color: #F59E0B;">
+                            <div class="card-left">
+                                <div class="card-icon" style="background: #F59E0B15;">
+                                    <i class="fas fa-trophy" style="color: #F59E0B;"></i>
+                                </div>
+                                <span class="card-amount" style="color: #F59E0B;">10K</span>
+                            </div>
+                            <span class="card-arrow">➜</span>
+                            <span class="card-action">Buang 5 Item</span>
                         </div>
-                        <span class="card-amount" style="color: #8B5CF6;">5K</span>
-                    </div>
-                    <span class="card-arrow">➜</span>
-                    <span class="card-action">Buang Item Dipegang</span>
+                        <div class="challenge-card" style="border-left-color: #EF4444;">
+                            <div class="card-left">
+                                <div class="card-icon" style="background: #EF444415;">
+                                    <i class="fas fa-trophy" style="color: #EF4444;"></i>
+                                </div>
+                                <span class="card-amount" style="color: #EF4444;">20K</span>
+                            </div>
+                            <span class="card-arrow">➜</span>
+                            <span class="card-action">Kill Villager Armorer</span>
+                        </div>
+                        <div class="challenge-card" style="border-left-color: #22C55E;">
+                            <div class="card-left">
+                                <div class="card-icon" style="background: #22C55E15;">
+                                    <i class="fas fa-trophy" style="color: #22C55E;"></i>
+                                </div>
+                                <span class="card-amount" style="color: #22C55E;">30K</span>
+                            </div>
+                            <span class="card-arrow">➜</span>
+                            <span class="card-action">Kill Villager Mending</span>
+                        </div>
+                        <div class="challenge-card" style="border-left-color: #06B6D4;">
+                            <div class="card-left">
+                                <div class="card-icon" style="background: #06B6D415;">
+                                    <i class="fas fa-trophy" style="color: #06B6D4;"></i>
+                                </div>
+                                <span class="card-amount" style="color: #06B6D4;">50K</span>
+                            </div>
+                            <span class="card-arrow">➜</span>
+                            <span class="card-action">Buang 1 Set Armor</span>
+                        </div>
+                        <div class="challenge-card" style="border-left-color: #A855F7;">
+                            <div class="card-left">
+                                <div class="card-icon" style="background: #A855F715;">
+                                    <i class="fas fa-trophy" style="color: #A855F7;"></i>
+                                </div>
+                                <span class="card-amount" style="color: #A855F7;">100K</span>
+                            </div>
+                            <span class="card-arrow">➜</span>
+                            <span class="card-action">Clear Inventory</span>
+                        </div>
+                        <div class="challenge-card" style="border-left-color: #14B8A6;">
+                            <div class="card-left">
+                                <div class="card-icon" style="background: #14B8A615;">
+                                    <i class="fas fa-trophy" style="color: #14B8A6;"></i>
+                                </div>
+                                <span class="card-amount" style="color: #14B8A6;">200K</span>
+                            </div>
+                            <span class="card-arrow">➜</span>
+                            <span class="card-action">Bebas Atur Sendiri</span>
+                        </div>
+                    <% } %>
                 </div>
-                <div class="challenge-card" style="border-left-color: #F59E0B;">
-                    <div class="card-left">
-                        <div class="card-icon" style="background: #F59E0B15;">
-                            <i class="fas fa-trophy" style="color: #F59E0B;"></i>
-                        </div>
-                        <span class="card-amount" style="color: #F59E0B;">10K</span>
-                    </div>
-                    <span class="card-arrow">➜</span>
-                    <span class="card-action">Buang 5 Item</span>
+                
+                <!-- Footer -->
+                <div class="overlay-footer">
+                    <p>⋆ ˖ ࣪ ✧ NYALA TERUS NIH YGY ✧ ࣪ ˖ ⋆</p>
                 </div>
-                <div class="challenge-card" style="border-left-color: #EF4444;">
-                    <div class="card-left">
-                        <div class="card-icon" style="background: #EF444415;">
-                            <i class="fas fa-trophy" style="color: #EF4444;"></i>
-                        </div>
-                        <span class="card-amount" style="color: #EF4444;">20K</span>
-                    </div>
-                    <span class="card-arrow">➜</span>
-                    <span class="card-action">Kill Villager Armorer</span>
-                </div>
-                <div class="challenge-card" style="border-left-color: #22C55E;">
-                    <div class="card-left">
-                        <div class="card-icon" style="background: #22C55E15;">
-                            <i class="fas fa-trophy" style="color: #22C55E;"></i>
-                        </div>
-                        <span class="card-amount" style="color: #22C55E;">30K</span>
-                    </div>
-                    <span class="card-arrow">➜</span>
-                    <span class="card-action">Kill Villager Mending</span>
-                </div>
-                <div class="challenge-card" style="border-left-color: #06B6D4;">
-                    <div class="card-left">
-                        <div class="card-icon" style="background: #06B6D415;">
-                            <i class="fas fa-trophy" style="color: #06B6D4;"></i>
-                        </div>
-                        <span class="card-amount" style="color: #06B6D4;">50K</span>
-                    </div>
-                    <span class="card-arrow">➜</span>
-                    <span class="card-action">Buang 1 Set Armor</span>
-                </div>
-                <div class="challenge-card" style="border-left-color: #A855F7;">
-                    <div class="card-left">
-                        <div class="card-icon" style="background: #A855F715;">
-                            <i class="fas fa-trophy" style="color: #A855F7;"></i>
-                        </div>
-                        <span class="card-amount" style="color: #A855F7;">100K</span>
-                    </div>
-                    <span class="card-arrow">➜</span>
-                    <span class="card-action">Clear Inventory</span>
-                </div>
-                <div class="challenge-card" style="border-left-color: #14B8A6;">
-                    <div class="card-left">
-                        <div class="card-icon" style="background: #14B8A615;">
-                            <i class="fas fa-trophy" style="color: #14B8A6;"></i>
-                        </div>
-                        <span class="card-amount" style="color: #14B8A6;">200K</span>
-                    </div>
-                    <span class="card-arrow">➜</span>
-                    <span class="card-action">Bebas Atur Sendiri</span>
-                </div>
-            <% } %>
-        </div>
-        
-        <!-- Footer kecil -->
-        <div class="overlay-footer">
-            <p>⋆ ˖ ࣪ ✧ NYALA TERUS NIH YGY ✧ ࣪ ˖ ⋆</p>
+            </div>
         </div>
     </div>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        (function() {
+            const baseElement = document.getElementById('overlayBase');
+            if (!baseElement) return;
+            
+            // Base width desain = 400px
+            const BASE_WIDTH = 400;
+            
+            function updateScale() {
+                // Dapatkan lebar viewport (jendela browser di OBS)
+                const viewportWidth = window.innerWidth;
+                
+                // Hitung scale: semakin kecil viewport, semakin kecil scale
+                // Tapi minimal scale 0.5 (200px) dan maksimal 1 (400px)
+                let scale = viewportWidth / BASE_WIDTH;
+                
+                // Batasi scale antara 0.5 dan 1
+                scale = Math.min(Math.max(scale, 0.5), 1);
+                
+                // Terapkan transform scale
+                baseElement.style.transform = `scale(${scale})`;
+                
+                // Opsional: debug (hapus jika tidak perlu)
+                // console.log(`Viewport: ${viewportWidth}px, Scale: ${scale.toFixed(2)}x`);
+            }
+            
+            // Jalankan saat load
+            window.addEventListener('load', updateScale);
+            // Jalankan saat resize
+            window.addEventListener('resize', updateScale);
+            // Jalankan setelah delay (fallback)
+            setTimeout(updateScale, 100);
+            setTimeout(updateScale, 500);
+        })();
+    </script>
 </body>
 </html>
