@@ -1,0 +1,44 @@
+[
+    {
+        "id": 1,
+        "amount": "5K",
+        "action": "Buang Item Dipegang",
+        "color": "#8B5CF6"
+    },
+    {
+        "id": 2,
+        "amount": "10K",
+        "action": "Buang 5 Item",
+        "color": "#F59E0B"
+    },
+    {
+        "id": 3,
+        "amount": "20K",
+        "action": "Kill 1 Villager",
+        "color": "#EF4444"
+    },
+    {
+        "id": 4,
+        "amount": "30K",
+        "action": "Kill Villager Mending",
+        "color": "#22C55E"
+    },
+    {
+        "id": 5,
+        "amount": "50K",
+        "action": "Buang 1 Set Armor",
+        "color": "#06B6D4"
+    },
+    {
+        "id": 6,
+        "amount": "100K",
+        "action": "Clear Inventory",
+        "color": "#A855F7"
+    },
+    {
+        "id": 7,
+        "amount": "200K",
+        "action": "Bebas Atur Sendiri",
+        "color": "#14B8A6"
+    }
+]

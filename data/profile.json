@@ -1,0 +1,21 @@
+{
+  "avatar_url": "/img/avatar.png",
+  "name": "Nuxy MC",
+  "bio": "Minecraft Streamer",
+  "socials": [
+    {
+      "name": "SociaBuzz",
+      "url": "https://sociabuzz.com/nuxy_mc/tribe",
+      "icon": "fas fa-gift",
+      "type": "donate",
+      "icon_type": "fontawesome"
+    },
+    {
+      "name": "Discord NiloCraft",
+      "url": "https://discord.gg/2TBkCQjbCp",
+      "icon": "fab fa-discord",
+      "type": "social",
+      "icon_type": "fontawesome"
+    }
+  ]
+}
