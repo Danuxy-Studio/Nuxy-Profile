@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <%- include('../partials/head') %>
+    <style>
+        .preview-overlay {
+            background: transparent;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+        
+        .preview-box {
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(12px);
+            border-radius: 20px;
+            width: 340px;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            overflow: hidden;
+        }
+        
+        .preview-header {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            padding: 12px 16px;
+            text-align: center;
+            border-bottom: 1px solid rgba(139, 92, 246, 0.3);
+        }
+        
+        .preview-header h3 {
+            font-size: 14px;
+            font-weight: 700;
+            color: white;
+        }
+        
+        .preview-header h3 i {
+            color: #F59E0B;
+            margin-right: 6px;
+        }
+        
+        .preview-list {
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        
+        .preview-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-left: 3px solid;
+        }
+        
+        .preview-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .preview-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .preview-amount {
+            font-size: 13px;
+            font-weight: 800;
+            font-family: monospace;
+        }
+        
+        .preview-arrow {
+            color: #6b7280;
+            font-size: 11px;
+            margin: 0 6px;
+        }
+        
+        .preview-action {
+            font-size: 11px;
+            color: #e5e7eb;
+            text-align: right;
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .preview-footer {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 6px 12px;
+            text-align: center;
+            border-top: 1px solid rgba(139, 92, 246, 0.15);
+        }
+        
+        .preview-footer p {
+            font-size: 7px;
+            color: #6b7280;
+        }
+        
+        .size-slider {
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        
+        .preview-frame {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            overflow-x: auto;
+        }
+        
+        .color-preview {
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-[#0a0a14]">
+    <%- include('../partials/header') %>
+    
+    <main class="max-w-5xl mx-auto px-4 py-8">
+        <div class="flex items-center justify-between mb-8">
+            <div>
+                <h1 class="text-2xl md:text-3xl font-bold gradient-text mb-1">
+                    <i class="fas fa-tv mr-2"></i>Edit Overlay
+                </h1>
+                <p class="text-gray-400 text-sm">Atur tampilan challenge untuk live streaming</p>
+            </div>
+            <a href="/admin" class="text-gray-400 hover:text-purple-400 transition">
+                <i class="fas fa-arrow-left mr-2"></i>Dashboard
+            </a>
+        </div>
+
+        <!-- Preview Card -->
+        <div class="glass-card rounded-2xl p-6 mb-6">
+            <h2 class="text-white font-bold mb-4 flex items-center gap-2">
+                <i class="fas fa-eye text-purple-400"></i>
+                Preview Overlay
+            </h2>
+            
+            <div class="preview-frame">
+                <div id="previewContainer" class="preview-overlay">
+                    <!-- Preview akan diisi JS -->
+                </div>
+            </div>
+            
+            <p class="text-gray-500 text-xs text-center mt-3">
+                <i class="fas fa-check-circle text-green-500 mr-1"></i>
+                Setting OBS: <strong class="text-purple-400">Width 340px, Height 400px</strong>
+            </p>
+        </div>
+
+        <!-- Form Edit Challenges -->
+        <div class="glass-card rounded-2xl p-6">
+            <h2 class="text-white font-bold mb-4 flex items-center gap-2">
+                <i class="fas fa-pen text-purple-400"></i>
+                Edit Challenges
+            </h2>
+            
+            <form id="challengeForm">
+                <div id="challengesContainer" class="space-y-4 mb-6"></div>
+                
+                <button type="button" onclick="addChallenge()" 
+                        class="bg-purple-500/20 text-purple-400 border border-purple-500/30 px-4 py-2 rounded-xl text-sm hover:bg-purple-500/30 transition mb-4">
+                    <i class="fas fa-plus mr-2"></i>Tambah Challenge
+                </button>
+                
+                <div class="flex gap-3 flex-wrap">
+                    <button type="submit" class="btn-primary text-white px-6 py-3 rounded-xl font-semibold">
+                        <i class="fas fa-save mr-2"></i>Simpan
+                    </button>
+                    <a href="/overlay" target="_blank" class="bg-gray-700/50 text-gray-300 px-6 py-3 rounded-xl font-semibold hover:bg-gray-700/70 transition">
+                        <i class="fas fa-external-link-alt mr-2"></i>Buka Overlay
+                    </a>
+                </div>
+            </form>
+        </div>
+
+        <!-- Info OBS -->
+        <div class="glass-card rounded-2xl p-6 mt-6">
+            <h2 class="text-white font-bold mb-3 flex items-center gap-2">
+                <i class="fas fa-question-circle text-purple-400"></i>
+                Setting OBS
+            </h2>
+            <div class="text-gray-400 text-sm space-y-2">
+                <p>• <strong>Width:</strong> 340px</p>
+                <p>• <strong>Height:</strong> 400px</p>
+                <p>• Centang <strong>Refresh browser when scene becomes active</strong></p>
+            </div>
+        </div>
+    </main>
+
+    <%- include('../partials/mobileNav') %>
+    <%- include('../partials/footer') %>
+
+    <script>
+        let challenges = [];
+        
+        // Load data dari server
+        async function loadChallenges() {
+            try {
+                const response = await fetch('/data/challenges.json?_=' + Date.now());
+                if (response.ok) {
+                    challenges = await response.json();
+                    console.log('Data loaded:', challenges);
+                } else {
+                    // Default data
+                    challenges = [
+                        { id: 1, amount: "5K", action: "Buang Item Dipegang", color: "#8B5CF6" },
+                        { id: 2, amount: "10K", action: "Buang 5 Item", color: "#F59E0B" },
+                        { id: 3, amount: "20K", action: "Kill Villager Armorer", color: "#EF4444" },
+                        { id: 4, amount: "30K", action: "Kill Villager Mending", color: "#22C55E" },
+                        { id: 5, amount: "50K", action: "Buang 1 Set Armor", color: "#06B6D4" },
+                        { id: 6, amount: "100K", action: "Clear Inventory", color: "#A855F7" },
+                        { id: 7, amount: "200K", action: "Bebas Atur Sendiri", color: "#14B8A6" }
+                    ];
+                }
+                renderChallenges();
+                renderPreview();
+            } catch(e) {
+                console.error('Error loading challenges:', e);
+                // Fallback data
+                challenges = [
+                    { id: 1, amount: "5K", action: "Buang Item Dipegang", color: "#8B5CF6" },
+                    { id: 2, amount: "10K", action: "Buang 5 Item", color: "#F59E0B" },
+                    { id: 3, amount: "20K", action: "Kill Villager Armorer", color: "#EF4444" },
+                    { id: 4, amount: "30K", action: "Kill Villager Mending", color: "#22C55E" },
+                    { id: 5, amount: "50K", action: "Buang 1 Set Armor", color: "#06B6D4" },
+                    { id: 6, amount: "100K", action: "Clear Inventory", color: "#A855F7" },
+                    { id: 7, amount: "200K", action: "Bebas Atur Sendiri", color: "#14B8A6" }
+                ];
+                renderChallenges();
+                renderPreview();
+            }
+        }
+        
+        // Render form edit
+        function renderChallenges() {
+            const container = document.getElementById('challengesContainer');
+            if (!container) return;
+            
+            container.innerHTML = '';
+            challenges.forEach((challenge, index) => {
+                const div = document.createElement('div');
+                div.className = 'bg-gray-800/30 rounded-xl p-4';
+                div.innerHTML = `
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-white text-sm font-medium">Challenge ${index + 1}</span>
+                        <button type="button" onclick="removeChallenge(${index})" class="text-red-400 hover:text-red-300">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="text-gray-400 text-xs mb-1 block">Amount</label>
+                            <input type="text" class="w-full bg-gray-900/50 border border-purple-500/20 rounded-lg px-3 py-2 text-white text-sm" 
+                                   value="${escapeHtml(challenge.amount)}" data-field="amount" data-index="${index}">
+                        </div>
+                        <div>
+                            <label class="text-gray-400 text-xs mb-1 block">Action</label>
+                            <input type="text" class="w-full bg-gray-900/50 border border-purple-500/20 rounded-lg px-3 py-2 text-white text-sm" 
+                                   value="${escapeHtml(challenge.action)}" data-field="action" data-index="${index}">
+                        </div>
+                        <div class="col-span-2">
+                            <label class="text-gray-400 text-xs mb-1 block">Warna</label>
+                            <div class="flex gap-2 items-center">
+                                <input type="color" class="w-10 h-10 bg-gray-900/50 border border-purple-500/20 rounded-lg cursor-pointer" 
+                                       value="${challenge.color}" data-field="color" data-index="${index}">
+                                <input type="text" class="flex-1 bg-gray-900/50 border border-purple-500/20 rounded-lg px-3 py-2 text-white text-sm font-mono" 
+                                       value="${challenge.color}" data-field="colorText" data-index="${index}">
+                                <div class="color-preview" style="background: ${challenge.color};"></div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+            
+            attachEvents();
+        }
+        
+        function attachEvents() {
+            // Amount change
+            document.querySelectorAll('[data-field="amount"]').forEach(input => {
+                input.addEventListener('change', (e) => {
+                    const idx = parseInt(e.target.dataset.index);
+                    challenges[idx].amount = e.target.value;
+                    renderPreview();
+                });
+            });
+            
+            // Action change
+            document.querySelectorAll('[data-field="action"]').forEach(input => {
+                input.addEventListener('change', (e) => {
+                    const idx = parseInt(e.target.dataset.index);
+                    challenges[idx].action = e.target.value;
+                    renderPreview();
+                });
+            });
+            
+            // Color picker change
+            document.querySelectorAll('[data-field="color"]').forEach(input => {
+                input.addEventListener('change', (e) => {
+                    const idx = parseInt(e.target.dataset.index);
+                    challenges[idx].color = e.target.value;
+                    const textInput = document.querySelector(`[data-field="colorText"][data-index="${idx}"]`);
+                    const preview = textInput?.parentElement?.querySelector('.color-preview');
+                    if (textInput) textInput.value = e.target.value;
+                    if (preview) preview.style.background = e.target.value;
+                    renderPreview();
+                });
+            });
+            
+            // Color text change
+            document.querySelectorAll('[data-field="colorText"]').forEach(input => {
+                input.addEventListener('change', (e) => {
+                    const idx = parseInt(e.target.dataset.index);
+                    let colorValue = e.target.value;
+                    if (!colorValue.startsWith('#')) colorValue = '#' + colorValue;
+                    challenges[idx].color = colorValue;
+                    const colorInput = document.querySelector(`[data-field="color"][data-index="${idx}"]`);
+                    const preview = e.target.parentElement?.querySelector('.color-preview');
+                    if (colorInput) colorInput.value = colorValue;
+                    if (preview) preview.style.background = colorValue;
+                    renderPreview();
+                });
+            });
+        }
+        
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+        
+        // Render preview overlay
+        function renderPreview() {
+            const container = document.getElementById('previewContainer');
+            if (!container) return;
+            
+            let html = `
+                <div class="preview-box">
+                    <div class="preview-header">
+                        <h3><i class="fas fa-crown"></i> MINECRAFT CHALLENGE</h3>
+                    </div>
+                    <div class="preview-list">
+            `;
+            
+            challenges.forEach(challenge => {
+                html += `
+                    <div class="preview-card" style="border-left-color: ${challenge.color};">
+                        <div class="preview-left">
+                            <div class="preview-icon" style="background: ${challenge.color}15;">
+                                <i class="fas fa-trophy" style="color: ${challenge.color}; font-size: 12px;"></i>
+                            </div>
+                            <span class="preview-amount" style="color: ${challenge.color};">${escapeHtml(challenge.amount)}</span>
+                        </div>
+                        <span class="preview-arrow">➜</span>
+                        <span class="preview-action">${escapeHtml(challenge.action)}</span>
+                    </div>
+                `;
+            });
+            
+            html += `
+                    </div>
+                    <div class="preview-footer">
+                        <p>⋆ ˖ ࣪ ✧ NYALA TERUS NIH YGY ✧ ࣪ ˖ ⋆</p>
+                    </div>
+                </div>
+            `;
+            
+            container.innerHTML = html;
+        }
+        
+        function addChallenge() {
+            const newId = challenges.length > 0 ? Math.max(...challenges.map(c => c.id), 0) + 1 : 1;
+            challenges.push({
+                id: newId,
+                amount: "NEW",
+                action: "Challenge Baru",
+                color: "#8B5CF6"
+            });
+            renderChallenges();
+            renderPreview();
+        }
+        
+        function removeChallenge(index) {
+            if (confirm('Hapus challenge ini?')) {
+                challenges.splice(index, 1);
+                challenges.forEach((c, i) => c.id = i + 1);
+                renderChallenges();
+                renderPreview();
+            }
+        }
+        
+        // Save ke server
+        document.getElementById('challengeForm')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            try {
+                const response = await fetch('/api/overlay/update', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ challenges })
+                });
+                
+                const result = await response.json();
+                if (result.success) {
+                    showToast('Overlay berhasil diupdate!', 'success');
+                } else {
+                    showToast('Gagal update: ' + (result.message || 'Unknown error'), 'error');
+                }
+            } catch(err) {
+                showToast('Error: ' + err.message, 'error');
+            }
+        });
+        
+        // Load data saat halaman dibuka
+        loadChallenges();
+        
+        function showToast(msg, type) {
+            const toast = document.createElement('div');
+            toast.className = `fixed top-4 right-4 z-50 px-4 py-3 rounded-xl shadow-lg flex items-center gap-2 ${type === 'success' ? 'bg-emerald-500/90' : 'bg-red-500/90'} text-white text-sm`;
+            toast.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i><span>${msg}</span>`;
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transition = 'opacity 0.3s';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

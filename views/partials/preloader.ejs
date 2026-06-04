@@ -1,0 +1,39 @@
+<!-- Preloader - Hilangkan Semua Glitch -->
+<div class="preloader" id="preloader">
+    <div class="loader">
+        <div class="cube cube1"></div>
+        <div class="cube cube2"></div>
+        <div class="cube cube3"></div>
+        <div class="cube cube4"></div>
+    </div>
+</div>
+
+<script>
+    (function() {
+        // Hilangkan preloader secepat mungkin
+        const preloader = document.getElementById('preloader');
+        
+        // Function to hide preloader
+        function hidePreloader() {
+            if (preloader && !preloader.classList.contains('hide')) {
+                preloader.classList.add('hide');
+                setTimeout(function() {
+                    if (preloader) preloader.style.display = 'none';
+                }, 500);
+            }
+        }
+        
+        // Hide immediately if DOM is already loaded
+        if (document.readyState === 'complete') {
+            hidePreloader();
+        } else {
+            window.addEventListener('load', hidePreloader);
+        }
+        
+        // Force hide after 1.5 second (max)
+        setTimeout(hidePreloader, 1500);
+        
+        // Extra: tambahkan class loaded ke body
+        document.body.classList.add('js-loaded');
+    })();
+</script>

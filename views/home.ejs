@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <%- include('partials/head') %>
+    <!-- Inline style anti glitch untuk halaman ini -->
+    <style>
+        /* Pastiin background gelap dari awal */
+        html, body, #skeleton {
+            background: linear-gradient(180deg, #0a0a14 0%, #0f0f1a 50%, #0a0a14 100%);
+            min-height: 100vh;
+        }
+        
+        /* Hilangkan margin/padding yang bisa bikin putih */
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        
+        /* Skeleton background gelap */
+        .skeleton {
+            background: linear-gradient(110deg, #11111a 8%, #1a1a2a 18%, #11111a 33%);
+            background-size: 200% 100%;
+        }
+    </style>
+</head>
+<body style="background: linear-gradient(180deg, #0a0a14 0%, #0f0f1a 50%, #0a0a14 100%);">
+    <%- include('partials/preloader') %>
+    <%- include('partials/header') %>
+    
+    <main class="max-w-md mx-auto px-4 py-6">
+        <!-- Skeleton Loading - Background gelap -->
+        <div id="skeleton" style="background: transparent;">
+            <div class="text-center mb-8">
+                <div class="skeleton skeleton-avatar mx-auto mb-4"></div>
+                <div class="skeleton skeleton-title mx-auto"></div>
+                <div class="skeleton skeleton-bio mx-auto"></div>
+                <div class="space-y-3 mt-6">
+                    <div class="skeleton skeleton-link"></div>
+                    <div class="skeleton skeleton-link"></div>
+                    <div class="skeleton skeleton-link"></div>
+                </div>
+                <div class="grid grid-cols-2 gap-3 mt-6">
+                    <div class="skeleton skeleton-card h-24"></div>
+                    <div class="skeleton skeleton-card h-24"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Real Content -->
+        <div id="content" class="content-wrapper" style="display: none;">
+            <!-- Profile Hero -->
+            <div class="text-center mb-8 animate-fade-up">
+                <div class="w-28 h-28 rounded-full mx-auto mb-4 p-1 bg-gradient-to-br from-purple-500 to-pink-500 animate-float">
+                    <div class="w-full h-full rounded-full overflow-hidden bg-gray-800">
+                        <img src="<%= profile.avatar_url || '/img/avatar.png' %>" 
+                             alt="<%= profile.name %>"
+                             class="w-full h-full object-cover"
+                             onerror="this.src='/img/avatar.png'">
+                    </div>
+                </div>
+                
+                <h1 class="text-2xl font-bold gradient-text mb-1"><%= profile.name %></h1>
+                
+                <% if (profile.bio) { %>
+                    <p class="text-gray-400 text-sm max-w-xs mx-auto"><%= profile.bio %></p>
+                <% } %>
+            </div>
+
+            <!-- Links -->
+            <div class="space-y-3">
+                <% if (profile.socials && profile.socials.length > 0) { %>
+                    <% profile.socials.forEach(function(link, index) { %>
+                        <a href="<%= link.url %>" 
+                           target="_blank" 
+                           rel="noopener noreferrer"
+                           class="glass-card flex items-center gap-4 p-4 big-tap hover-scale transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] stagger-item"
+                           style="animation-delay: <%= 0.05 * index %>s">
+                            
+                            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500/20 to-purple-700/20 flex items-center justify-center flex-shrink-0">
+                                <% if (link.icon_type === 'emoji') { %>
+                                    <% if (link.icon === '💛') { %>
+                                        <i class="fas fa-heart text-2xl text-yellow-400"></i>
+                                    <% } else if (link.icon === '☕') { %>
+                                        <i class="fas fa-mug-hot text-2xl text-yellow-400"></i>
+                                    <% } else if (link.icon === '💰') { %>
+                                        <i class="fas fa-money-bill-wave text-2xl text-green-400"></i>
+                                    <% } else if (link.icon === '🎁') { %>
+                                        <i class="fas fa-gift text-2xl text-pink-400"></i>
+                                    <% } else if (link.icon === '⭐') { %>
+                                        <i class="fas fa-star text-2xl text-yellow-400"></i>
+                                    <% } else if (link.icon === '❤️') { %>
+                                        <i class="fas fa-heart text-2xl text-red-400"></i>
+                                    <% } else if (link.icon === '🔥') { %>
+                                        <i class="fas fa-fire text-2xl text-orange-400"></i>
+                                    <% } else if (link.icon === '👑') { %>
+                                        <i class="fas fa-crown text-2xl text-yellow-400"></i>
+                                    <% } else if (link.icon === '🎮') { %>
+                                        <i class="fas fa-gamepad text-2xl text-purple-400"></i>
+                                    <% } else if (link.icon === '📺') { %>
+                                        <i class="fas fa-tv text-2xl text-blue-400"></i>
+                                    <% } else if (link.icon === '💎') { %>
+                                        <i class="fas fa-gem text-2xl text-blue-400"></i>
+                                    <% } else { %>
+                                        <i class="fas fa-link text-2xl text-purple-400"></i>
+                                    <% } %>
+                                <% } else { %>
+                                    <i class="<%= link.icon %> text-2xl text-purple-400"></i>
+                                <% } %>
+                            </div>
+                            
+                            <div class="flex-1">
+                                <p class="text-white font-semibold"><%= link.name %></p>
+                                <p class="text-gray-500 text-xs">
+                                    <% if (link.type === 'donate') { %>
+                                        <i class="fas fa-heart text-xs text-pink-400 mr-1"></i> Dukung Nuxy MC
+                                    <% } else { %>
+                                        <i class="fas fa-external-link-alt text-xs text-gray-500 mr-1"></i> Klik untuk buka
+                                    <% } %>
+                                </p>
+                            </div>
+                            
+                            <i class="fas fa-arrow-right text-gray-500 text-sm group-hover:translate-x-1 transition-transform"></i>
+                        </a>
+                    <% }); %>
+                <% } else { %>
+                    <div class="glass-card p-8 text-center animate-pop">
+                        <i class="fas fa-link text-4xl text-gray-600 mb-2"></i>
+                        <p class="text-gray-500">Belum ada link</p>
+                    </div>
+                <% } %>
+            </div>
+            
+            <!-- Quick Menu -->
+            <div class="mt-6 grid grid-cols-2 gap-3">
+                <a href="/mods" class="glass-card p-4 text-center big-tap hover-scale transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] animate-slide-left" style="animation-delay: 0.2s">
+                    <i class="fas fa-cubes text-2xl text-purple-400 mb-1 animate-bounce" style="animation-duration: 1.5s"></i>
+                    <p class="text-white text-sm font-medium">Modpacks</p>
+                    <p class="text-gray-600 text-[10px]"><i class="fas fa-download mr-1"></i>Download mod</p>
+                </a>
+                <a href="/servers" class="glass-card p-4 text-center big-tap hover-scale transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] animate-slide-right" style="animation-delay: 0.2s">
+                    <i class="fas fa-server text-2xl text-purple-400 mb-1 animate-pulse-ring"></i>
+                    <p class="text-white text-sm font-medium">Servers</p>
+                    <p class="text-gray-600 text-[10px]"><i class="fas fa-plug mr-1"></i>Join sekarang</p>
+                </a>
+            </div>
+        </div>
+    </main>
+    
+    <%- include('partials/mobileNav') %>
+    <%- include('partials/footer') %>
+    
+    <script>
+        (function() {
+            // Skeleton to content transition
+            const skeleton = document.getElementById('skeleton');
+            const content = document.getElementById('content');
+            
+            if (skeleton && content) {
+                // Sembunyikan skeleton setelah 300ms
+                setTimeout(function() {
+                    skeleton.style.opacity = '0';
+                    skeleton.style.transition = 'opacity 0.2s';
+                    setTimeout(function() {
+                        skeleton.style.display = 'none';
+                        content.style.display = 'block';
+                        setTimeout(function() {
+                            content.classList.add('loaded');
+                        }, 20);
+                    }, 200);
+                }, 300);
+            }
+        })();
+    </script>
+</body>
+</html>

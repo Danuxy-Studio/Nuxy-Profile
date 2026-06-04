@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <%- include('partials/head') %>
+    <style>
+        .progress-ring-circle {
+            transition: stroke-dashoffset 0.1s linear;
+        }
+    </style>
+</head>
+<body>
+    <%- include('partials/preloader') %>
+    <%- include('partials/header') %>
+    
+    <main class="max-w-md mx-auto px-4 py-6">
+        <!-- Skeleton Loading -->
+        <div id="skeleton">
+            <div class="skeleton w-20 h-6 mb-4"></div>
+            <div class="skeleton skeleton-card h-80 mb-5"></div>
+            <div class="skeleton h-60 w-full rounded-xl mb-5"></div>
+            <div class="skeleton h-40 w-full rounded-xl"></div>
+        </div>
+        
+        <!-- Real Content -->
+        <div id="content" class="content-wrapper" style="display: none;">
+            <!-- Back Button -->
+            <a href="/mods" class="inline-flex items-center text-gray-400 mb-4 hover:text-purple-400 transition animate-slide-left">
+                <i class="fas fa-arrow-left mr-2"></i> Kembali
+            </a>
+
+            <!-- Mod Info Card -->
+            <div class="glass-card p-6 mb-5 text-center animate-fade-up">
+                <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-purple-500/20 to-purple-700/20 flex items-center justify-center mx-auto mb-4 animate-float">
+                    <i class="fas fa-cube text-4xl text-purple-400"></i>
+                </div>
+                <h1 class="text-xl font-bold text-white"><%= mod.name %></h1>
+                <div class="flex items-center justify-center gap-2 mt-2">
+                    <span class="text-xs bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded-full">
+                        <i class="fab fa-java mr-1"></i>Minecraft <%= mod.mc_version %>
+                    </span>
+                </div>
+                <p class="text-gray-400 text-sm mt-3"><%= mod.description %></p>
+            </div>
+
+            <!-- Ad Banner 1 -->
+            <div class="my-4 text-center animate-fade" style="animation-delay: 0.1s">
+                <div class="bg-gray-800/30 rounded-xl p-2">
+                    <span class="text-[10px] text-gray-600"><i class="fas fa-ad mr-1"></i>Iklan</span>
+                    <div id="ad-container-1" style="min-height: 100px;">
+                        <script>
+                            atOptions = {
+                                'key' : '2e1952b53273e3e02a9b3e3d312f61cf',
+                                'format' : 'iframe',
+                                'height' : 250,
+                                'width' : 300,
+                                'params' : {}
+                            };
+                        </script>
+                        <script src="https://www.highperformanceformat.com/2e1952b53273e3e02a9b3e3d312f61cf/invoke.js"></script>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Countdown & Download -->
+            <div class="glass-card p-6 text-center animate-pop" id="downloadSection">
+                <div class="mb-4">
+                    <div class="w-24 h-24 rounded-full border-4 border-purple-500/30 flex items-center justify-center mx-auto mb-3 relative">
+                        <span class="text-4xl font-bold text-purple-400 countdown-number" id="countdown">5</span>
+                        <svg class="absolute inset-0 w-full h-full -rotate-90">
+                            <circle cx="48" cy="48" r="44" fill="none" stroke="rgba(139,92,246,0.15)" stroke-width="4"/>
+                            <circle id="progressCircle" cx="48" cy="48" r="44" fill="none" stroke="#8B5CF6" stroke-width="4" 
+                                    stroke-dasharray="276.46" stroke-dashoffset="0" class="progress-ring-circle"/>
+                        </svg>
+                    </div>
+                    <p class="text-gray-300 text-sm" id="statusText">
+                        <i class="fas fa-hourglass-half text-purple-400 mr-1"></i>
+                        Tunggu <span id="timeLeft" class="font-bold text-purple-400">5</span> detik
+                    </p>
+                </div>
+                
+                <!-- Download Button -->
+                <a href="#" 
+                   id="downloadBtn"
+                   class="w-full py-4 rounded-xl font-semibold text-center flex items-center justify-center gap-2 transition-all duration-300 opacity-50 pointer-events-none bg-gray-700 text-gray-400">
+                    <i class="fas fa-lock"></i>
+                    Sedang memproses...
+                </a>
+                
+                <p class="text-gray-600 text-xs mt-3">
+                    <i class="fas fa-shield-alt text-green-500"></i> Aman & Gratis
+                </p>
+            </div>
+
+            <!-- Ad Banner 2 -->
+            <div class="my-4 text-center animate-fade" style="animation-delay: 0.2s">
+                <div class="bg-gray-800/30 rounded-xl p-2">
+                    <span class="text-[10px] text-gray-600"><i class="fas fa-ad mr-1"></i>Iklan</span>
+                    <script async="async" data-cfasync="false" src="https://pl29351551.profitablecpmratenetwork.com/067d68146a19f8ada3b8e745ff802f3c/invoke.js"></script>
+                    <div id="container-067d68146a19f8ada3b8e745ff802f3c"></div>
+                </div>
+            </div>
+
+            <!-- Info Tambahan -->
+            <div class="mt-4 text-center text-gray-600 text-xs animate-fade" style="animation-delay: 0.25s">
+                <p><i class="fas fa-check-circle text-green-500 mr-1"></i> Download otomatis dimulai setelah 5 detik</p>
+                <p class="mt-1"><i class="fas fa-wifi text-blue-500 mr-1"></i> Pastikan koneksi internet stabil</p>
+            </div>
+        </div>
+    </main>
+
+    <%- include('partials/mobileNav') %>
+    <%- include('partials/footer') %>
+
+    <script>
+        // Hide skeleton and show content
+        window.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                const skeleton = document.getElementById('skeleton');
+                const content = document.getElementById('content');
+                if (skeleton && content) {
+                    skeleton.style.opacity = '0';
+                    skeleton.style.transition = 'opacity 0.3s';
+                    setTimeout(function() {
+                        skeleton.style.display = 'none';
+                        content.style.display = 'block';
+                        setTimeout(function() {
+                            content.classList.add('loaded');
+                        }, 50);
+                    }, 300);
+                }
+            }, 400);
+        });
+        
+        // Countdown logic
+        const totalTime = 5;
+        let timeLeft = totalTime;
+        const circle = document.getElementById('progressCircle');
+        const circumference = 2 * Math.PI * 44;
+        if (circle) circle.style.strokeDasharray = circumference;
+        
+        function updateProgress() {
+            if (!circle) return;
+            const offset = circumference - (timeLeft / totalTime) * circumference;
+            circle.style.strokeDashoffset = offset;
+        }
+        
+        if (circle) updateProgress();
+        
+        const timer = setInterval(() => {
+            timeLeft--;
+            const countdownEl = document.getElementById('countdown');
+            const timeLeftSpan = document.getElementById('timeLeft');
+            if (countdownEl) countdownEl.textContent = timeLeft;
+            if (timeLeftSpan) timeLeftSpan.textContent = timeLeft;
+            updateProgress();
+            
+            if (countdownEl) {
+                countdownEl.style.transform = 'scale(1.1)';
+                setTimeout(() => {
+                    if (countdownEl) countdownEl.style.transform = 'scale(1)';
+                }, 100);
+            }
+            
+            if (timeLeft <= 0) {
+                clearInterval(timer);
+                const statusText = document.getElementById('statusText');
+                if (statusText) {
+                    statusText.innerHTML = '<i class="fas fa-check-circle text-green-400 mr-1"></i> Download siap! Klik tombol di bawah';
+                }
+                
+                const btn = document.getElementById('downloadBtn');
+                if (btn) {
+                    btn.href = '/go/<%= mod.id %>';
+                    btn.classList.remove('opacity-50', 'pointer-events-none', 'bg-gray-700', 'text-gray-400');
+                    btn.classList.add('btn-primary', 'text-white', 'big-tap', 'ready-animation');
+                    btn.innerHTML = '<i class="fas fa-download"></i> Download Sekarang';
+                }
+                
+                const downloadSection = document.getElementById('downloadSection');
+                if (downloadSection) downloadSection.classList.add('animate-glow');
+            }
+        }, 1000);
+    </script>
+</body>
+</html>

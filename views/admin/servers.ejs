@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head') %>
+</head>
+<body class="min-h-screen bg-[#0a0a14]">
+    <%- include('../partials/header') %>
+    
+    <main class="max-w-4xl mx-auto px-4 py-8">
+        <!-- Header -->
+        <div class="flex items-center justify-between mb-8">
+            <div>
+                <h1 class="text-2xl md:text-3xl font-bold gradient-text mb-1">Servers</h1>
+                <p class="text-gray-400 text-sm">Manage your Minecraft servers</p>
+            </div>
+            <a href="/admin" class="flex items-center text-gray-400 hover:text-purple-400 transition text-sm">
+                <i class="fas fa-arrow-left mr-2"></i>Dashboard
+            </a>
+        </div>
+
+        <!-- Toast -->
+        <% if (typeof success_msg !== 'undefined' && success_msg && success_msg.length > 0) { %>
+            <div class="fixed top-4 right-4 z-50 bg-emerald-500/90 backdrop-blur text-white px-5 py-3 rounded-xl shadow-lg flex items-center gap-2 animate-slide-in" id="toast">
+                <i class="fas fa-check-circle"></i>
+                <span class="text-sm"><%= success_msg %></span>
+                <button onclick="this.parentElement.remove()" class="ml-2"><i class="fas fa-times"></i></button>
+            </div>
+        <% } %>
+        
+        <% if (typeof error_msg !== 'undefined' && error_msg && error_msg.length > 0) { %>
+            <div class="fixed top-4 right-4 z-50 bg-red-500/90 backdrop-blur text-white px-5 py-3 rounded-xl shadow-lg flex items-center gap-2 animate-slide-in" id="toast">
+                <i class="fas fa-exclamation-circle"></i>
+                <span class="text-sm"><%= error_msg %></span>
+                <button onclick="this.parentElement.remove()" class="ml-2"><i class="fas fa-times"></i></button>
+            </div>
+        <% } %>
+
+        <!-- Add Form -->
+        <div class="glass-card rounded-2xl p-5 md:p-6 mb-6">
+            <h2 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                <span class="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center">
+                    <i class="fas fa-plus text-purple-400 text-sm"></i>
+                </span>
+                Add New Server
+            </h2>
+            <form action="/admin/servers/add" method="POST" class="space-y-3">
+                <input type="text" name="name" placeholder="Server name" required 
+                       class="w-full bg-gray-800/50 border border-purple-500/20 rounded-xl px-4 py-2.5 text-white text-sm focus:border-purple-500 focus:outline-none transition">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="bg-gray-800/30 rounded-xl p-3">
+                        <label class="flex items-center gap-3 cursor-pointer">
+                            <input type="checkbox" name="has_java" onchange="document.getElementById('addJavaIp').classList.toggle('hidden')" 
+                                   class="w-4 h-4 rounded accent-purple-600">
+                            <div>
+                                <span class="text-white text-sm font-medium">Java Edition</span>
+                                <p class="text-gray-500 text-xs">Enable Java server</p>
+                            </div>
+                        </label>
+                        <input type="text" name="java_ip" id="addJavaIp" placeholder="Java IP address" 
+                               class="hidden mt-2 w-full bg-gray-800/50 border border-purple-500/20 rounded-lg px-3 py-2 text-white text-sm">
+                    </div>
+                    <div class="bg-gray-800/30 rounded-xl p-3">
+                        <label class="flex items-center gap-3 cursor-pointer">
+                            <input type="checkbox" name="has_bedrock" onchange="document.getElementById('addBedrockIp').classList.toggle('hidden');document.getElementById('addBedrockPort').classList.toggle('hidden')" 
+                                   class="w-4 h-4 rounded accent-purple-600">
+                            <div>
+                                <span class="text-white text-sm font-medium">Bedrock Edition</span>
+                                <p class="text-gray-500 text-xs">Enable Bedrock server</p>
+                            </div>
+                        </label>
+                        <input type="text" name="bedrock_ip" id="addBedrockIp" placeholder="Bedrock IP" 
+                               class="hidden mt-2 w-full bg-gray-800/50 border border-purple-500/20 rounded-lg px-3 py-2 text-white text-sm">
+                        <input type="number" name="bedrock_port" id="addBedrockPort" placeholder="Port (default 19132)" 
+                               class="hidden mt-2 w-full bg-gray-800/50 border border-purple-500/20 rounded-lg px-3 py-2 text-white text-sm">
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary text-white px-6 py-2.5 rounded-xl font-medium text-sm">
+                    <i class="fas fa-plus mr-2"></i>Add Server
+                </button>
+            </form>
+        </div>
+
+        <!-- Servers List -->
+        <div class="space-y-3">
+            <% if (servers && servers.length > 0) { %>
+                <% servers.forEach(function(server) { %>
+                    <div class="glass-card rounded-2xl p-5 md:p-6">
+                        <form action="/admin/servers/edit/<%= server.id %>" method="POST" class="space-y-3">
+                            <input type="text" name="name" value="<%= server.name %>" required 
+                                   class="w-full bg-gray-800/50 border border-purple-500/20 rounded-xl px-4 py-2.5 text-white text-sm focus:border-purple-500 focus:outline-none">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div class="bg-gray-800/30 rounded-xl p-3">
+                                    <label class="flex items-center gap-3 cursor-pointer">
+                                        <input type="checkbox" name="has_java" <%= server.has_java ? 'checked' : '' %> 
+                                               onchange="document.getElementById('javaIp<%= server.id %>').classList.toggle('hidden')" 
+                                               class="w-4 h-4 rounded accent-purple-600">
+                                        <div>
+                                            <span class="text-white text-sm font-medium">Java Edition</span>
+                                            <p class="text-gray-500 text-xs">Enable Java server</p>
+                                        </div>
+                                    </label>
+                                    <input type="text" name="java_ip" id="javaIp<%= server.id %>" value="<%= server.java_ip || '' %>" 
+                                           placeholder="Java IP" class="<%= server.has_java ? '' : 'hidden' %> mt-2 w-full bg-gray-800/50 border border-purple-500/20 rounded-lg px-3 py-2 text-white text-sm">
+                                </div>
+                                <div class="bg-gray-800/30 rounded-xl p-3">
+                                    <label class="flex items-center gap-3 cursor-pointer">
+                                        <input type="checkbox" name="has_bedrock" <%= server.has_bedrock ? 'checked' : '' %> 
+                                               onchange="document.getElementById('bedrockIp<%= server.id %>').classList.toggle('hidden');document.getElementById('bedrockPort<%= server.id %>').classList.toggle('hidden')" 
+                                               class="w-4 h-4 rounded accent-purple-600">
+                                        <div>
+                                            <span class="text-white text-sm font-medium">Bedrock Edition</span>
+                                            <p class="text-gray-500 text-xs">Enable Bedrock server</p>
+                                        </div>
+                                    </label>
+                                    <input type="text" name="bedrock_ip" id="bedrockIp<%= server.id %>" value="<%= server.bedrock_ip || '' %>" 
+                                           placeholder="Bedrock IP" class="<%= server.has_bedrock ? '' : 'hidden' %> mt-2 w-full bg-gray-800/50 border border-purple-500/20 rounded-lg px-3 py-2 text-white text-sm">
+                                    <input type="number" name="bedrock_port" id="bedrockPort<%= server.id %>" value="<%= server.bedrock_port || 19132 %>" 
+                                           placeholder="Port" class="<%= server.has_bedrock ? '' : 'hidden' %> mt-2 w-full bg-gray-800/50 border border-purple-500/20 rounded-lg px-3 py-2 text-white text-sm">
+                                </div>
+                            </div>
+                            <div class="flex gap-2">
+                                <button type="submit" class="btn-primary text-white px-5 py-2 rounded-xl font-medium text-sm">
+                                    <i class="fas fa-save mr-2"></i>Update
+                                </button>
+                                <button type="button" onclick="confirmDelete('/admin/servers/delete/<%= server.id %>')" 
+                                        class="bg-red-500/10 text-red-400 border border-red-500/20 px-5 py-2 rounded-xl font-medium text-sm hover:bg-red-500/20 transition">
+                                    <i class="fas fa-trash mr-2"></i>Delete
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                <% }); %>
+            <% } else { %>
+                <div class="glass-card rounded-2xl p-12 text-center">
+                    <i class="fas fa-server text-5xl text-gray-700 mb-4"></i>
+                    <p class="text-gray-500 text-lg">No servers yet</p>
+                    <p class="text-gray-600 text-sm mt-1">Add your first server above</p>
+                </div>
+            <% } %>
+        </div>
+    </main>
+
+    <!-- Confirm Modal -->
+    <div id="confirmModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeModal()"></div>
+        <div class="glass-card rounded-2xl p-6 max-w-sm w-full relative z-10 text-center">
+            <div class="w-14 h-14 rounded-full bg-red-500/10 flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-trash text-2xl text-red-400"></i>
+            </div>
+            <h3 class="text-white font-bold text-lg mb-2">Delete Server?</h3>
+            <p class="text-gray-400 text-sm mb-6">This action cannot be undone.</p>
+            <div class="flex gap-2 justify-center">
+                <button onclick="closeModal()" class="bg-gray-700 text-gray-300 px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-gray-600 transition">Cancel</button>
+                <a href="#" id="confirmDeleteBtn" class="bg-red-500 text-white px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-red-600 transition">Delete</a>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        .animate-slide-in { animation: slideIn 0.3s ease; }
+    </style>
+
+    <script>
+        // Auto-hide toast
+        setTimeout(() => {
+            const toast = document.getElementById('toast');
+            if (toast) { 
+                toast.style.opacity = '0'; 
+                toast.style.transition = 'opacity 0.3s'; 
+                setTimeout(() => { if (toast && toast.parentElement) toast.remove(); }, 300); 
+            }
+        }, 3000);
+
+        function confirmDelete(url) {
+            document.getElementById('confirmModal').classList.remove('hidden');
+            document.getElementById('confirmDeleteBtn').href = url;
+        }
+        function closeModal() {
+            document.getElementById('confirmModal').classList.add('hidden');
+            document.getElementById('confirmDeleteBtn').href = '#';
+        }
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+    </script>
+</body>
+</html>

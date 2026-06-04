@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head') %>
+</head>
+<body class="min-h-screen bg-[#0a0a14]">
+    <%- include('../partials/header') %>
+    
+    <main class="max-w-4xl mx-auto px-4 py-8">
+        <!-- Header -->
+        <div class="mb-10">
+            <h1 class="text-3xl md:text-4xl font-bold gradient-text mb-2">Dashboard</h1>
+            <p class="text-gray-400">Welcome back! Manage your Nuxy MC profile.</p>
+        </div>
+
+        <!-- Menu Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <!-- Profile -->
+            <a href="/admin/profile" 
+               class="glass-card rounded-2xl p-6 group hover:border-purple-400/40 transition-all duration-300 hover:scale-[1.02]">
+                <div class="flex items-start gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center flex-shrink-0 group-hover:bg-purple-500/20 transition">
+                        <i class="fas fa-user-circle text-2xl text-purple-400"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <h3 class="text-lg font-semibold text-white mb-1">Edit Profile</h3>
+                        <p class="text-gray-400 text-sm">Avatar, bio & social links</p>
+                    </div>
+                    <i class="fas fa-chevron-right text-gray-600 ml-auto self-center group-hover:text-purple-400 group-hover:translate-x-1 transition-all"></i>
+                </div>
+            </a>
+            
+            <!-- Modpacks -->
+            <a href="/admin/mods" 
+               class="glass-card rounded-2xl p-6 group hover:border-purple-400/40 transition-all duration-300 hover:scale-[1.02]">
+                <div class="flex items-start gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center flex-shrink-0 group-hover:bg-purple-500/20 transition">
+                        <i class="fas fa-cubes text-2xl text-purple-400"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <h3 class="text-lg font-semibold text-white mb-1">Modpacks</h3>
+                        <p class="text-gray-400 text-sm">Add & manage modpacks</p>
+                    </div>
+                    <i class="fas fa-chevron-right text-gray-600 ml-auto self-center group-hover:text-purple-400 group-hover:translate-x-1 transition-all"></i>
+                </div>
+            </a>
+            
+            <!-- Servers -->
+            <a href="/admin/servers" 
+               class="glass-card rounded-2xl p-6 group hover:border-purple-400/40 transition-all duration-300 hover:scale-[1.02]">
+                <div class="flex items-start gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center flex-shrink-0 group-hover:bg-purple-500/20 transition">
+                        <i class="fas fa-server text-2xl text-purple-400"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <h3 class="text-lg font-semibold text-white mb-1">Servers</h3>
+                        <p class="text-gray-400 text-sm">Configure game servers</p>
+                    </div>
+                    <i class="fas fa-chevron-right text-gray-600 ml-auto self-center group-hover:text-purple-400 group-hover:translate-x-1 transition-all"></i>
+                </div>
+            </a>
+            
+            <!-- Overlay Stream -->
+            <a href="/admin/overlay" 
+               class="glass-card rounded-2xl p-6 group hover:border-purple-400/40 transition-all duration-300 hover:scale-[1.02]">
+                <div class="flex items-start gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center flex-shrink-0 group-hover:bg-purple-500/20 transition">
+                        <i class="fas fa-tv text-2xl text-purple-400"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <h3 class="text-lg font-semibold text-white mb-1">Overlay Stream</h3>
+                        <p class="text-gray-400 text-sm">Atur challenge untuk live streaming</p>
+                    </div>
+                    <i class="fas fa-chevron-right text-gray-600 ml-auto self-center group-hover:text-purple-400 group-hover:translate-x-1 transition-all"></i>
+                </div>
+            </a>
+
+            <!-- View Site -->
+            <a href="/" target="_blank" 
+               class="glass-card rounded-2xl p-6 group hover:border-purple-400/40 transition-all duration-300 hover:scale-[1.02]">
+                <div class="flex items-start gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center flex-shrink-0 group-hover:bg-purple-500/20 transition">
+                        <i class="fas fa-external-link-alt text-2xl text-purple-400"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <h3 class="text-lg font-semibold text-white mb-1">View Site</h3>
+                        <p class="text-gray-400 text-sm">See your public profile</p>
+                    </div>
+                    <i class="fas fa-chevron-right text-gray-600 ml-auto self-center group-hover:text-purple-400 group-hover:translate-x-1 transition-all"></i>
+                </div>
+            </a>
+
+            <!-- Logout -->
+            <a href="/auth/logout" 
+               class="glass-card rounded-2xl p-6 group hover:border-red-400/40 transition-all duration-300 hover:scale-[1.02] sm:col-span-2">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-red-500/10 flex items-center justify-center flex-shrink-0 group-hover:bg-red-500/20 transition">
+                        <i class="fas fa-sign-out-alt text-2xl text-red-400"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-white mb-1">Logout</h3>
+                        <p class="text-gray-400 text-sm">Sign out from admin panel</p>
+                    </div>
+                    <i class="fas fa-chevron-right text-gray-600 ml-auto self-center group-hover:text-red-400 group-hover:translate-x-1 transition-all"></i>
+                </div>
+            </a>
+        </div>
+
+        <!-- Quick Info -->
+        <div class="mt-10 pt-8 border-t border-purple-500/10">
+            <div class="flex items-center gap-3 text-gray-500 text-sm">
+                <i class="fas fa-shield-alt text-purple-400"></i>
+                <span>Logged in as <strong class="text-gray-300">admin</strong></span>
+                <span class="text-gray-700">•</span>
+                <span>Nuxy MC Admin Panel v1.0</span>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

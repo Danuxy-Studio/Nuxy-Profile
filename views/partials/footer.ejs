@@ -1,0 +1,34 @@
+<!-- Footer -->
+<footer class="text-center py-6 mt-8 border-t border-purple-500/10">
+    <div class="max-w-md mx-auto px-4">
+        <p class="text-gray-600 text-xs">
+            &copy; 2024 Nuxy MC | 
+            <a href="/mods" class="hover:text-purple-400">Modpacks</a> | 
+            <a href="/servers" class="hover:text-purple-400">Servers</a>
+        </p>
+        <p class="text-gray-700 text-[10px] mt-2">
+            Minecraft adalah trademark Mojang AB. Tidak ada afiliasi.
+        </p>
+    </div>
+</footer>
+
+<!-- Simple Toast -->
+<div id="toast" class="fixed bottom-20 left-1/2 -translate-x-1/2 bg-gray-800/95 backdrop-blur text-white px-4 py-2 rounded-full text-sm hidden z-50">
+    <i class="fas fa-check-circle text-green-400 mr-2"></i>
+    <span>Disalin!</span>
+</div>
+
+<script>
+    function showToast(msg, type = 'success') {
+        const toast = document.getElementById('toast');
+        const icon = type === 'success' ? 'fa-check-circle text-green-400' : 'fa-exclamation-circle text-red-400';
+        toast.innerHTML = `<i class="fas ${icon} mr-2"></i>${msg}`;
+        toast.classList.remove('hidden');
+        setTimeout(() => toast.classList.add('hidden'), 2000);
+    }
+    
+    function copyText(text) {
+        navigator.clipboard.writeText(text);
+        showToast('Copied: ' + text);
+    }
+</script>

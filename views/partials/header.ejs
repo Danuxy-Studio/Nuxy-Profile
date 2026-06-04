@@ -1,0 +1,184 @@
+<!-- Header dengan Animasi Smooth -->
+<header class="sticky top-0 z-40 transition-all duration-300 ease-out" id="mainHeader">
+    <div class="bg-gray-900/80 backdrop-blur-md border-b border-purple-500/20 transition-all duration-300">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+            <!-- Logo dengan animasi hover -->
+            <a href="/" class="flex items-center gap-2 group">
+                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-purple-500/30">
+                    <i class="fas fa-cube text-white text-sm transition-transform duration-300 group-hover:rotate-12"></i>
+                </div>
+                <span class="font-bold gradient-text text-lg transition-all duration-300 group-hover:tracking-wide">Nuxy MC</span>
+            </a>
+            
+            <!-- Desktop Navigation - Smooth transitions -->
+            <div class="hidden md:flex items-center gap-1">
+                <a href="/" class="relative text-gray-300 hover:text-purple-400 transition-all duration-300 px-4 py-2 rounded-xl hover:bg-purple-500/10 group">
+                    <i class="fas fa-home mr-2 transition-transform duration-300 group-hover:-translate-y-0.5"></i>
+                    <span>Home</span>
+                    <span class="absolute bottom-0 left-1/2 w-0 h-0.5 bg-purple-500 transition-all duration-300 group-hover:w-1/2 group-hover:left-1/4"></span>
+                </a>
+                <a href="/mods" class="relative text-gray-300 hover:text-purple-400 transition-all duration-300 px-4 py-2 rounded-xl hover:bg-purple-500/10 group">
+                    <i class="fas fa-cubes mr-2 transition-transform duration-300 group-hover:-translate-y-0.5"></i>
+                    <span>Mods</span>
+                    <span class="absolute bottom-0 left-1/2 w-0 h-0.5 bg-purple-500 transition-all duration-300 group-hover:w-1/2 group-hover:left-1/4"></span>
+                </a>
+                <a href="/servers" class="relative text-gray-300 hover:text-purple-400 transition-all duration-300 px-4 py-2 rounded-xl hover:bg-purple-500/10 group">
+                    <i class="fas fa-server mr-2 transition-transform duration-300 group-hover:-translate-y-0.5"></i>
+                    <span>Servers</span>
+                    <span class="absolute bottom-0 left-1/2 w-0 h-0.5 bg-purple-500 transition-all duration-300 group-hover:w-1/2 group-hover:left-1/4"></span>
+                </a>
+                <% if (user) { %>
+                <a href="/admin" class="relative text-gray-300 hover:text-purple-400 transition-all duration-300 px-4 py-2 rounded-xl hover:bg-purple-500/10 group">
+                    <i class="fas fa-cog mr-2 transition-transform duration-300 group-hover:rotate-90"></i>
+                    <span>Admin</span>
+                    <span class="absolute bottom-0 left-1/2 w-0 h-0.5 bg-purple-500 transition-all duration-300 group-hover:w-1/2 group-hover:left-1/4"></span>
+                </a>
+                <a href="/auth/logout" class="relative text-red-400 hover:text-red-300 transition-all duration-300 px-4 py-2 rounded-xl hover:bg-red-500/10 group">
+                    <i class="fas fa-sign-out-alt mr-2 transition-transform duration-300 group-hover:translate-x-1"></i>
+                    <span>Logout</span>
+                </a>
+                <% } %>
+            </div>
+            
+            <!-- Mobile Menu Button dengan animasi -->
+            <div class="md:hidden">
+                <button id="mobileMenuBtn" class="text-gray-400 hover:text-purple-400 transition-all duration-300 p-2 rounded-xl hover:bg-purple-500/10">
+                    <i class="fas fa-bars text-xl transition-transform duration-300" id="menuIcon"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Mobile Dropdown Menu dengan animasi smooth -->
+        <div id="mobileMenu" class="hidden md:hidden bg-gray-900/95 backdrop-blur-lg border-b border-purple-500/20 transform transition-all duration-300 ease-out">
+            <div class="px-4 py-3 space-y-2">
+                <a href="/" class="block py-3 px-3 text-gray-300 hover:text-purple-400 hover:bg-purple-500/10 rounded-xl transition-all duration-300 transform hover:translate-x-2">
+                    <i class="fas fa-home mr-3 w-5"></i>Home
+                </a>
+                <a href="/mods" class="block py-3 px-3 text-gray-300 hover:text-purple-400 hover:bg-purple-500/10 rounded-xl transition-all duration-300 transform hover:translate-x-2">
+                    <i class="fas fa-cubes mr-3 w-5"></i>Mods
+                </a>
+                <a href="/servers" class="block py-3 px-3 text-gray-300 hover:text-purple-400 hover:bg-purple-500/10 rounded-xl transition-all duration-300 transform hover:translate-x-2">
+                    <i class="fas fa-server mr-3 w-5"></i>Servers
+                </a>
+                <% if (user) { %>
+                <a href="/admin" class="block py-3 px-3 text-gray-300 hover:text-purple-400 hover:bg-purple-500/10 rounded-xl transition-all duration-300 transform hover:translate-x-2">
+                    <i class="fas fa-cog mr-3 w-5"></i>Admin
+                </a>
+                <a href="/auth/logout" class="block py-3 px-3 text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-xl transition-all duration-300 transform hover:translate-x-2">
+                    <i class="fas fa-sign-out-alt mr-3 w-5"></i>Logout
+                </a>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</header>
+
+<script>
+    // Mobile menu toggle dengan animasi
+    const mobileBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const menuIcon = document.getElementById('menuIcon');
+    
+    if (mobileBtn && mobileMenu) {
+        mobileBtn.addEventListener('click', () => {
+            const isHidden = mobileMenu.classList.contains('hidden');
+            
+            if (isHidden) {
+                // Buka menu dengan animasi
+                mobileMenu.classList.remove('hidden');
+                mobileMenu.style.opacity = '0';
+                mobileMenu.style.transform = 'translateY(-10px)';
+                setTimeout(() => {
+                    mobileMenu.style.opacity = '1';
+                    mobileMenu.style.transform = 'translateY(0)';
+                }, 10);
+                // Ganti icon
+                if (menuIcon) {
+                    menuIcon.classList.remove('fa-bars');
+                    menuIcon.classList.add('fa-times');
+                }
+            } else {
+                // Tutup menu dengan animasi
+                mobileMenu.style.opacity = '0';
+                mobileMenu.style.transform = 'translateY(-10px)';
+                setTimeout(() => {
+                    mobileMenu.classList.add('hidden');
+                    mobileMenu.style.opacity = '';
+                    mobileMenu.style.transform = '';
+                }, 300);
+                // Ganti icon
+                if (menuIcon) {
+                    menuIcon.classList.remove('fa-times');
+                    menuIcon.classList.add('fa-bars');
+                }
+            }
+        });
+    }
+    
+    // Header scroll effect - transparan saat scroll ke bawah
+    let lastScroll = 0;
+    const header = document.getElementById('mainHeader');
+    
+    window.addEventListener('scroll', () => {
+        const currentScroll = window.pageYOffset;
+        
+        if (currentScroll > 100) {
+            // Scroll ke bawah - header lebih transparan
+            if (header) {
+                header.style.backdropFilter = 'blur(20px)';
+                header.querySelector('.bg-gray-900\\/80')?.classList.add('bg-opacity-95');
+            }
+        } else {
+            // Scroll ke atas - header normal
+            if (header) {
+                header.style.backdropFilter = 'blur(12px)';
+                header.querySelector('.bg-gray-900\\/80')?.classList.remove('bg-opacity-95');
+            }
+        }
+        
+        lastScroll = currentScroll;
+    });
+</script>
+
+<style>
+    /* Animasi untuk header saat scroll */
+    #mainHeader {
+        transition: all 0.3s ease-out;
+    }
+    
+    #mainHeader .bg-gray-900\/80 {
+        transition: all 0.3s ease-out;
+    }
+    
+    /* Hover effect yang lebih smooth */
+    .nav-link {
+        position: relative;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .nav-link::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        width: 0;
+        height: 2px;
+        background: linear-gradient(90deg, #8B5CF6, #7C3AED);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        transform: translateX(-50%);
+    }
+    
+    .nav-link:hover::after {
+        width: 80%;
+    }
+    
+    /* Mobile menu animation */
+    #mobileMenu {
+        transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    
+    /* Smooth semua transition */
+    a, button {
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+</style>

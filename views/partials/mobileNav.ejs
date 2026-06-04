@@ -1,0 +1,41 @@
+<!-- Mobile Bottom Navigation - Smooth animation -->
+<nav class="fixed bottom-0 left-0 right-0 bg-gray-900/95 backdrop-blur-lg border-t border-purple-500/20 z-40 md:hidden transform transition-transform duration-300 ease-out" id="bottomNav">
+    <div class="flex justify-around items-center py-2 max-w-md mx-auto">
+        <a href="/" class="flex flex-col items-center py-2 px-5 rounded-xl transition-all duration-300 hover:scale-110 active:scale-95 <%= path === '/' ? 'text-purple-400' : 'text-gray-500' %>">
+            <i class="fas fa-home text-xl transition-transform duration-300 group-hover:-translate-y-1"></i>
+            <span class="text-[10px] mt-1">Home</span>
+        </a>
+        <a href="/mods" class="flex flex-col items-center py-2 px-5 rounded-xl transition-all duration-300 hover:scale-110 active:scale-95 <%= path === '/mods' ? 'text-purple-400' : 'text-gray-500' %>">
+            <i class="fas fa-cubes text-xl transition-transform duration-300 group-hover:-translate-y-1"></i>
+            <span class="text-[10px] mt-1">Mods</span>
+        </a>
+        <a href="/servers" class="flex flex-col items-center py-2 px-5 rounded-xl transition-all duration-300 hover:scale-110 active:scale-95 <%= path === '/servers' ? 'text-purple-400' : 'text-gray-500' %>">
+            <i class="fas fa-server text-xl transition-transform duration-300 group-hover:-translate-y-1"></i>
+            <span class="text-[10px] mt-1">Server</span>
+        </a>
+    </div>
+</nav>
+
+<!-- Spacer untuk mobile -->
+<div class="h-16 md:hidden"></div>
+
+<script>
+    // Hide bottom nav on scroll (opsional)
+    let lastScrollTop = 0;
+    const bottomNav = document.getElementById('bottomNav');
+    
+    if (bottomNav && window.innerWidth < 768) {
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            
+            if (scrollTop > lastScrollTop && scrollTop > 100) {
+                // Scroll ke bawah - sembunyiin bottom nav
+                bottomNav.style.transform = 'translateY(100%)';
+            } else {
+                // Scroll ke atas - munculin bottom nav
+                bottomNav.style.transform = 'translateY(0)';
+            }
+            lastScrollTop = scrollTop;
+        });
+    }
+</script>

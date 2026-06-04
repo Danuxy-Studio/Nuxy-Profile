@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head') %>
+</head>
+<body class="min-h-screen bg-[#0a0a14]">
+    <%- include('../partials/header') %>
+    
+    <main class="max-w-4xl mx-auto px-4 py-8">
+        <!-- Header -->
+        <div class="flex items-center justify-between mb-8">
+            <div>
+                <h1 class="text-2xl md:text-3xl font-bold gradient-text mb-1">Modpacks</h1>
+                <p class="text-gray-400 text-sm">Manage your Minecraft modpacks</p>
+            </div>
+            <a href="/admin" class="flex items-center text-gray-400 hover:text-purple-400 transition text-sm">
+                <i class="fas fa-arrow-left mr-2"></i>Dashboard
+            </a>
+        </div>
+
+        <!-- Toast Notification -->
+        <% if (typeof success_msg !== 'undefined' && success_msg && success_msg.length > 0) { %>
+            <div class="fixed top-4 right-4 z-50 bg-emerald-500/90 backdrop-blur text-white px-5 py-3 rounded-xl shadow-lg flex items-center gap-2 animate-slide-in" id="toast">
+                <i class="fas fa-check-circle"></i>
+                <span class="text-sm"><%= success_msg %></span>
+                <button onclick="this.parentElement.remove()" class="ml-2 hover:text-white/70"><i class="fas fa-times"></i></button>
+            </div>
+        <% } %>
+        
+        <% if (typeof error_msg !== 'undefined' && error_msg && error_msg.length > 0) { %>
+            <div class="fixed top-4 right-4 z-50 bg-red-500/90 backdrop-blur text-white px-5 py-3 rounded-xl shadow-lg flex items-center gap-2 animate-slide-in" id="toast">
+                <i class="fas fa-exclamation-circle"></i>
+                <span class="text-sm"><%= error_msg %></span>
+                <button onclick="this.parentElement.remove()" class="ml-2 hover:text-white/70"><i class="fas fa-times"></i></button>
+            </div>
+        <% } %>
+
+        <!-- Add Form -->
+        <div class="glass-card rounded-2xl p-5 md:p-6 mb-6">
+            <h2 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                <span class="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center">
+                    <i class="fas fa-plus text-purple-400 text-sm"></i>
+                </span>
+                Add New Modpack
+            </h2>
+            <form action="/admin/mods/add" method="POST" class="space-y-3">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <input type="text" name="name" placeholder="Modpack name" required 
+                           class="bg-gray-800/50 border border-purple-500/20 rounded-xl px-4 py-2.5 text-white text-sm focus:border-purple-500 focus:outline-none transition">
+                    <input type="text" name="mc_version" placeholder="MC Version (e.g. 1.20.1)" required 
+                           class="bg-gray-800/50 border border-purple-500/20 rounded-xl px-4 py-2.5 text-white text-sm focus:border-purple-500 focus:outline-none transition">
+                </div>
+                <textarea name="description" placeholder="Short description..." rows="2" required 
+                          class="w-full bg-gray-800/50 border border-purple-500/20 rounded-xl px-4 py-2.5 text-white text-sm focus:border-purple-500 focus:outline-none transition resize-none"></textarea>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <input type="url" name="download_url" placeholder="Download URL" required 
+                           class="bg-gray-800/50 border border-purple-500/20 rounded-xl px-4 py-2.5 text-white text-sm focus:border-purple-500 focus:outline-none transition">
+                    <input type="date" name="release_date" 
+                           class="bg-gray-800/50 border border-purple-500/20 rounded-xl px-4 py-2.5 text-white text-sm focus:border-purple-500 focus:outline-none transition">
+                </div>
+                <button type="submit" class="w-full sm:w-auto btn-primary text-white px-6 py-2.5 rounded-xl font-medium text-sm">
+                    <i class="fas fa-plus mr-2"></i>Add Modpack
+                </button>
+            </form>
+        </div>
+
+        <!-- Modpacks List -->
+        <div class="space-y-3">
+            <% if (mods && mods.length > 0) { %>
+                <% mods.forEach(function(mod) { %>
+                    <div class="glass-card rounded-2xl p-5 md:p-6">
+                        <form action="/admin/mods/edit/<%= mod.id %>" method="POST" class="space-y-3">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <input type="text" name="name" value="<%= mod.name %>" required 
+                                       class="bg-gray-800/50 border border-purple-500/20 rounded-xl px-4 py-2.5 text-white text-sm focus:border-purple-500 focus:outline-none">
+                                <input type="text" name="mc_version" value="<%= mod.mc_version %>" required 
+                                       class="bg-gray-800/50 border border-purple-500/20 rounded-xl px-4 py-2.5 text-white text-sm focus:border-purple-500 focus:outline-none">
+                            </div>
+                            <textarea name="description" rows="2" required 
+                                      class="w-full bg-gray-800/50 border border-purple-500/20 rounded-xl px-4 py-2.5 text-white text-sm focus:border-purple-500 focus:outline-none resize-none"><%= mod.description %></textarea>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <input type="url" name="download_url" value="<%= mod.download_url %>" required 
+                                       class="bg-gray-800/50 border border-purple-500/20 rounded-xl px-4 py-2.5 text-white text-sm focus:border-purple-500 focus:outline-none">
+                                <input type="date" name="release_date" value="<%= mod.release_date %>" 
+                                       class="bg-gray-800/50 border border-purple-500/20 rounded-xl px-4 py-2.5 text-white text-sm focus:border-purple-500 focus:outline-none">
+                            </div>
+                            <div class="flex gap-2">
+                                <button type="submit" class="btn-primary text-white px-5 py-2 rounded-xl font-medium text-sm">
+                                    <i class="fas fa-save mr-2"></i>Update
+                                </button>
+                                <button type="button" onclick="confirmDelete('/admin/mods/delete/<%= mod.id %>')" 
+                                        class="bg-red-500/10 text-red-400 border border-red-500/20 px-5 py-2 rounded-xl font-medium text-sm hover:bg-red-500/20 transition">
+                                    <i class="fas fa-trash mr-2"></i>Delete
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                <% }); %>
+            <% } else { %>
+                <div class="glass-card rounded-2xl p-12 text-center">
+                    <i class="fas fa-cubes text-5xl text-gray-700 mb-4"></i>
+                    <p class="text-gray-500 text-lg">No modpacks yet</p>
+                    <p class="text-gray-600 text-sm mt-1">Add your first modpack above</p>
+                </div>
+            <% } %>
+        </div>
+    </main>
+
+    <!-- Confirm Modal -->
+    <div id="confirmModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeModal()"></div>
+        <div class="glass-card rounded-2xl p-6 max-w-sm w-full relative z-10 text-center">
+            <div class="w-14 h-14 rounded-full bg-red-500/10 flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-trash text-2xl text-red-400"></i>
+            </div>
+            <h3 class="text-white font-bold text-lg mb-2">Delete Modpack?</h3>
+            <p class="text-gray-400 text-sm mb-6">This action cannot be undone.</p>
+            <div class="flex gap-2 justify-center">
+                <button onclick="closeModal()" class="bg-gray-700 text-gray-300 px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-gray-600 transition">Cancel</button>
+                <a href="#" id="confirmDeleteBtn" class="bg-red-500 text-white px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-red-600 transition">Delete</a>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        .animate-slide-in { animation: slideIn 0.3s ease; }
+    </style>
+
+    <script>
+        // Auto-hide toast after 3 seconds
+        setTimeout(() => {
+            const toast = document.getElementById('toast');
+            if (toast) { 
+                toast.style.opacity = '0'; 
+                toast.style.transition = 'opacity 0.3s'; 
+                setTimeout(() => { if (toast.parentElement) toast.remove(); }, 300); 
+            }
+        }, 3000);
+
+        // Confirm modal functions
+        function confirmDelete(url) {
+            document.getElementById('confirmModal').classList.remove('hidden');
+            document.getElementById('confirmDeleteBtn').href = url;
+        }
+        function closeModal() {
+            document.getElementById('confirmModal').classList.add('hidden');
+            document.getElementById('confirmDeleteBtn').href = '#';
+        }
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+    </script>
+</body>
+</html>
