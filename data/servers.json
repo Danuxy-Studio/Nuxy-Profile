@@ -1,1 +1,11 @@
-[]
+[
+  {
+    "id": "1781317686404",
+    "name": "Queen Craft",
+    "has_java": true,
+    "java_ip": "queencraft.xyz",
+    "has_bedrock": true,
+    "bedrock_ip": "queencraft.xyz",
+    "bedrock_port": 19030
+  }
+]
