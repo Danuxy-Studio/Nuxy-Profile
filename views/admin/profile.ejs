@@ -128,7 +128,7 @@
                         </span>
                         Links
                     </h2>
-                    <div class="flex gap-2">
+                    <div class="flex gap-2 flex-wrap">
                         <button type="button" onclick="addLink('social')" 
                                 class="btn-primary text-white px-3 py-2 rounded-lg text-xs md:text-sm font-medium">
                             <i class="fas fa-plus mr-1"></i>Social
@@ -137,21 +137,36 @@
                                 class="bg-amber-500/20 text-amber-400 border border-amber-500/30 px-3 py-2 rounded-lg text-xs md:text-sm font-medium hover:bg-amber-500/30 transition">
                             <i class="fas fa-heart mr-1"></i>Donate
                         </button>
+                        <button type="button" onclick="addLink('community')" 
+                                class="bg-green-500/20 text-green-400 border border-green-500/30 px-3 py-2 rounded-lg text-xs md:text-sm font-medium hover:bg-green-500/30 transition">
+                            <i class="fas fa-users mr-1"></i>Community
+                        </button>
                     </div>
                 </div>
                 
                 <div id="linksContainer" class="space-y-3">
                     <% if (profile.socials && profile.socials.length > 0) { %>
-                        <% profile.socials.forEach(function(link, index) { %>
+                        <% profile.socials.forEach(function(link, index) { 
+                            let badgeColor = 'bg-purple-500/20 text-purple-400';
+                            let badgeLabel = 'Social';
+                            if (link.type === 'donate') {
+                                badgeColor = 'bg-amber-500/20 text-amber-400';
+                                badgeLabel = 'Donate';
+                            } else if (link.type === 'community') {
+                                badgeColor = 'bg-green-500/20 text-green-400';
+                                badgeLabel = 'Community';
+                            }
+                        %>
                             <div class="social-link-item bg-gray-800/30 rounded-xl p-3 md:p-4 border border-purple-500/10" data-index="<%= index %>">
                                 <!-- Header -->
                                 <div class="flex items-center gap-2 mb-3">
-                                    <span class="badge text-xs font-medium px-2.5 py-1 rounded-full <%= link.type === 'donate' ? 'bg-amber-500/20 text-amber-400' : 'bg-purple-500/20 text-purple-400' %>">
-                                        <%= link.type === 'donate' ? 'Donate' : 'Social' %>
+                                    <span class="badge text-xs font-medium px-2.5 py-1 rounded-full <%= badgeColor %>">
+                                        <%= badgeLabel %>
                                     </span>
                                     <select name="social_type_<%= index %>" class="type-select bg-gray-800/50 border border-purple-500/20 rounded-lg px-2 py-1 text-white text-xs focus:outline-none" onchange="updateBadge(this)">
                                         <option value="social" <%= link.type === 'social' ? 'selected' : '' %>>Social</option>
                                         <option value="donate" <%= link.type === 'donate' ? 'selected' : '' %>>Donate</option>
+                                        <option value="community" <%= link.type === 'community' ? 'selected' : '' %>>Community</option>
                                     </select>
                                     <button type="button" onclick="removeLink(this)" class="text-red-400 hover:text-red-300 p-1.5 hover:bg-red-500/10 rounded-lg ml-auto transition">
                                         <i class="fas fa-trash text-sm"></i>
@@ -188,6 +203,9 @@
                                                 <option value="fab fa-spotify" <%= link.icon === 'fab fa-spotify' ? 'selected' : '' %>>🎧 Spotify</option>
                                                 <option value="fab fa-telegram" <%= link.icon === 'fab fa-telegram' ? 'selected' : '' %>>✈️ Telegram</option>
                                                 <option value="fab fa-whatsapp" <%= link.icon === 'fab fa-whatsapp' ? 'selected' : '' %>>📱 WhatsApp</option>
+                                                <option value="fab fa-linkedin" <%= link.icon === 'fab fa-linkedin' ? 'selected' : '' %>>💼 LinkedIn</option>
+                                                <option value="fab fa-reddit" <%= link.icon === 'fab fa-reddit' ? 'selected' : '' %>>🤖 Reddit</option>
+                                                <option value="fab fa-pinterest" <%= link.icon === 'fab fa-pinterest' ? 'selected' : '' %>>📌 Pinterest</option>
                                                 <option value="fas fa-globe" <%= link.icon === 'fas fa-globe' ? 'selected' : '' %>>🌐 Website</option>
                                                 <option value="fas fa-envelope" <%= link.icon === 'fas fa-envelope' ? 'selected' : '' %>>📧 Email</option>
                                             </optgroup>
@@ -200,6 +218,16 @@
                                                 <option value="fas fa-comment-dollar" <%= link.icon === 'fas fa-comment-dollar' ? 'selected' : '' %>>💵 Dollar</option>
                                                 <option value="fas fa-donate" <%= link.icon === 'fas fa-donate' ? 'selected' : '' %>>🎗️ Donate</option>
                                                 <option value="fas fa-hand-holding-heart" <%= link.icon === 'fas fa-hand-holding-heart' ? 'selected' : '' %>>🤲 Support</option>
+                                                <option value="fas fa-sack-dollar" <%= link.icon === 'fas fa-sack-dollar' ? 'selected' : '' %>>💰 Money Bag</option>
+                                            </optgroup>
+                                            <optgroup label="── Community ──">
+                                                <option value="fab fa-whatsapp" <%= link.icon === 'fab fa-whatsapp' ? 'selected' : '' %>>📱 WhatsApp</option>
+                                                <option value="fab fa-discord" <%= link.icon === 'fab fa-discord' ? 'selected' : '' %>>💬 Discord</option>
+                                                <option value="fab fa-telegram" <%= link.icon === 'fab fa-telegram' ? 'selected' : '' %>>✈️ Telegram</option>
+                                                <option value="fas fa-users" <%= link.icon === 'fas fa-users' ? 'selected' : '' %>>👥 Users</option>
+                                                <option value="fas fa-people-group" <%= link.icon === 'fas fa-people-group' ? 'selected' : '' %>>👨‍👩‍👧‍👦 Group</option>
+                                                <option value="fas fa-comments" <%= link.icon === 'fas fa-comments' ? 'selected' : '' %>>💬 Comments</option>
+                                                <option value="fas fa-handshake" <%= link.icon === 'fas fa-handshake' ? 'selected' : '' %>>🤝 Handshake</option>
                                             </optgroup>
                                             <optgroup label="── Emoji ──">
                                                 <option value="💛" <%= link.icon === '💛' ? 'selected' : '' %>>💛 Yellow Heart</option>
@@ -216,6 +244,8 @@
                                                 <option value="💎" <%= link.icon === '💎' ? 'selected' : '' %>>💎 Diamond</option>
                                                 <option value="🪙" <%= link.icon === '🪙' ? 'selected' : '' %>>🪙 Coin</option>
                                                 <option value="🤝" <%= link.icon === '🤝' ? 'selected' : '' %>>🤝 Handshake</option>
+                                                <option value="👋" <%= link.icon === '👋' ? 'selected' : '' %>>👋 Wave</option>
+                                                <option value="✨" <%= link.icon === '✨' ? 'selected' : '' %>>✨ Sparkle</option>
                                             </optgroup>
                                         </select>
                                         <input type="hidden" name="social_icon_type_<%= index %>" value="<%= link.icon_type || 'fontawesome' %>">
@@ -234,7 +264,7 @@
             </div>
 
             <!-- Submit -->
-            <div class="flex gap-3">
+            <div class="flex gap-3 flex-wrap">
                 <button type="submit" class="btn-primary text-white px-6 py-3 rounded-xl font-semibold text-sm flex items-center gap-2">
                     <i class="fas fa-save"></i>Save Changes
                 </button>
@@ -324,8 +354,18 @@
             
             const allItems = container.querySelectorAll('.social-link-item');
             const index = allItems.length;
-            const typeLabel = type === 'donate' ? 'Donate' : 'Social';
-            const typeBadge = type === 'donate' ? 'bg-amber-500/20 text-amber-400' : 'bg-purple-500/20 text-purple-400';
+            
+            let typeLabel = 'Social';
+            let typeBadge = 'bg-purple-500/20 text-purple-400';
+            let iconOptions = '';
+            
+            if (type === 'donate') {
+                typeLabel = 'Donate';
+                typeBadge = 'bg-amber-500/20 text-amber-400';
+            } else if (type === 'community') {
+                typeLabel = 'Community';
+                typeBadge = 'bg-green-500/20 text-green-400';
+            }
             
             const div = document.createElement('div');
             div.className = 'social-link-item bg-gray-800/30 rounded-xl p-3 md:p-4 border border-purple-500/10';
@@ -338,6 +378,7 @@
                     <select name="social_type_${index}" class="type-select bg-gray-800/50 border border-purple-500/20 rounded-lg px-2 py-1 text-white text-xs focus:outline-none" onchange="updateBadge(this)">
                         <option value="social" ${type === 'social' ? 'selected' : ''}>Social</option>
                         <option value="donate" ${type === 'donate' ? 'selected' : ''}>Donate</option>
+                        <option value="community" ${type === 'community' ? 'selected' : ''}>Community</option>
                     </select>
                     <button type="button" onclick="removeLink(this)" class="text-red-400 hover:text-red-300 p-1.5 hover:bg-red-500/10 rounded-lg ml-auto transition">
                         <i class="fas fa-trash text-sm"></i>
@@ -346,7 +387,7 @@
                 <div class="space-y-2 md:space-y-0 md:grid md:grid-cols-3 md:gap-3">
                     <div>
                         <label class="text-gray-500 text-xs mb-1 block">Name</label>
-                        <input type="text" name="social_name_${index}" placeholder="YouTube, Saweria..."
+                        <input type="text" name="social_name_${index}" placeholder="${type === 'donate' ? 'Saweria, Sociabuzz...' : type === 'community' ? 'WhatsApp, Discord...' : 'YouTube, Instagram...'}"
                                class="w-full bg-gray-800/50 border border-purple-500/20 rounded-lg px-3 py-2 text-white text-sm focus:border-purple-500 focus:outline-none transition">
                     </div>
                     <div>
@@ -367,6 +408,12 @@
                                 <option value="fab fa-twitch">🎮 Twitch</option>
                                 <option value="fab fa-facebook">📘 Facebook</option>
                                 <option value="fab fa-github">💻 GitHub</option>
+                                <option value="fab fa-spotify">🎧 Spotify</option>
+                                <option value="fab fa-telegram">✈️ Telegram</option>
+                                <option value="fab fa-whatsapp">📱 WhatsApp</option>
+                                <option value="fab fa-linkedin">💼 LinkedIn</option>
+                                <option value="fab fa-reddit">🤖 Reddit</option>
+                                <option value="fab fa-pinterest">📌 Pinterest</option>
                                 <option value="fas fa-globe">🌐 Website</option>
                                 <option value="fas fa-envelope">📧 Email</option>
                             </optgroup>
@@ -378,6 +425,17 @@
                                 <option value="fas fa-crown">👑 Crown</option>
                                 <option value="fas fa-comment-dollar">💵 Dollar</option>
                                 <option value="fas fa-donate">🎗️ Donate</option>
+                                <option value="fas fa-hand-holding-heart">🤲 Support</option>
+                                <option value="fas fa-sack-dollar">💰 Money Bag</option>
+                            </optgroup>
+                            <optgroup label="── Community ──">
+                                <option value="fab fa-whatsapp">📱 WhatsApp</option>
+                                <option value="fab fa-discord">💬 Discord</option>
+                                <option value="fab fa-telegram">✈️ Telegram</option>
+                                <option value="fas fa-users">👥 Users</option>
+                                <option value="fas fa-people-group">👨‍👩‍👧‍👦 Group</option>
+                                <option value="fas fa-comments">💬 Comments</option>
+                                <option value="fas fa-handshake">🤝 Handshake</option>
                             </optgroup>
                             <optgroup label="── Emoji ──">
                                 <option value="💛">💛 Yellow Heart</option>
@@ -390,6 +448,12 @@
                                 <option value="👑">👑 Crown</option>
                                 <option value="🎮">🎮 Game</option>
                                 <option value="📺">📺 TV</option>
+                                <option value="🎯">🎯 Target</option>
+                                <option value="💎">💎 Diamond</option>
+                                <option value="🪙">🪙 Coin</option>
+                                <option value="🤝">🤝 Handshake</option>
+                                <option value="👋">👋 Wave</option>
+                                <option value="✨">✨ Sparkle</option>
                             </optgroup>
                         </select>
                         <input type="hidden" name="social_icon_type_${index}" value="fontawesome">
@@ -398,14 +462,12 @@
             `;
             container.appendChild(div);
             
-            // Animate in
             setTimeout(() => {
                 div.style.opacity = '1';
                 div.style.transform = 'translateY(0)';
                 div.style.transition = 'all 0.3s ease';
             }, 10);
             
-            // Scroll to new element
             setTimeout(() => {
                 div.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }, 150);
@@ -430,6 +492,9 @@
             if (select.value === 'donate') {
                 badge.className = 'badge text-xs font-medium px-2.5 py-1 rounded-full bg-amber-500/20 text-amber-400';
                 badge.textContent = 'Donate';
+            } else if (select.value === 'community') {
+                badge.className = 'badge text-xs font-medium px-2.5 py-1 rounded-full bg-green-500/20 text-green-400';
+                badge.textContent = 'Community';
             } else {
                 badge.className = 'badge text-xs font-medium px-2.5 py-1 rounded-full bg-purple-500/20 text-purple-400';
                 badge.textContent = 'Social';

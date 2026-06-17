@@ -1,41 +1,147 @@
-<!-- Mobile Bottom Navigation - Smooth animation -->
-<nav class="fixed bottom-0 left-0 right-0 bg-gray-900/95 backdrop-blur-lg border-t border-purple-500/20 z-40 md:hidden transform transition-transform duration-300 ease-out" id="bottomNav">
-    <div class="flex justify-around items-center py-2 max-w-md mx-auto">
-        <a href="/" class="flex flex-col items-center py-2 px-5 rounded-xl transition-all duration-300 hover:scale-110 active:scale-95 <%= path === '/' ? 'text-purple-400' : 'text-gray-500' %>">
-            <i class="fas fa-home text-xl transition-transform duration-300 group-hover:-translate-y-1"></i>
-            <span class="text-[10px] mt-1">Home</span>
+<!-- Mobile Bottom Navigation - Smooth Animation No Delay -->
+<nav class="fixed bottom-0 left-0 right-0 bg-gray-900/95 backdrop-blur-xl border-t border-purple-500/20 z-40 md:hidden safe-area-bottom" id="bottomNav">
+    <div class="flex justify-around items-center py-1.5 px-2 max-w-md mx-auto">
+        <!-- Home -->
+        <a href="/" class="flex flex-col items-center py-1 px-3 rounded-xl transition-all duration-200 relative group">
+            <div class="relative flex flex-col items-center">
+                <div class="w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 <%= path === '/' ? 'bg-purple-500/20' : 'bg-transparent group-hover:bg-purple-500/10' %>">
+                    <i class="fas fa-home text-base transition-all duration-200 group-hover:scale-110 <%= path === '/' ? 'text-purple-400' : 'text-gray-500 group-hover:text-purple-400' %>"></i>
+                </div>
+            </div>
+            <span class="text-[9px] mt-0.5 font-medium transition-all duration-200 <%= path === '/' ? 'text-purple-400' : 'text-gray-500' %>">Home</span>
         </a>
-        <a href="/mods" class="flex flex-col items-center py-2 px-5 rounded-xl transition-all duration-300 hover:scale-110 active:scale-95 <%= path === '/mods' ? 'text-purple-400' : 'text-gray-500' %>">
-            <i class="fas fa-cubes text-xl transition-transform duration-300 group-hover:-translate-y-1"></i>
-            <span class="text-[10px] mt-1">Mods</span>
+        
+        <!-- Mods -->
+        <a href="/mods" class="flex flex-col items-center py-1 px-3 rounded-xl transition-all duration-200 relative group">
+            <div class="relative flex flex-col items-center">
+                <div class="w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 <%= path === '/mods' ? 'bg-purple-500/20' : 'bg-transparent group-hover:bg-purple-500/10' %>">
+                    <i class="fas fa-cubes text-base transition-all duration-200 group-hover:scale-110 <%= path === '/mods' ? 'text-purple-400' : 'text-gray-500 group-hover:text-purple-400' %>"></i>
+                </div>
+            </div>
+            <span class="text-[9px] mt-0.5 font-medium transition-all duration-200 <%= path === '/mods' ? 'text-purple-400' : 'text-gray-500' %>">Mods</span>
         </a>
-        <a href="/servers" class="flex flex-col items-center py-2 px-5 rounded-xl transition-all duration-300 hover:scale-110 active:scale-95 <%= path === '/servers' ? 'text-purple-400' : 'text-gray-500' %>">
-            <i class="fas fa-server text-xl transition-transform duration-300 group-hover:-translate-y-1"></i>
-            <span class="text-[10px] mt-1">Server</span>
+        
+        <!-- Servers -->
+        <a href="/servers" class="flex flex-col items-center py-1 px-3 rounded-xl transition-all duration-200 relative group">
+            <div class="relative flex flex-col items-center">
+                <div class="w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 <%= path === '/servers' ? 'bg-purple-500/20' : 'bg-transparent group-hover:bg-purple-500/10' %>">
+                    <i class="fas fa-server text-base transition-all duration-200 group-hover:scale-110 <%= path === '/servers' ? 'text-purple-400' : 'text-gray-500 group-hover:text-purple-400' %>"></i>
+                </div>
+            </div>
+            <span class="text-[9px] mt-0.5 font-medium transition-all duration-200 <%= path === '/servers' ? 'text-purple-400' : 'text-gray-500' %>">Server</span>
         </a>
+        
+        <!-- Admin (jika login) -->
+        <% if (user) { %>
+            <a href="/admin" class="flex flex-col items-center py-1 px-3 rounded-xl transition-all duration-200 relative group">
+                <div class="relative flex flex-col items-center">
+                    <div class="w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 <%= path === '/admin' ? 'bg-purple-500/20' : 'bg-transparent group-hover:bg-purple-500/10' %>">
+                        <i class="fas fa-cog text-base transition-all duration-200 group-hover:scale-110 group-hover:rotate-90 <%= path === '/admin' ? 'text-purple-400' : 'text-gray-500 group-hover:text-purple-400' %>"></i>
+                    </div>
+                </div>
+                <span class="text-[9px] mt-0.5 font-medium transition-all duration-200 <%= path === '/admin' ? 'text-purple-400' : 'text-gray-500' %>">Admin</span>
+            </a>
+        <% } %>
     </div>
 </nav>
 
 <!-- Spacer untuk mobile -->
-<div class="h-16 md:hidden"></div>
+<div class="h-[60px] md:hidden"></div>
+
+<style>
+    .safe-area-bottom {
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+    
+    #bottomNav a {
+        -webkit-tap-highlight-color: transparent;
+        user-select: none;
+    }
+    
+    /* ANIMASI SMOOTH - Tanpa Delay */
+    #bottomNav {
+        box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.4);
+        /* Transisi yang smooth banget */
+        transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+                    opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        will-change: transform, opacity;
+        /* Default visible */
+        transform: translateY(0);
+        opacity: 1;
+    }
+    
+    /* Hidden state dengan animasi yang smooth */
+    #bottomNav.hidden-nav {
+        transform: translateY(calc(100% + 10px)) !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+    }
+</style>
 
 <script>
-    // Hide bottom nav on scroll (opsional)
-    let lastScrollTop = 0;
-    const bottomNav = document.getElementById('bottomNav');
-    
-    if (bottomNav && window.innerWidth < 768) {
-        window.addEventListener('scroll', () => {
+    (function() {
+        const bottomNav = document.getElementById('bottomNav');
+        if (!bottomNav || window.innerWidth >= 768) return;
+        
+        let lastScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        let isNavHidden = false;
+        let ticking = false;
+        
+        function hideNav() {
+            if (isNavHidden) return;
+            isNavHidden = true;
+            bottomNav.classList.add('hidden-nav');
+        }
+        
+        function showNav() {
+            if (!isNavHidden) return;
+            isNavHidden = false;
+            bottomNav.classList.remove('hidden-nav');
+        }
+        
+        function handleScroll() {
             const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
             
-            if (scrollTop > lastScrollTop && scrollTop > 100) {
-                // Scroll ke bawah - sembunyiin bottom nav
-                bottomNav.style.transform = 'translateY(100%)';
-            } else {
-                // Scroll ke atas - munculin bottom nav
-                bottomNav.style.transform = 'translateY(0)';
+            // Scroll ke bawah - HIDE dengan smooth
+            if (scrollTop > lastScrollTop && scrollTop > 50) {
+                hideNav();
+            } 
+            // Scroll ke atas - SHOW dengan smooth
+            else if (scrollTop < lastScrollTop) {
+                showNav();
             }
+            
+            // Paling atas - SHOW
+            if (scrollTop < 20) {
+                showNav();
+            }
+            
             lastScrollTop = scrollTop;
+        }
+        
+        // Event listener dengan requestAnimationFrame
+        window.addEventListener('scroll', function() {
+            if (!ticking) {
+                window.requestAnimationFrame(function() {
+                    handleScroll();
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        }, { passive: true });
+        
+        // Touch di area bawah - langsung muncul
+        document.addEventListener('touchstart', function(e) {
+            const touchY = e.touches[0].clientY;
+            const screenHeight = window.innerHeight;
+            if (touchY > screenHeight - 100) {
+                showNav();
+            }
+        }, { passive: true });
+        
+        // Pastikan visible saat load
+        requestAnimationFrame(() => {
+            showNav();
         });
-    }
+    })();
 </script>

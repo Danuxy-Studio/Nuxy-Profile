@@ -10,10 +10,34 @@
             min-height: 100vh;
         }
         
-        /* Hilangkan margin/padding yang bisa bikin putih */
-        body {
+        /* Hilangkan margin/padding yang bisa bikin putih & overflow */
+        html, body {
             margin: 0;
             padding: 0;
+            overflow-x: hidden;
+            max-width: 100vw;
+        }
+        
+        body {
+            overflow-x: hidden;
+            width: 100%;
+        }
+        
+        /* Tambahan padding top biar avatar tidak kepotong navbar */
+        main {
+            padding-top: 30px !important;
+        }
+        
+        @media (max-width: 768px) {
+            main {
+                padding-top: 24px !important;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            main {
+                padding-top: 16px !important;
+            }
         }
         
         /* Skeleton background gelap */
@@ -21,127 +45,361 @@
             background: linear-gradient(110deg, #11111a 8%, #1a1a2a 18%, #11111a 33%);
             background-size: 200% 100%;
         }
+        
+        /* Fix semua container tidak overflow */
+        main, .container-fix, .links-wrapper {
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+        
+        /* Fix card tidak overflow */
+        .glass-card {
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+        
+        /* Fix link card */
+        .link-card {
+            width: 100%;
+            max-width: 100%;
+            word-break: break-word;
+            overflow-wrap: break-word;
+        }
+        
+        /* Avatar image fix */
+        .avatar-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        /* Fix skeleton tidak overflow */
+        #skeleton, #content {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+        
+        /* Badge type di link - di bawah nama */
+        .link-badge {
+            font-size: 9px;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            display: inline-block;
+        }
+        
+        .link-badge-social {
+            background: rgba(139, 92, 246, 0.2);
+            color: #a78bfa;
+        }
+        
+        .link-badge-donate {
+            background: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+        }
+        
+        .link-badge-community {
+            background: rgba(34, 197, 94, 0.2);
+            color: #4ade80;
+        }
+        
+        /* Nama link - tidak kepotong */
+        .link-name {
+            font-weight: 600;
+            color: white;
+            word-break: break-word;
+            overflow-wrap: break-word;
+            white-space: normal;
+        }
+        
+        /* Responsive fix untuk HP */
+        @media (max-width: 480px) {
+            .px-4 {
+                padding-left: 12px !important;
+                padding-right: 12px !important;
+            }
+            
+            .link-card .w-12 {
+                width: 40px !important;
+                height: 40px !important;
+            }
+            
+            .link-card .text-2xl {
+                font-size: 1rem !important;
+            }
+            
+            .glass-card.p-4 {
+                padding: 10px 12px !important;
+            }
+            
+            .link-badge {
+                font-size: 8px;
+                padding: 1px 8px;
+            }
+            
+            .link-name {
+                font-size: 14px;
+            }
+            
+            /* Avatar lebih kecil di HP biar gak kepotong */
+            .w-28 {
+                width: 88px !important;
+                height: 88px !important;
+            }
+        }
+        
+        /* Animasi float - dengan batas agar tidak kepotong */
+        @keyframes float {
+            0%, 100% { 
+                transform: translateY(0px); 
+            }
+            50% { 
+                transform: translateY(-6px); 
+            }
+        }
+        
+        @keyframes float-desktop {
+            0%, 100% { 
+                transform: translateY(0px); 
+            }
+            50% { 
+                transform: translateY(-8px); 
+            }
+        }
+        
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 15px rgba(139, 92, 246, 0.2); }
+            50% { box-shadow: 0 0 30px rgba(139, 92, 246, 0.4); }
+        }
+        
+        @keyframes slideInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .avatar-container { 
+            animation: float 3s ease-in-out infinite; 
+        }
+        
+        @media (min-width: 768px) {
+            .avatar-container { 
+                animation: float-desktop 3s ease-in-out infinite; 
+            }
+        }
+        
+        .avatar-ring { animation: pulse-glow 2s ease-in-out infinite; }
+        
+        .animate-slide-up {
+            opacity: 0;
+            animation: slideInUp 0.5s ease forwards;
+        }
+        
+        .link-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .link-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(139, 92, 246, 0.12);
+        }
+        
+        .link-card[data-type="donate"]:hover {
+            border-color: rgba(245, 158, 11, 0.4) !important;
+            box-shadow: 0 8px 30px rgba(245, 158, 11, 0.12);
+        }
+        
+        .link-card[data-type="community"]:hover {
+            border-color: rgba(34, 197, 94, 0.4) !important;
+            box-shadow: 0 8px 30px rgba(34, 197, 94, 0.12);
+        }
+        
+        /* Deskripsi link dengan badge */
+        .link-desc {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        
+        .link-desc-text {
+            color: #6b7280;
+            font-size: 11px;
+        }
+        
+        /* Profile section - tambahan padding */
+        .profile-section {
+            padding-top: 8px;
+        }
+        
+        /* Avatar wrapper - biar float aman */
+        .avatar-wrapper {
+            position: relative;
+            margin-bottom: 12px;
+        }
     </style>
 </head>
-<body style="background: linear-gradient(180deg, #0a0a14 0%, #0f0f1a 50%, #0a0a14 100%);">
+<body style="background: linear-gradient(180deg, #0a0a14 0%, #0f0f1a 50%, #0a0a14 100%); overflow-x: hidden; width: 100%;">
     <%- include('partials/preloader') %>
     <%- include('partials/header') %>
     
-    <main class="max-w-md mx-auto px-4 py-6">
-        <!-- Skeleton Loading - Background gelap -->
-        <div id="skeleton" style="background: transparent;">
-            <div class="text-center mb-8">
-                <div class="skeleton skeleton-avatar mx-auto mb-4"></div>
-                <div class="skeleton skeleton-title mx-auto"></div>
-                <div class="skeleton skeleton-bio mx-auto"></div>
-                <div class="space-y-3 mt-6">
-                    <div class="skeleton skeleton-link"></div>
-                    <div class="skeleton skeleton-link"></div>
-                    <div class="skeleton skeleton-link"></div>
-                </div>
-                <div class="grid grid-cols-2 gap-3 mt-6">
-                    <div class="skeleton skeleton-card h-24"></div>
-                    <div class="skeleton skeleton-card h-24"></div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Real Content -->
-        <div id="content" class="content-wrapper" style="display: none;">
-            <!-- Profile Hero -->
-            <div class="text-center mb-8 animate-fade-up">
-                <div class="w-28 h-28 rounded-full mx-auto mb-4 p-1 bg-gradient-to-br from-purple-500 to-pink-500 animate-float">
-                    <div class="w-full h-full rounded-full overflow-hidden bg-gray-800">
-                        <img src="<%= profile.avatar_url || '/img/avatar.png' %>" 
-                             alt="<%= profile.name %>"
-                             class="w-full h-full object-cover"
-                             onerror="this.src='/img/avatar.png'">
+    <main class="w-full max-w-full px-4 py-6 md:py-10 overflow-x-hidden">
+        <div class="max-w-xl mx-auto w-full">
+            <!-- Skeleton Loading - Background gelap -->
+            <div id="skeleton" style="background: transparent; width: 100%;">
+                <div class="text-center mb-8 profile-section">
+                    <div class="skeleton skeleton-avatar mx-auto mb-4"></div>
+                    <div class="skeleton skeleton-title mx-auto"></div>
+                    <div class="skeleton skeleton-bio mx-auto"></div>
+                    <div class="space-y-3 mt-6">
+                        <div class="skeleton skeleton-link"></div>
+                        <div class="skeleton skeleton-link"></div>
+                        <div class="skeleton skeleton-link"></div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3 mt-6">
+                        <div class="skeleton skeleton-card h-24"></div>
+                        <div class="skeleton skeleton-card h-24"></div>
                     </div>
                 </div>
-                
-                <h1 class="text-2xl font-bold gradient-text mb-1"><%= profile.name %></h1>
-                
-                <% if (profile.bio) { %>
-                    <p class="text-gray-400 text-sm max-w-xs mx-auto"><%= profile.bio %></p>
-                <% } %>
-            </div>
-
-            <!-- Links -->
-            <div class="space-y-3">
-                <% if (profile.socials && profile.socials.length > 0) { %>
-                    <% profile.socials.forEach(function(link, index) { %>
-                        <a href="<%= link.url %>" 
-                           target="_blank" 
-                           rel="noopener noreferrer"
-                           class="glass-card flex items-center gap-4 p-4 big-tap hover-scale transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] stagger-item"
-                           style="animation-delay: <%= 0.05 * index %>s">
-                            
-                            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500/20 to-purple-700/20 flex items-center justify-center flex-shrink-0">
-                                <% if (link.icon_type === 'emoji') { %>
-                                    <% if (link.icon === '💛') { %>
-                                        <i class="fas fa-heart text-2xl text-yellow-400"></i>
-                                    <% } else if (link.icon === '☕') { %>
-                                        <i class="fas fa-mug-hot text-2xl text-yellow-400"></i>
-                                    <% } else if (link.icon === '💰') { %>
-                                        <i class="fas fa-money-bill-wave text-2xl text-green-400"></i>
-                                    <% } else if (link.icon === '🎁') { %>
-                                        <i class="fas fa-gift text-2xl text-pink-400"></i>
-                                    <% } else if (link.icon === '⭐') { %>
-                                        <i class="fas fa-star text-2xl text-yellow-400"></i>
-                                    <% } else if (link.icon === '❤️') { %>
-                                        <i class="fas fa-heart text-2xl text-red-400"></i>
-                                    <% } else if (link.icon === '🔥') { %>
-                                        <i class="fas fa-fire text-2xl text-orange-400"></i>
-                                    <% } else if (link.icon === '👑') { %>
-                                        <i class="fas fa-crown text-2xl text-yellow-400"></i>
-                                    <% } else if (link.icon === '🎮') { %>
-                                        <i class="fas fa-gamepad text-2xl text-purple-400"></i>
-                                    <% } else if (link.icon === '📺') { %>
-                                        <i class="fas fa-tv text-2xl text-blue-400"></i>
-                                    <% } else if (link.icon === '💎') { %>
-                                        <i class="fas fa-gem text-2xl text-blue-400"></i>
-                                    <% } else { %>
-                                        <i class="fas fa-link text-2xl text-purple-400"></i>
-                                    <% } %>
-                                <% } else { %>
-                                    <i class="<%= link.icon %> text-2xl text-purple-400"></i>
-                                <% } %>
-                            </div>
-                            
-                            <div class="flex-1">
-                                <p class="text-white font-semibold"><%= link.name %></p>
-                                <p class="text-gray-500 text-xs">
-                                    <% if (link.type === 'donate') { %>
-                                        <i class="fas fa-heart text-xs text-pink-400 mr-1"></i> Dukung Nuxy MC
-                                    <% } else { %>
-                                        <i class="fas fa-external-link-alt text-xs text-gray-500 mr-1"></i> Klik untuk buka
-                                    <% } %>
-                                </p>
-                            </div>
-                            
-                            <i class="fas fa-arrow-right text-gray-500 text-sm group-hover:translate-x-1 transition-transform"></i>
-                        </a>
-                    <% }); %>
-                <% } else { %>
-                    <div class="glass-card p-8 text-center animate-pop">
-                        <i class="fas fa-link text-4xl text-gray-600 mb-2"></i>
-                        <p class="text-gray-500">Belum ada link</p>
-                    </div>
-                <% } %>
             </div>
             
-            <!-- Quick Menu -->
-            <div class="mt-6 grid grid-cols-2 gap-3">
-                <a href="/mods" class="glass-card p-4 text-center big-tap hover-scale transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] animate-slide-left" style="animation-delay: 0.2s">
-                    <i class="fas fa-cubes text-2xl text-purple-400 mb-1 animate-bounce" style="animation-duration: 1.5s"></i>
-                    <p class="text-white text-sm font-medium">Modpacks</p>
-                    <p class="text-gray-600 text-[10px]"><i class="fas fa-download mr-1"></i>Download mod</p>
-                </a>
-                <a href="/servers" class="glass-card p-4 text-center big-tap hover-scale transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] animate-slide-right" style="animation-delay: 0.2s">
-                    <i class="fas fa-server text-2xl text-purple-400 mb-1 animate-pulse-ring"></i>
-                    <p class="text-white text-sm font-medium">Servers</p>
-                    <p class="text-gray-600 text-[10px]"><i class="fas fa-plug mr-1"></i>Join sekarang</p>
-                </a>
+            <!-- Real Content -->
+            <div id="content" class="content-wrapper w-full" style="display: none;">
+                <!-- Profile Hero -->
+                <div class="text-center mb-6 animate-fade-up profile-section">
+                    <!-- Avatar - tanpa bullet hijau -->
+                    <div class="avatar-wrapper">
+                        <div class="w-28 h-28 rounded-full mx-auto p-1 bg-gradient-to-br from-purple-500 to-pink-500 avatar-container">
+                            <div class="w-full h-full rounded-full overflow-hidden bg-gray-800 avatar-ring">
+                                <img src="<%= profile.avatar_url || '/img/avatar.png' %>" 
+                                     alt="<%= profile.name %>"
+                                     class="w-full h-full object-cover avatar-img"
+                                     onerror="this.src='/img/avatar.png'">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h1 class="text-2xl font-bold gradient-text mb-1 break-words"><%= profile.name %></h1>
+                    
+                    <% if (profile.bio) { %>
+                        <p class="text-gray-400 text-sm max-w-xs mx-auto break-words px-2"><%= profile.bio %></p>
+                    <% } %>
+                </div>
+
+                <!-- Links -->
+                <div class="space-y-3 w-full links-wrapper">
+                    <% if (profile.socials && profile.socials.length > 0) { %>
+                        <% profile.socials.forEach(function(link, index) { 
+                            // Tentukan badge berdasarkan type
+                            let badgeClass = 'link-badge-social';
+                            let badgeText = 'Social';
+                            let descText = 'Klik untuk buka';
+                            let descIcon = 'fa-external-link-alt';
+                            
+                            if (link.type === 'donate') {
+                                badgeClass = 'link-badge-donate';
+                                badgeText = 'Donate';
+                                descText = 'Dukung Nuxy MC';
+                                descIcon = 'fa-heart';
+                            } else if (link.type === 'community') {
+                                badgeClass = 'link-badge-community';
+                                badgeText = 'Community';
+                                descText = 'Gabung Komunitas';
+                                descIcon = 'fa-users';
+                            }
+                        %>
+                            <a href="<%= link.url %>" 
+                               target="_blank" 
+                               rel="noopener noreferrer"
+                               data-type="<%= link.type || 'social' %>"
+                               class="link-card glass-card flex items-center gap-4 p-4 big-tap hover-scale transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] stagger-item"
+                               style="animation-delay: <%= 0.05 * index %>s">
+                                
+                                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500/20 to-purple-700/20 flex items-center justify-center flex-shrink-0">
+                                    <% if (link.icon_type === 'emoji') { %>
+                                        <% if (link.icon === '💛') { %>
+                                            <span class="text-2xl">💛</span>
+                                        <% } else if (link.icon === '☕') { %>
+                                            <span class="text-2xl">☕</span>
+                                        <% } else if (link.icon === '💰') { %>
+                                            <span class="text-2xl">💰</span>
+                                        <% } else if (link.icon === '🎁') { %>
+                                            <span class="text-2xl">🎁</span>
+                                        <% } else if (link.icon === '⭐') { %>
+                                            <span class="text-2xl">⭐</span>
+                                        <% } else if (link.icon === '❤️') { %>
+                                            <span class="text-2xl">❤️</span>
+                                        <% } else if (link.icon === '🔥') { %>
+                                            <span class="text-2xl">🔥</span>
+                                        <% } else if (link.icon === '👑') { %>
+                                            <span class="text-2xl">👑</span>
+                                        <% } else if (link.icon === '🎮') { %>
+                                            <span class="text-2xl">🎮</span>
+                                        <% } else if (link.icon === '📺') { %>
+                                            <span class="text-2xl">📺</span>
+                                        <% } else if (link.icon === '💎') { %>
+                                            <span class="text-2xl">💎</span>
+                                        <% } else if (link.icon === '🪙') { %>
+                                            <span class="text-2xl">🪙</span>
+                                        <% } else if (link.icon === '🤝') { %>
+                                            <span class="text-2xl">🤝</span>
+                                        <% } else if (link.icon === '👋') { %>
+                                            <span class="text-2xl">👋</span>
+                                        <% } else if (link.icon === '✨') { %>
+                                            <span class="text-2xl">✨</span>
+                                        <% } else if (link.icon === '🎯') { %>
+                                            <span class="text-2xl">🎯</span>
+                                        <% } else { %>
+                                            <i class="fas fa-link text-2xl text-purple-400"></i>
+                                        <% } %>
+                                    <% } else { %>
+                                        <i class="<%= link.icon %> text-2xl text-purple-400"></i>
+                                    <% } %>
+                                </div>
+                                
+                                <div class="flex-1 min-w-0">
+                                    <!-- Nama link - tanpa badge di samping -->
+                                    <p class="link-name text-sm md:text-base"><%= link.name %></p>
+                                    
+                                    <!-- Deskripsi + badge di bawah -->
+                                    <div class="link-desc mt-0.5">
+                                        <span class="link-desc-text">
+                                            <i class="fas <%= descIcon %> text-[10px] mr-0.5"></i>
+                                            <%= descText %>
+                                        </span>
+                                        <span class="link-badge <%= badgeClass %>">
+                                            <%= badgeText %>
+                                        </span>
+                                    </div>
+                                </div>
+                                
+                                <i class="fas fa-arrow-right text-gray-500 text-sm flex-shrink-0 transition-transform group-hover:translate-x-1"></i>
+                            </a>
+                        <% }); %>
+                    <% } else { %>
+                        <div class="glass-card p-8 text-center animate-pop w-full">
+                            <i class="fas fa-link text-4xl text-gray-600 mb-2"></i>
+                            <p class="text-gray-500">Belum ada link</p>
+                        </div>
+                    <% } %>
+                </div>
+                
+                <!-- Quick Menu -->
+                <div class="mt-6 grid grid-cols-2 gap-3 w-full">
+                    <a href="/mods" class="glass-card p-4 text-center big-tap hover-scale transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] animate-slide-left" style="animation-delay: 0.2s">
+                        <i class="fas fa-cubes text-2xl text-purple-400 mb-1 animate-bounce" style="animation-duration: 1.5s"></i>
+                        <p class="text-white text-sm font-medium">Modpacks</p>
+                        <p class="text-gray-600 text-[10px]"><i class="fas fa-download mr-1"></i>Download mod</p>
+                    </a>
+                    <a href="/servers" class="glass-card p-4 text-center big-tap hover-scale transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] animate-slide-right" style="animation-delay: 0.2s">
+                        <i class="fas fa-server text-2xl text-purple-400 mb-1 animate-pulse-ring"></i>
+                        <p class="text-white text-sm font-medium">Servers</p>
+                        <p class="text-gray-600 text-[10px]"><i class="fas fa-plug mr-1"></i>Join sekarang</p>
+                    </a>
+                </div>
             </div>
         </div>
     </main>
