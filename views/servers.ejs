@@ -3,165 +3,276 @@
 <head>
     <%- include('partials/head') %>
     <style>
-        html, body, #skeleton {
-            background: linear-gradient(180deg, #0a0a14 0%, #0f0f1a 50%, #0a0a14 100%);
-            min-height: 100vh;
+        .server-card {
+            word-break: break-word;
+            overflow-wrap: break-word;
         }
-        body { margin: 0; padding: 0; }
-        .skeleton { background: linear-gradient(110deg, #11111a 8%, #1a1a2a 18%, #11111a 33%); background-size: 200% 100%; }
+        
+        .ip-box {
+            word-break: break-all;
+            overflow-wrap: anywhere;
+        }
+        
+        .ip-box code {
+            word-break: break-all;
+            overflow-wrap: anywhere;
+            white-space: normal;
+            line-height: 1.5;
+        }
+        
+        .copy-btn {
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+        
+        .copy-btn.copied {
+            background: rgba(34, 197, 94, 0.2) !important;
+            border-color: rgba(34, 197, 94, 0.4) !important;
+            color: #4ade80 !important;
+        }
+        
+        .community-btn {
+            transition: all 0.2s ease;
+        }
+        
+        .community-btn:hover {
+            transform: scale(1.05);
+        }
+        
+        .community-btn:active {
+            transform: scale(0.95);
+        }
+        
+        .toast {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(34, 197, 94, 0.95);
+            backdrop-filter: blur(8px);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 12px;
+            z-index: 1000;
+            font-size: 14px;
+            animation: slideUp 0.3s ease;
+            white-space: nowrap;
+        }
+        
+        @keyframes slideUp {
+            from { transform: translate(-50%, 100%); opacity: 0; }
+            to { transform: translate(-50%, 0); opacity: 1; }
+        }
+        
+        .community-section {
+            border-top: 1px solid rgba(139, 92, 246, 0.15);
+            padding-top: 12px;
+            margin-top: 12px;
+        }
+        
+        .community-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
     </style>
 </head>
-<body style="background: linear-gradient(180deg, #0a0a14 0%, #0f0f1a 50%, #0a0a14 100%);">
-    <%- include('partials/preloader') %>
+<body class="min-h-screen pb-20 md:pb-0">
     <%- include('partials/header') %>
     
-    <main class="max-w-md mx-auto px-4 py-4">
-        <div id="skeleton" style="background: transparent;">
-            <div class="skeleton skeleton-title w-48 mb-2"></div>
-            <div class="skeleton w-64 h-4 mb-6"></div>
-            <div class="skeleton h-40 w-full rounded-xl mb-5"></div>
+    <main class="max-w-2xl mx-auto px-4 py-6 md:py-10">
+        <!-- Header -->
+        <div class="text-center mb-6 md:mb-8 animate-fade-up">
+            <h1 class="text-2xl md:text-3xl font-bold gradient-text mb-1">🎮 Servers & Community</h1>
+            <p class="text-gray-400 text-sm">Join server kami atau gabung komunitas!</p>
+        </div>
+
+        <!-- CARA JOIN SERVER -->
+        <div class="glass-card p-4 mb-5 animate-pop">
+            <div class="flex items-center gap-2 mb-3">
+                <div class="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center">
+                    <i class="fas fa-question-circle text-purple-400 text-sm"></i>
+                </div>
+                <p class="text-white font-semibold text-sm"><i class="fas fa-book-open mr-1"></i> Cara Join Server:</p>
+            </div>
+            <ol class="text-gray-300 text-xs space-y-2">
+                <li class="flex items-start gap-2">
+                    <span class="w-5 h-5 rounded-full bg-purple-500/20 text-purple-400 text-xs flex items-center justify-center flex-shrink-0 mt-0.5"><i class="fas fa-fingerprint text-[10px]"></i></span>
+                    <span>Tap IP server di bawah (otomatis copy)</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <span class="w-5 h-5 rounded-full bg-purple-500/20 text-purple-400 text-xs flex items-center justify-center flex-shrink-0 mt-0.5"><i class="fas fa-cube text-[10px]"></i></span>
+                    <span>Buka Minecraft</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <span class="w-5 h-5 rounded-full bg-purple-500/20 text-purple-400 text-xs flex items-center justify-center flex-shrink-0 mt-0.5"><i class="fas fa-plus text-[10px]"></i></span>
+                    <span>Pilih Multiplayer → Add Server</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <span class="w-5 h-5 rounded-full bg-purple-500/20 text-purple-400 text-xs flex items-center justify-center flex-shrink-0 mt-0.5"><i class="fas fa-paste text-[10px]"></i></span>
+                    <span>Tap & hold kolom IP → Paste</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <span class="w-5 h-5 rounded-full bg-green-500/20 text-green-400 text-xs flex items-center justify-center flex-shrink-0 mt-0.5"><i class="fas fa-check text-[10px]"></i></span>
+                    <span>Save & Join! 🚀</span>
+                </li>
+            </ol>
+        </div>
+
+        <% if (servers && servers.length > 0) { %>
             <div class="space-y-4">
-                <div class="skeleton skeleton-card h-64"></div>
-                <div class="skeleton skeleton-card h-64"></div>
-            </div>
-        </div>
-        
-        <div id="content" class="content-wrapper" style="display: none;">
-            <div class="mb-6 animate-fade-up">
-                <h1 class="text-2xl font-bold gradient-text"><i class="fas fa-server mr-2"></i> Minecraft Servers</h1>
-                <p class="text-gray-400 text-sm mt-1"><i class="fas fa-fingerprint mr-1"></i> Tap IP untuk copy, langsung paste di Minecraft!</p>
-            </div>
-
-            <!-- CARA JOIN SERVER -->
-            <div class="glass-card p-4 mb-5 animate-pop">
-                <div class="flex items-center gap-2 mb-3">
-                    <div class="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center">
-                        <i class="fas fa-question-circle text-purple-400 text-sm"></i>
-                    </div>
-                    <p class="text-white font-semibold text-sm"><i class="fas fa-book-open mr-1"></i> Cara Join Server:</p>
-                </div>
-                <ol class="text-gray-300 text-xs space-y-2">
-                    <li class="flex items-start gap-2">
-                        <span class="w-5 h-5 rounded-full bg-purple-500/20 text-purple-400 text-xs flex items-center justify-center flex-shrink-0 mt-0.5"><i class="fas fa-fingerprint text-[10px]"></i></span>
-                        <span>Tap IP server di bawah (otomatis copy)</span>
-                    </li>
-                    <li class="flex items-start gap-2">
-                        <span class="w-5 h-5 rounded-full bg-purple-500/20 text-purple-400 text-xs flex items-center justify-center flex-shrink-0 mt-0.5"><i class="fas fa-cube text-[10px]"></i></span>
-                        <span>Buka Minecraft</span>
-                    </li>
-                    <li class="flex items-start gap-2">
-                        <span class="w-5 h-5 rounded-full bg-purple-500/20 text-purple-400 text-xs flex items-center justify-center flex-shrink-0 mt-0.5"><i class="fas fa-plus text-[10px]"></i></span>
-                        <span>Pilih Multiplayer → Add Server</span>
-                    </li>
-                    <li class="flex items-start gap-2">
-                        <span class="w-5 h-5 rounded-full bg-purple-500/20 text-purple-400 text-xs flex items-center justify-center flex-shrink-0 mt-0.5"><i class="fas fa-paste text-[10px]"></i></span>
-                        <span>Tap & hold kolom IP → Paste</span>
-                    </li>
-                    <li class="flex items-start gap-2">
-                        <span class="w-5 h-5 rounded-full bg-green-500/20 text-green-400 text-xs flex items-center justify-center flex-shrink-0 mt-0.5"><i class="fas fa-check text-[10px]"></i></span>
-                        <span>Save & Join! <i class="fas fa-rocket text-green-400"></i></span>
-                    </li>
-                </ol>
-            </div>
-
-            <% if (servers && servers.length > 0) { %>
-                <div class="space-y-4">
-                    <% servers.forEach(function(server, idx) { %>
-                        <div class="glass-card p-5 stagger-item" style="animation-delay: <%= 0.1 * idx %>s">
-                            <div class="flex items-center gap-3 mb-4">
-                                <div class="w-10 h-10 rounded-xl bg-purple-500/20 flex items-center justify-center animate-pulse-ring">
-                                    <i class="fas fa-server text-purple-400"></i>
-                                </div>
-                                <h2 class="text-white font-bold text-lg"><%= server.name %></h2>
+                <% servers.forEach(function(server, idx) { %>
+                    <div class="glass-card p-5 stagger-item" style="animation-delay: <%= 0.1 * idx %>s">
+                        <!-- Server Name -->
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-10 h-10 rounded-xl bg-purple-500/20 flex items-center justify-center animate-pulse-ring">
+                                <i class="fas fa-server text-purple-400"></i>
                             </div>
-                            
-                            <div class="space-y-3">
-                                <% if (server.has_java) { %>
-                                    <div class="bg-gray-800/50 rounded-xl p-3 hover:bg-gray-800/70 transition">
-                                        <div class="flex items-center gap-2 mb-2">
-                                            <i class="fab fa-java text-orange-400"></i>
-                                            <span class="text-white font-medium text-sm">Java Edition</span>
-                                        </div>
-                                        <div class="flex items-center justify-between bg-gray-900/50 rounded-lg p-3 big-tap hover:bg-gray-900/70 transition-all active:scale-[0.98]" 
-                                             onclick="copyText('<%= server.java_ip %>')">
-                                            <code class="text-purple-400 font-mono text-sm"><%= server.java_ip %></code>
-                                            <i class="fas fa-copy text-gray-500 hover:text-purple-400 transition"></i>
-                                        </div>
-                                    </div>
-                                <% } %>
-                                
-                                <% if (server.has_bedrock) { %>
-                                    <div class="bg-gray-800/50 rounded-xl p-3 hover:bg-gray-800/70 transition">
-                                        <div class="flex items-center gap-2 mb-2">
-                                            <i class="fas fa-cube text-blue-400"></i>
-                                            <span class="text-white font-medium text-sm">Bedrock Edition</span>
-                                        </div>
-                                        <div class="space-y-2">
-                                            <div class="flex items-center justify-between bg-gray-900/50 rounded-lg p-3 big-tap hover:bg-gray-900/70 transition-all active:scale-[0.98]" 
-                                                 onclick="copyText('<%= server.bedrock_ip %>')">
-                                                <div>
-                                                    <p class="text-gray-500 text-[10px]"><i class="fas fa-network-wired mr-1"></i>IP Address</p>
-                                                    <code class="text-purple-400 font-mono text-sm"><%= server.bedrock_ip %></code>
-                                                </div>
-                                                <i class="fas fa-copy text-gray-500 hover:text-purple-400 transition"></i>
-                                            </div>
-                                            <div class="flex items-center justify-between bg-gray-900/50 rounded-lg p-3 big-tap hover:bg-gray-900/70 transition-all active:scale-[0.98]" 
-                                                 onclick="copyText('<%= server.bedrock_port %>')">
-                                                <div>
-                                                    <p class="text-gray-500 text-[10px]"><i class="fas fa-plug mr-1"></i>Port</p>
-                                                    <code class="text-purple-400 font-mono text-sm"><%= server.bedrock_port %></code>
-                                                </div>
-                                                <i class="fas fa-copy text-gray-500 hover:text-purple-400 transition"></i>
-                                            </div>
-                                        </div>
-                                    </div>
-                                <% } %>
-                            </div>
+                            <h2 class="text-white font-bold text-lg"><%= server.name %></h2>
                         </div>
-                    <% }); %>
-                </div>
-            <% } else { %>
-                <div class="glass-card p-8 text-center animate-pop">
-                    <i class="fas fa-server text-5xl text-gray-600 mb-3"></i>
-                    <p class="text-gray-400">Belum ada server</p>
-                    <p class="text-gray-600 text-sm"><i class="fas fa-clock mr-1"></i>Cek lagi nanti ya!</p>
-                </div>
-            <% } %>
-        </div>
+                        
+                        <!-- Server Info -->
+                        <div class="space-y-3">
+                            <!-- Java -->
+                            <% if (server.has_java) { %>
+                                <div class="bg-gray-800/50 rounded-xl p-3 hover:bg-gray-800/70 transition">
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <i class="fab fa-java text-lg text-orange-400"></i>
+                                        <span class="text-white font-medium text-sm">Java Edition</span>
+                                    </div>
+                                    <div class="ip-box bg-gray-900/50 rounded-lg p-3 flex items-start justify-between gap-2">
+                                        <code class="text-purple-400 font-mono text-sm flex-1 min-w-0" onclick="copyText('<%= server.java_ip %>', this)"><%= server.java_ip %></code>
+                                        <button onclick="copyText('<%= server.java_ip %>', this)" 
+                                                class="copy-btn text-gray-500 hover:text-purple-400 p-1.5 rounded-lg hover:bg-purple-500/10 transition flex-shrink-0">
+                                            <i class="fas fa-copy text-sm"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            <% } %>
+                            
+                            <!-- Bedrock -->
+                            <% if (server.has_bedrock) { %>
+                                <div class="bg-gray-800/50 rounded-xl p-3 hover:bg-gray-800/70 transition">
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <i class="fas fa-cube text-lg text-blue-400"></i>
+                                        <span class="text-white font-medium text-sm">Bedrock Edition</span>
+                                    </div>
+                                    <div class="space-y-2">
+                                        <div class="ip-box bg-gray-900/50 rounded-lg p-3 flex items-start justify-between gap-2">
+                                            <div class="flex-1 min-w-0">
+                                                <p class="text-gray-500 text-xs mb-0.5">IP Address</p>
+                                                <code class="text-purple-400 font-mono text-sm" onclick="copyText('<%= server.bedrock_ip %>', this)"><%= server.bedrock_ip %></code>
+                                            </div>
+                                            <button onclick="copyText('<%= server.bedrock_ip %>', this)" 
+                                                    class="copy-btn text-gray-500 hover:text-purple-400 p-1.5 rounded-lg hover:bg-purple-500/10 transition flex-shrink-0 mt-4">
+                                                <i class="fas fa-copy text-sm"></i>
+                                            </button>
+                                        </div>
+                                        <div class="ip-box bg-gray-900/50 rounded-lg p-3 flex items-start justify-between gap-2">
+                                            <div class="flex-1 min-w-0">
+                                                <p class="text-gray-500 text-xs mb-0.5">Port</p>
+                                                <code class="text-purple-400 font-mono text-sm" onclick="copyText('<%= server.bedrock_port %>', this)"><%= server.bedrock_port %></code>
+                                            </div>
+                                            <button onclick="copyText('<%= server.bedrock_port %>', this)" 
+                                                    class="copy-btn text-gray-500 hover:text-purple-400 p-1.5 rounded-lg hover:bg-purple-500/10 transition flex-shrink-0 mt-4">
+                                                <i class="fas fa-copy text-sm"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            <% } %>
+                            
+                            <!-- Community Section -->
+                            <% if (server.community && (server.community.whatsapp || server.community.discord)) { %>
+                                <div class="community-section">
+                                    <p class="text-gray-500 text-xs mb-2 flex items-center gap-1">
+                                        <i class="fas fa-users text-purple-400"></i> Join Komunitas:
+                                    </p>
+                                    <div class="flex gap-2 flex-wrap">
+                                        <% if (server.community.whatsapp) { %>
+                                            <a href="<%= server.community.whatsapp %>" 
+                                               target="_blank" 
+                                               rel="noopener noreferrer"
+                                               class="community-btn flex-1 min-w-[120px] bg-green-500/20 hover:bg-green-500/30 border border-green-500/30 rounded-xl px-4 py-2.5 flex items-center justify-center gap-2 text-white text-sm font-medium transition">
+                                                <i class="fab fa-whatsapp text-green-400 text-lg"></i>
+                                                WhatsApp
+                                            </a>
+                                        <% } %>
+                                        <% if (server.community.discord) { %>
+                                            <a href="<%= server.community.discord %>" 
+                                               target="_blank" 
+                                               rel="noopener noreferrer"
+                                               class="community-btn flex-1 min-w-[120px] bg-indigo-500/20 hover:bg-indigo-500/30 border border-indigo-500/30 rounded-xl px-4 py-2.5 flex items-center justify-center gap-2 text-white text-sm font-medium transition">
+                                                <i class="fab fa-discord text-indigo-400 text-lg"></i>
+                                                Discord
+                                            </a>
+                                        <% } %>
+                                    </div>
+                                </div>
+                            <% } %>
+                        </div>
+                    </div>
+                <% }); %>
+            </div>
+        <% } else { %>
+            <div class="glass-card p-8 text-center animate-pop">
+                <i class="fas fa-server text-5xl text-gray-600 mb-3"></i>
+                <p class="text-gray-400">Belum ada server</p>
+                <p class="text-gray-600 text-sm"><i class="fas fa-clock mr-1"></i>Cek lagi nanti ya!</p>
+            </div>
+        <% } %>
     </main>
     
     <%- include('partials/mobileNav') %>
     <%- include('partials/footer') %>
-    
+
     <script>
-        (function() {
-            const skeleton = document.getElementById('skeleton');
-            const content = document.getElementById('content');
-            if (skeleton && content) {
-                setTimeout(function() {
-                    skeleton.style.opacity = '0';
-                    skeleton.style.transition = 'opacity 0.2s';
-                    setTimeout(function() {
-                        skeleton.style.display = 'none';
-                        content.style.display = 'block';
-                        setTimeout(function() { content.classList.add('loaded'); }, 20);
-                    }, 200);
-                }, 300);
-            }
-        })();
+        function copyText(text, element) {
+            navigator.clipboard.writeText(text).then(() => {
+                // Find the nearest copy button
+                const copyBtn = element.closest('.ip-box')?.querySelector('.copy-btn');
+                if (copyBtn) {
+                    copyBtn.classList.add('copied');
+                    const icon = copyBtn.querySelector('i');
+                    if (icon) icon.className = 'fas fa-check text-sm';
+                    
+                    setTimeout(() => {
+                        copyBtn.classList.remove('copied');
+                        if (icon) icon.className = 'fas fa-copy text-sm';
+                    }, 1500);
+                }
+                
+                showToast('Copied: ' + text);
+            }).catch(() => {
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                textarea.style.position = 'fixed';
+                textarea.style.opacity = '0';
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                showToast('Copied!');
+            });
+        }
         
-        function copyText(text) {
-            navigator.clipboard.writeText(text);
-            const toast = document.getElementById('toast') || (function() {
-                const t = document.createElement('div');
-                t.id = 'toast';
-                t.className = 'fixed bottom-20 left-1/2 -translate-x-1/2 bg-gray-800/95 backdrop-blur text-white px-4 py-2 rounded-full text-sm z-50';
-                document.body.appendChild(t);
-                return t;
-            })();
-            toast.innerHTML = '<i class="fas fa-check-circle text-green-400 mr-2"></i> Copied: ' + text;
-            toast.classList.remove('hidden');
-            setTimeout(() => toast.classList.add('hidden'), 2000);
+        function showToast(message) {
+            const existing = document.querySelector('.toast');
+            if (existing) existing.remove();
+            
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerHTML = '<i class="fas fa-check mr-2"></i>' + message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transition = 'opacity 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, 2000);
         }
     </script>
 </body>

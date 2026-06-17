@@ -10,8 +10,10 @@
         <!-- Header -->
         <div class="flex items-center justify-between mb-8">
             <div>
-                <h1 class="text-2xl md:text-3xl font-bold gradient-text mb-1">Servers</h1>
-                <p class="text-gray-400 text-sm">Manage your Minecraft servers</p>
+                <h1 class="text-2xl md:text-3xl font-bold gradient-text mb-1">
+                    <i class="fas fa-server mr-2"></i>Manage Servers
+                </h1>
+                <p class="text-gray-400 text-sm">Atur server & komunitas (WhatsApp/Discord)</p>
             </div>
             <a href="/admin" class="flex items-center text-gray-400 hover:text-purple-400 transition text-sm">
                 <i class="fas fa-arrow-left mr-2"></i>Dashboard
@@ -23,7 +25,7 @@
             <div class="fixed top-4 right-4 z-50 bg-emerald-500/90 backdrop-blur text-white px-5 py-3 rounded-xl shadow-lg flex items-center gap-2 animate-slide-in" id="toast">
                 <i class="fas fa-check-circle"></i>
                 <span class="text-sm"><%= success_msg %></span>
-                <button onclick="this.parentElement.remove()" class="ml-2"><i class="fas fa-times"></i></button>
+                <button onclick="this.parentElement.remove()" class="ml-2 hover:text-white/70"><i class="fas fa-times"></i></button>
             </div>
         <% } %>
         
@@ -31,7 +33,7 @@
             <div class="fixed top-4 right-4 z-50 bg-red-500/90 backdrop-blur text-white px-5 py-3 rounded-xl shadow-lg flex items-center gap-2 animate-slide-in" id="toast">
                 <i class="fas fa-exclamation-circle"></i>
                 <span class="text-sm"><%= error_msg %></span>
-                <button onclick="this.parentElement.remove()" class="ml-2"><i class="fas fa-times"></i></button>
+                <button onclick="this.parentElement.remove()" class="ml-2 hover:text-white/70"><i class="fas fa-times"></i></button>
             </div>
         <% } %>
 
@@ -44,15 +46,18 @@
                 Add New Server
             </h2>
             <form action="/admin/servers/add" method="POST" class="space-y-3">
+                <!-- Nama Server -->
                 <input type="text" name="name" placeholder="Server name" required 
                        class="w-full bg-gray-800/50 border border-purple-500/20 rounded-xl px-4 py-2.5 text-white text-sm focus:border-purple-500 focus:outline-none transition">
+                
+                <!-- Java & Bedrock -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div class="bg-gray-800/30 rounded-xl p-3">
                         <label class="flex items-center gap-3 cursor-pointer">
                             <input type="checkbox" name="has_java" onchange="document.getElementById('addJavaIp').classList.toggle('hidden')" 
                                    class="w-4 h-4 rounded accent-purple-600">
                             <div>
-                                <span class="text-white text-sm font-medium">Java Edition</span>
+                                <span class="text-white text-sm font-medium"><i class="fab fa-java mr-1"></i>Java Edition</span>
                                 <p class="text-gray-500 text-xs">Enable Java server</p>
                             </div>
                         </label>
@@ -61,19 +66,45 @@
                     </div>
                     <div class="bg-gray-800/30 rounded-xl p-3">
                         <label class="flex items-center gap-3 cursor-pointer">
-                            <input type="checkbox" name="has_bedrock" onchange="document.getElementById('addBedrockIp').classList.toggle('hidden');document.getElementById('addBedrockPort').classList.toggle('hidden')" 
+                            <input type="checkbox" name="has_bedrock" onchange="document.getElementById('addBedrockGroup').classList.toggle('hidden')" 
                                    class="w-4 h-4 rounded accent-purple-600">
                             <div>
-                                <span class="text-white text-sm font-medium">Bedrock Edition</span>
+                                <span class="text-white text-sm font-medium"><i class="fas fa-cube mr-1"></i>Bedrock Edition</span>
                                 <p class="text-gray-500 text-xs">Enable Bedrock server</p>
                             </div>
                         </label>
-                        <input type="text" name="bedrock_ip" id="addBedrockIp" placeholder="Bedrock IP" 
-                               class="hidden mt-2 w-full bg-gray-800/50 border border-purple-500/20 rounded-lg px-3 py-2 text-white text-sm">
-                        <input type="number" name="bedrock_port" id="addBedrockPort" placeholder="Port (default 19132)" 
-                               class="hidden mt-2 w-full bg-gray-800/50 border border-purple-500/20 rounded-lg px-3 py-2 text-white text-sm">
+                        <div id="addBedrockGroup" class="hidden mt-2 space-y-2">
+                            <input type="text" name="bedrock_ip" placeholder="Bedrock IP" 
+                                   class="w-full bg-gray-800/50 border border-purple-500/20 rounded-lg px-3 py-2 text-white text-sm">
+                            <input type="number" name="bedrock_port" placeholder="Port (default 19132)" 
+                                   class="w-full bg-gray-800/50 border border-purple-500/20 rounded-lg px-3 py-2 text-white text-sm">
+                        </div>
                     </div>
                 </div>
+                
+                <!-- Community Section -->
+                <div class="bg-purple-500/5 border border-purple-500/20 rounded-xl p-4">
+                    <p class="text-white font-medium text-sm mb-3 flex items-center gap-2">
+                        <i class="fas fa-users text-purple-400"></i> Community Links
+                    </p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="text-gray-400 text-xs mb-1 block">
+                                <i class="fab fa-whatsapp text-green-400 mr-1"></i> WhatsApp Group URL
+                            </label>
+                            <input type="url" name="whatsapp" placeholder="https://chat.whatsapp.com/..." 
+                                   class="w-full bg-gray-800/50 border border-purple-500/20 rounded-lg px-3 py-2 text-white text-sm focus:border-purple-500 focus:outline-none transition">
+                        </div>
+                        <div>
+                            <label class="text-gray-400 text-xs mb-1 block">
+                                <i class="fab fa-discord text-indigo-400 mr-1"></i> Discord Invite URL
+                            </label>
+                            <input type="url" name="discord" placeholder="https://discord.gg/..." 
+                                   class="w-full bg-gray-800/50 border border-purple-500/20 rounded-lg px-3 py-2 text-white text-sm focus:border-purple-500 focus:outline-none transition">
+                        </div>
+                    </div>
+                </div>
+                
                 <button type="submit" class="btn-primary text-white px-6 py-2.5 rounded-xl font-medium text-sm">
                     <i class="fas fa-plus mr-2"></i>Add Server
                 </button>
@@ -86,8 +117,11 @@
                 <% servers.forEach(function(server) { %>
                     <div class="glass-card rounded-2xl p-5 md:p-6">
                         <form action="/admin/servers/edit/<%= server.id %>" method="POST" class="space-y-3">
+                            <!-- Nama Server -->
                             <input type="text" name="name" value="<%= server.name %>" required 
                                    class="w-full bg-gray-800/50 border border-purple-500/20 rounded-xl px-4 py-2.5 text-white text-sm focus:border-purple-500 focus:outline-none">
+                            
+                            <!-- Java & Bedrock -->
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div class="bg-gray-800/30 rounded-xl p-3">
                                     <label class="flex items-center gap-3 cursor-pointer">
@@ -95,7 +129,7 @@
                                                onchange="document.getElementById('javaIp<%= server.id %>').classList.toggle('hidden')" 
                                                class="w-4 h-4 rounded accent-purple-600">
                                         <div>
-                                            <span class="text-white text-sm font-medium">Java Edition</span>
+                                            <span class="text-white text-sm font-medium"><i class="fab fa-java mr-1"></i>Java Edition</span>
                                             <p class="text-gray-500 text-xs">Enable Java server</p>
                                         </div>
                                     </label>
@@ -105,20 +139,48 @@
                                 <div class="bg-gray-800/30 rounded-xl p-3">
                                     <label class="flex items-center gap-3 cursor-pointer">
                                         <input type="checkbox" name="has_bedrock" <%= server.has_bedrock ? 'checked' : '' %> 
-                                               onchange="document.getElementById('bedrockIp<%= server.id %>').classList.toggle('hidden');document.getElementById('bedrockPort<%= server.id %>').classList.toggle('hidden')" 
+                                               onchange="document.getElementById('bedrockGroup<%= server.id %>').classList.toggle('hidden')" 
                                                class="w-4 h-4 rounded accent-purple-600">
                                         <div>
-                                            <span class="text-white text-sm font-medium">Bedrock Edition</span>
+                                            <span class="text-white text-sm font-medium"><i class="fas fa-cube mr-1"></i>Bedrock Edition</span>
                                             <p class="text-gray-500 text-xs">Enable Bedrock server</p>
                                         </div>
                                     </label>
-                                    <input type="text" name="bedrock_ip" id="bedrockIp<%= server.id %>" value="<%= server.bedrock_ip || '' %>" 
-                                           placeholder="Bedrock IP" class="<%= server.has_bedrock ? '' : 'hidden' %> mt-2 w-full bg-gray-800/50 border border-purple-500/20 rounded-lg px-3 py-2 text-white text-sm">
-                                    <input type="number" name="bedrock_port" id="bedrockPort<%= server.id %>" value="<%= server.bedrock_port || 19132 %>" 
-                                           placeholder="Port" class="<%= server.has_bedrock ? '' : 'hidden' %> mt-2 w-full bg-gray-800/50 border border-purple-500/20 rounded-lg px-3 py-2 text-white text-sm">
+                                    <div id="bedrockGroup<%= server.id %>" class="<%= server.has_bedrock ? '' : 'hidden' %> mt-2 space-y-2">
+                                        <input type="text" name="bedrock_ip" value="<%= server.bedrock_ip || '' %>" 
+                                               placeholder="Bedrock IP" class="w-full bg-gray-800/50 border border-purple-500/20 rounded-lg px-3 py-2 text-white text-sm">
+                                        <input type="number" name="bedrock_port" value="<%= server.bedrock_port || 19132 %>" 
+                                               placeholder="Port" class="w-full bg-gray-800/50 border border-purple-500/20 rounded-lg px-3 py-2 text-white text-sm">
+                                    </div>
                                 </div>
                             </div>
-                            <div class="flex gap-2">
+                            
+                            <!-- Community Section -->
+                            <div class="bg-purple-500/5 border border-purple-500/20 rounded-xl p-4">
+                                <p class="text-white font-medium text-sm mb-3 flex items-center gap-2">
+                                    <i class="fas fa-users text-purple-400"></i> Community Links
+                                </p>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                    <div>
+                                        <label class="text-gray-400 text-xs mb-1 block">
+                                            <i class="fab fa-whatsapp text-green-400 mr-1"></i> WhatsApp Group
+                                        </label>
+                                        <input type="url" name="whatsapp" value="<%= server.community && server.community.whatsapp ? server.community.whatsapp : '' %>" 
+                                               placeholder="https://chat.whatsapp.com/..." 
+                                               class="w-full bg-gray-800/50 border border-purple-500/20 rounded-lg px-3 py-2 text-white text-sm focus:border-purple-500 focus:outline-none transition">
+                                    </div>
+                                    <div>
+                                        <label class="text-gray-400 text-xs mb-1 block">
+                                            <i class="fab fa-discord text-indigo-400 mr-1"></i> Discord Server
+                                        </label>
+                                        <input type="url" name="discord" value="<%= server.community && server.community.discord ? server.community.discord : '' %>" 
+                                               placeholder="https://discord.gg/..." 
+                                               class="w-full bg-gray-800/50 border border-purple-500/20 rounded-lg px-3 py-2 text-white text-sm focus:border-purple-500 focus:outline-none transition">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex gap-2 flex-wrap">
                                 <button type="submit" class="btn-primary text-white px-5 py-2 rounded-xl font-medium text-sm">
                                     <i class="fas fa-save mr-2"></i>Update
                                 </button>

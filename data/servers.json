@@ -6,6 +6,10 @@
     "java_ip": "queencraft.xyz",
     "has_bedrock": true,
     "bedrock_ip": "queencraft.xyz",
-    "bedrock_port": 19030
+    "bedrock_port": 19030,
+    "community": {
+      "whatsapp": "https://wa.queencraft.xyz",
+      "discord": "https://discord.queencraft.xyz"
+    }
   }
 ]

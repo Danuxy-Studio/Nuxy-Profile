@@ -80,11 +80,9 @@ router.post('/profile', upload.single('avatar'), (req, res) => {
         // BUILD SOCIAL LINKS MANUALLY
         const socials = [];
         
-        // Get all keys from body
         const allKeys = Object.keys(req.body);
         console.log('All keys:', allKeys);
         
-        // Find social name keys (social_name_0, social_name_1, etc.)
         const nameKeys = allKeys.filter(key => key.startsWith('social_name_'));
         console.log('Name keys found:', nameKeys);
         
@@ -193,7 +191,6 @@ router.post('/mods/edit/:id', (req, res) => {
     res.redirect('/admin/mods');
 });
 
-// Gunakan GET untuk delete biar lebih simple
 router.get('/mods/delete/:id', (req, res) => {
     try {
         let mods = readJSON('mods.json');
@@ -225,7 +222,11 @@ router.post('/servers/add', (req, res) => {
             java_ip: hasJava ? (req.body.java_ip || '') : '',
             has_bedrock: hasBedrock,
             bedrock_ip: hasBedrock ? (req.body.bedrock_ip || '') : '',
-            bedrock_port: hasBedrock ? (parseInt(req.body.bedrock_port) || 19132) : 19132
+            bedrock_port: hasBedrock ? (parseInt(req.body.bedrock_port) || 19132) : 19132,
+            community: {
+                whatsapp: req.body.whatsapp || '',
+                discord: req.body.discord || ''
+            }
         };
         servers.push(newServer);
         writeJSON('servers.json', servers);
@@ -251,7 +252,11 @@ router.post('/servers/edit/:id', (req, res) => {
                 java_ip: hasJava ? (req.body.java_ip || '') : '',
                 has_bedrock: hasBedrock,
                 bedrock_ip: hasBedrock ? (req.body.bedrock_ip || '') : '',
-                bedrock_port: hasBedrock ? (parseInt(req.body.bedrock_port) || 19132) : 19132
+                bedrock_port: hasBedrock ? (parseInt(req.body.bedrock_port) || 19132) : 19132,
+                community: {
+                    whatsapp: req.body.whatsapp || '',
+                    discord: req.body.discord || ''
+                }
             };
             writeJSON('servers.json', servers);
             req.flash('success_msg', 'Server berhasil diupdate!');
@@ -262,7 +267,6 @@ router.post('/servers/edit/:id', (req, res) => {
     res.redirect('/admin/servers');
 });
 
-// Gunakan GET untuk delete
 router.get('/servers/delete/:id', (req, res) => {
     try {
         let servers = readJSON('servers.json');
@@ -273,6 +277,34 @@ router.get('/servers/delete/:id', (req, res) => {
         req.flash('error_msg', 'Error: ' + error.message);
     }
     res.redirect('/admin/servers');
+});
+
+// ==================== OVERLAY ====================
+router.get('/overlay', (req, res) => {
+    let challenges = [];
+    const challengesPath = path.join(__dirname, '..', 'data', 'challenges.json');
+    
+    if (fs.existsSync(challengesPath)) {
+        try {
+            challenges = JSON.parse(fs.readFileSync(challengesPath, 'utf8'));
+        } catch(e) {
+            console.error('Error reading challenges.json:', e);
+        }
+    }
+    
+    if (!challenges || challenges.length === 0) {
+        challenges = [
+            { id: 1, amount: "5K", action: "Buang Item Dipegang", color: "#8B5CF6" },
+            { id: 2, amount: "10K", action: "Buang 5 Item", color: "#F59E0B" },
+            { id: 3, amount: "20K", action: "Kill Villager Armorer", color: "#EF4444" },
+            { id: 4, amount: "30K", action: "Kill Villager Mending", color: "#22C55E" },
+            { id: 5, amount: "50K", action: "Buang 1 Set Armor", color: "#06B6D4" },
+            { id: 6, amount: "100K", action: "Clear Inventory", color: "#A855F7" },
+            { id: 7, amount: "200K", action: "Bebas Atur Sendiri", color: "#14B8A6" }
+        ];
+    }
+    
+    res.render('admin/overlay', { challenges, title: 'Edit Overlay' });
 });
 
 module.exports = router;
