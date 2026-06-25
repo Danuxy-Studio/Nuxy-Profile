@@ -1,10 +1,10 @@
 {
   "avatar_url": "/img/avatar.png",
   "name": "Nuxy MC",
-  "bio": "Minecraft Streamer",
+  "bio": "Seorang pria yang suka bermain minecraft, Support aku terus ya bair semangat ngonten nya 🥰",
   "socials": [
     {
-      "name": "SociaBuzz",
+      "name": "Donation",
       "url": "https://sociabuzz.com/nuxy_mc/tribe",
       "icon": "fas fa-gift",
       "type": "donate",
@@ -18,8 +18,8 @@
       "icon_type": "fontawesome"
     },
     {
-      "name": "Channel Danuxy Digital",
-      "url": "https://whatsapp.com/channel/0029Vb6RsCAEAKWDFTrHdu0L",
+      "name": "Saluran WA",
+      "url": "https://whatsapp.com/channel/0029Vb8UiHp0waju0U0dJU0j",
       "icon": "fab fa-whatsapp",
       "type": "community",
       "icon_type": "fontawesome"
