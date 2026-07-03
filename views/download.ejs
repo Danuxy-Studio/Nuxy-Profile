@@ -1,14 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <%- include('partials/head') %>
     
     <style>
+        /* ===== RESET & BASE ===== */
         .ad-container {
-            min-height: 100px;
+            min-height: 80px;
             background: rgba(139, 92, 246, 0.03);
-            border: 1px solid rgba(139, 92, 246, 0.1);
-            border-radius: 16px;
+            border: 1px solid rgba(139, 92, 246, 0.08);
+            border-radius: 14px;
             overflow: hidden;
             display: flex;
             align-items: center;
@@ -16,308 +17,483 @@
         }
         
         .ad-label {
-            background: rgba(245,158,11,0.15);
+            background: rgba(245, 158, 11, 0.12);
             color: #f59e0b;
-            font-size: 10px;
+            font-size: 9px;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 1.5px;
-            padding: 5px 10px;
+            letter-spacing: 1.2px;
+            padding: 4px 10px;
             border-radius: 20px;
             display: inline-block;
         }
         
-        .countdown-display {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background: rgba(139, 92, 246, 0.1);
-            border: 3px solid rgba(139, 92, 246, 0.3);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto;
+        /* ===== COUNTDOWN CIRCLE ===== */
+        .countdown-wrapper {
             position: relative;
+            width: 90px;
+            height: 90px;
+            margin: 0 auto;
         }
         
-        .countdown-display.ready {
-            border-color: #4ade80;
-            background: rgba(34, 197, 94, 0.1);
-            animation: pulse-green 1.5s ease infinite;
+        .countdown-svg {
+            transform: rotate(-90deg);
+            width: 90px;
+            height: 90px;
         }
         
-        @keyframes pulse-green {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.3); }
-            50% { box-shadow: 0 0 0 15px rgba(34, 197, 94, 0); }
+        .countdown-svg .bg-circle {
+            fill: none;
+            stroke: rgba(139, 92, 246, 0.12);
+            stroke-width: 4;
+        }
+        
+        .countdown-svg .progress-circle {
+            fill: none;
+            stroke: url(#gradient);
+            stroke-width: 4;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 0.3s ease;
+            filter: drop-shadow(0 0 6px rgba(139, 92, 246, 0.3));
         }
         
         .countdown-number {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             font-size: 32px;
             font-weight: 800;
             color: #a78bfa;
-        }
-        
-        .ready .countdown-number {
-            color: #4ade80;
-        }
-        
-        .progress-ring {
-            position: absolute;
-            top: -3px;
-            left: -3px;
-            width: calc(100% + 6px);
-            height: calc(100% + 6px);
-            border-radius: 50%;
-            border: 3px solid transparent;
-            border-top-color: #8B5CF6;
-            animation: spin 2s linear infinite;
-        }
-        
-        .ready .progress-ring {
-            display: none;
-        }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        
-        .btn-download {
-            position: relative;
-            overflow: hidden;
+            font-variant-numeric: tabular-nums;
             transition: all 0.3s ease;
-            opacity: 0.4;
-            pointer-events: none;
-            cursor: not-allowed;
         }
         
-        .btn-download.active {
-            opacity: 1;
-            pointer-events: auto;
-            cursor: pointer;
-            animation: glow 1.5s ease infinite;
+        .countdown-number.done {
+            color: #4ade80;
+            font-size: 36px;
         }
         
-        @keyframes glow {
-            0%, 100% { box-shadow: 0 0 20px rgba(139, 92, 246, 0.3); }
-            50% { box-shadow: 0 0 40px rgba(139, 92, 246, 0.6); }
+        .countdown-number .sub-text {
+            font-size: 10px;
+            font-weight: 500;
+            color: #6b7280;
+            display: block;
+            margin-top: -4px;
         }
         
-        .btn-download.active:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 35px rgba(139, 92, 246, 0.4);
+        /* Pulse efek saat selesai */
+        @keyframes readyPulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.06); }
         }
         
+        .countdown-number.done {
+            animation: readyPulse 1.2s ease-in-out infinite;
+        }
+        
+        @keyframes ringGlow {
+            0%, 100% { filter: drop-shadow(0 0 6px rgba(139, 92, 246, 0.3)); }
+            50% { filter: drop-shadow(0 0 20px rgba(74, 222, 128, 0.5)); }
+        }
+        
+        .countdown-wrapper.ready .progress-circle {
+            animation: ringGlow 1.5s ease-in-out infinite;
+        }
+        
+        /* ===== STATUS ===== */
         .status-badge {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 600;
-            padding: 6px 14px;
+            padding: 5px 14px;
             border-radius: 20px;
+            transition: all 0.4s ease;
         }
         
         .status-waiting {
-            background: rgba(245, 158, 11, 0.15);
+            background: rgba(245, 158, 11, 0.12);
             color: #f59e0b;
         }
         
         .status-ready {
-            background: rgba(34, 197, 94, 0.15);
+            background: rgba(34, 197, 94, 0.12);
             color: #4ade80;
         }
         
-        .progress-bar {
+        /* ===== PROGRESS BAR ===== */
+        .progress-track {
             width: 100%;
-            height: 4px;
-            background: rgba(139, 92, 246, 0.15);
+            height: 3px;
+            background: rgba(139, 92, 246, 0.1);
             border-radius: 2px;
             overflow: hidden;
-            margin: 16px 0;
+            margin: 14px 0 8px;
         }
         
         .progress-fill {
             height: 100%;
             background: linear-gradient(90deg, #8B5CF6, #7C3AED, #6D28D9);
             border-radius: 2px;
-            transition: width 1s linear;
             width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        .progress-fill.done {
+            background: linear-gradient(90deg, #4ade80, #22c55e);
+        }
+        
+        /* ===== DOWNLOAD BUTTON ===== */
+        .btn-download {
+            display: block;
+            width: 100%;
+            padding: 14px 20px;
+            border-radius: 14px;
+            font-weight: 600;
+            font-size: 14px;
+            text-align: center;
+            transition: all 0.3s ease;
+            opacity: 0.5;
+            pointer-events: none;
+            cursor: not-allowed;
+            background: linear-gradient(135deg, #374151, #1f2937);
+            color: #9ca3af;
+            border: none;
+            text-decoration: none;
+        }
+        
+        .btn-download.active {
+            opacity: 1;
+            pointer-events: auto;
+            cursor: pointer;
+            background: linear-gradient(135deg, #8B5CF6, #7C3AED);
+            color: white;
+            box-shadow: 0 4px 20px rgba(139, 92, 246, 0.3);
+        }
+        
+        .btn-download.active:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(139, 92, 246, 0.4);
+        }
+        
+        .btn-download.active:active {
+            transform: scale(0.98);
+        }
+        
+        .btn-download .icon {
+            display: inline-block;
+            margin-right: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-download.active .icon {
+            animation: bounceIcon 1.2s ease-in-out infinite;
+        }
+        
+        @keyframes bounceIcon {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-3px); }
+        }
+        
+        /* ===== HINT TEXT ===== */
+        .hint-text {
+            font-size: 11px;
+            color: #6b7280;
+            text-align: center;
+            margin-top: 10px;
+            transition: all 0.4s ease;
+        }
+        
+        .hint-text.ready {
+            color: #4ade80;
+        }
+        
+        /* ===== ANIMASI MASUK ===== */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-up {
+            animation: fadeUp 0.5s ease forwards;
+        }
+        
+        .fade-up-delay-1 { animation-delay: 0.05s; opacity: 0; }
+        .fade-up-delay-2 { animation-delay: 0.1s; opacity: 0; }
+        .fade-up-delay-3 { animation-delay: 0.15s; opacity: 0; }
+        .fade-up-delay-4 { animation-delay: 0.2s; opacity: 0; }
+        .fade-up-delay-5 { animation-delay: 0.25s; opacity: 0; }
+        
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 480px) {
+            .countdown-wrapper {
+                width: 76px;
+                height: 76px;
+            }
+            .countdown-svg {
+                width: 76px;
+                height: 76px;
+            }
+            .countdown-number {
+                font-size: 26px;
+            }
+            .countdown-number.done {
+                font-size: 30px;
+            }
+            .btn-download {
+                font-size: 13px;
+                padding: 12px 16px;
+            }
         }
     </style>
 </head>
 <body class="min-h-screen bg-[#0a0a14]">
-    <main class="max-w-2xl mx-auto px-4 py-6 md:py-12">
-        <!-- Header -->
-        <div class="text-center mb-6">
-            <p class="text-gray-500 text-xs mb-3">DOWNLOAD MODPACK</p>
-            <h1 class="text-xl md:text-2xl font-bold text-white mb-1"><%= mod.name %></h1>
-            <p class="text-gray-400 text-sm">MC <%= mod.mc_version %> • <%= mod.release_date %></p>
+    <main class="max-w-lg mx-auto px-4 py-6 md:py-10">
+        
+        <!-- ===== HEADER ===== -->
+        <div class="text-center mb-5 fade-up fade-up-delay-1">
+            <span class="text-[10px] font-semibold text-purple-400/70 uppercase tracking-wider">⬇ Download Modpack</span>
+            <h1 class="text-xl md:text-2xl font-bold text-white mt-1"><%= mod.name %></h1>
+            <div class="flex items-center justify-center gap-3 mt-1.5 text-xs text-gray-500">
+                <span><i class="fas fa-tag mr-1"></i>MC <%= mod.mc_version %></span>
+                <span class="w-1 h-1 rounded-full bg-gray-700"></span>
+                <span><i class="far fa-calendar mr-1"></i><%= mod.release_date %></span>
+            </div>
         </div>
 
-        <!-- Iklan 1: Banner 300x250 -->
-        <div class="text-center mb-3">
-            <span class="ad-label">Advertisement</span>
+        <!-- ===== IKLAN 1 ===== -->
+        <div class="text-center mb-2 fade-up fade-up-delay-2">
+            <span class="ad-label">Sponsored</span>
         </div>
-        <div class="ad-container mb-6">
+        <div class="ad-container mb-5 fade-up fade-up-delay-2">
             <script>
-              atOptions = {
-                'key' : '2e1952b53273e3e02a9b3e3d312f61cf',
-                'format' : 'iframe',
-                'height' : 250,
-                'width' : 300,
-                'params' : {}
-              };
+                atOptions = {
+                    'key' : '2e1952b53273e3e02a9b3e3d312f61cf',
+                    'format' : 'iframe',
+                    'height' : 250,
+                    'width' : 300,
+                    'params' : {}
+                };
             </script>
             <script src="https://www.highperformanceformat.com/2e1952b53273e3e02a9b3e3d312f61cf/invoke.js"></script>
         </div>
 
-        <!-- Countdown Circle & Status -->
-        <div class="glass-card rounded-2xl p-6 md:p-8 mb-6 text-center">
-            <div class="countdown-display mb-4" id="countdownDisplay">
-                <div class="progress-ring" id="progressRing"></div>
-                <span class="countdown-number" id="countdownNumber">30</span>
+        <!-- ===== COUNTDOWN CARD ===== -->
+        <div class="glass-card rounded-2xl p-6 md:p-7 mb-5 text-center fade-up fade-up-delay-3">
+            
+            <!-- Circle Progress -->
+            <div class="countdown-wrapper" id="countdownWrapper">
+                <svg class="countdown-svg" viewBox="0 0 90 90">
+                    <defs>
+                        <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" style="stop-color:#8B5CF6"/>
+                            <stop offset="100%" style="stop-color:#7C3AED"/>
+                        </linearGradient>
+                    </defs>
+                    <circle class="bg-circle" cx="45" cy="45" r="40"/>
+                    <circle class="progress-circle" id="progressCircle" cx="45" cy="45" r="40"
+                            stroke-dasharray="251.2" stroke-dashoffset="0"/>
+                </svg>
+                <div class="countdown-number" id="countdownNumber">
+                    30
+                    <span class="sub-text">detik</span>
+                </div>
             </div>
             
-            <div class="status-badge status-waiting mb-2" id="statusBadge">
-                <i class="fas fa-clock"></i>
-                <span id="statusText">Mohon tunggu...</span>
+            <!-- Status -->
+            <div class="status-badge status-waiting mt-3" id="statusBadge">
+                <i class="fas fa-hourglass-half" id="statusIcon"></i>
+                <span id="statusText">Menunggu...</span>
             </div>
             
-            <p class="text-gray-500 text-sm" id="statusDesc">
-                Link download akan muncul dalam <strong><span id="timeLeft">30</span> detik</strong>
-            </p>
-            
-            <div class="progress-bar">
+            <!-- Progress Bar -->
+            <div class="progress-track">
                 <div class="progress-fill" id="progressFill"></div>
             </div>
+            
+            <!-- Status Desc -->
+            <p class="text-gray-500 text-xs" id="statusDesc">
+                Link download akan aktif dalam <strong id="timeLeft">30</strong> detik
+            </p>
         </div>
 
-        <!-- Iklan 2: Native Banner -->
-        <div class="text-center mb-3">
-            <span class="ad-label">Advertisement</span>
+        <!-- ===== IKLAN 2 ===== -->
+        <div class="text-center mb-2 fade-up fade-up-delay-4">
+            <span class="ad-label">Sponsored</span>
         </div>
-        <div class="ad-container mb-4">
+        <div class="ad-container mb-4 fade-up fade-up-delay-4">
             <script async="async" data-cfasync="false" src="https://pl29351551.profitablecpmratenetwork.com/067d68146a19f8ada3b8e745ff802f3c/invoke.js"></script>
             <div id="container-067d68146a19f8ada3b8e745ff802f3c"></div>
         </div>
 
-        <!-- Download Info Card -->
-        <div class="glass-card rounded-2xl p-4 md:p-5 mb-4">
-            <div class="flex items-center gap-3">
-                <div class="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center flex-shrink-0">
-                    <i class="fas fa-cube text-xl text-purple-400"></i>
-                </div>
-                <div class="flex-1 min-w-0">
-                    <h3 class="text-white font-bold text-base truncate"><%= mod.name %></h3>
-                    <p class="text-gray-500 text-xs mt-0.5 line-clamp-2"><%= mod.description %></p>
-                </div>
+        <!-- ===== INFO MOD ===== -->
+        <div class="glass-card rounded-2xl p-3.5 md:p-4 mb-4 flex items-center gap-3 fade-up fade-up-delay-4">
+            <div class="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center flex-shrink-0">
+                <i class="fas fa-cube text-purple-400"></i>
+            </div>
+            <div class="flex-1 min-w-0">
+                <p class="text-white font-semibold text-sm truncate"><%= mod.name %></p>
+                <p class="text-gray-500 text-xs truncate"><%= mod.description %></p>
             </div>
         </div>
 
-        <!-- Download Button -->
-        <a href="/go/<%= mod.id %>" 
-           class="btn-download w-full bg-gradient-to-r from-purple-600 to-purple-700 text-white py-4 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 mb-3"
+        <!-- ===== DOWNLOAD BUTTON ===== -->
+        <a href="#" 
+           class="btn-download fade-up fade-up-delay-5"
            id="downloadButton"
            onclick="return handleDownload(event)">
-            <i class="fas fa-lock" id="btnIcon"></i>
+            <span class="icon"><i class="fas fa-lock" id="btnIcon"></i></span>
             <span id="btnText">Tunggu 30 detik...</span>
         </a>
         
-        <p class="text-center text-gray-600 text-xs mb-8" id="hintText">
+        <p class="hint-text" id="hintText">
             <i class="fas fa-info-circle mr-1"></i>
-            Tombol download akan aktif setelah countdown selesai
+            Tombol aktif setelah countdown selesai
         </p>
 
-        <!-- Iklan 3: Social Bar -->
-        <div class="text-center mb-3">
-            <span class="ad-label">Advertisement</span>
+        <!-- ===== IKLAN 3 ===== -->
+        <div class="text-center mb-2 mt-5 fade-up fade-up-delay-5">
+            <span class="ad-label">Sponsored</span>
         </div>
-        <div class="ad-container mb-8">
+        <div class="ad-container mb-5 fade-up fade-up-delay-5">
             <script src="https://pl29351553.profitablecpmratenetwork.com/29/9c/0a/299c0a97fe579e4863897f90bc0a8194.js"></script>
         </div>
 
-        <!-- Back Link -->
-        <div class="text-center">
-            <a href="/mods" class="text-gray-600 hover:text-gray-400 transition text-sm">
+        <!-- ===== BACK LINK ===== -->
+        <div class="text-center fade-up fade-up-delay-5">
+            <a href="/mods" class="text-gray-600 hover:text-gray-400 transition text-xs">
                 <i class="fas fa-arrow-left mr-1"></i>Kembali ke daftar modpack
             </a>
         </div>
         
-        <p class="text-center text-gray-700 text-xs mt-6">
-            Dengan mendownload, Anda menyetujui Syarat & Ketentuan kami.
+        <p class="text-center text-gray-700/60 text-[10px] mt-4 fade-up fade-up-delay-5">
+            Dengan mendownload, Anda menyetujui Syarat &amp; Ketentuan
         </p>
     </main>
 
-    <!-- Social Bar akan tampil di pojok secara otomatis -->
-
+    <!-- ============================================================ -->
+    <!-- ===== SCRIPT ===== -->
     <script>
-        const totalTime = 30;
-        let timeLeft = totalTime;
-        let downloadReady = false;
-        
-        const countdownNumber = document.getElementById('countdownNumber');
-        const countdownDisplay = document.getElementById('countdownDisplay');
-        const progressFill = document.getElementById('progressFill');
-        const statusBadge = document.getElementById('statusBadge');
-        const statusText = document.getElementById('statusText');
-        const statusDesc = document.getElementById('statusDesc');
-        const timeLeftSpan = document.getElementById('timeLeft');
-        const downloadButton = document.getElementById('downloadButton');
-        const btnIcon = document.getElementById('btnIcon');
-        const btnText = document.getElementById('btnText');
-        const hintText = document.getElementById('hintText');
-        
-        function updateCountdown() {
-            if (timeLeft <= 0) {
+        (function() {
+            const TOTAL_TIME = 30; // detik
+            let timeLeft = TOTAL_TIME;
+            let downloadReady = false;
+            let timer = null;
+            
+            // DOM Elements
+            const wrapper = document.getElementById('countdownWrapper');
+            const circle = document.getElementById('progressCircle');
+            const numberEl = document.getElementById('countdownNumber');
+            const progressFill = document.getElementById('progressFill');
+            const statusBadge = document.getElementById('statusBadge');
+            const statusText = document.getElementById('statusText');
+            const statusIcon = document.getElementById('statusIcon');
+            const statusDesc = document.getElementById('statusDesc');
+            const timeLeftSpan = document.getElementById('timeLeft');
+            const btn = document.getElementById('downloadButton');
+            const btnIcon = document.getElementById('btnIcon');
+            const btnText = document.getElementById('btnText');
+            const hint = document.getElementById('hintText');
+            
+            const circumference = 2 * Math.PI * 40; // r=40
+            
+            // Set initial
+            circle.style.strokeDasharray = circumference;
+            circle.style.strokeDashoffset = circumference;
+            
+            function updateDisplay() {
+                // Hitung progress
+                const progress = (TOTAL_TIME - timeLeft) / TOTAL_TIME;
+                const offset = circumference * (1 - progress);
+                circle.style.strokeDashoffset = offset;
+                
+                // Progress bar
+                progressFill.style.width = (progress * 100) + '%';
+                
+                // Angka
+                numberEl.textContent = timeLeft;
+                if (timeLeftSpan) timeLeftSpan.textContent = timeLeft;
+                
+                // Status desc
+                if (timeLeft > 5) {
+                    statusDesc.innerHTML = 'Link download aktif dalam <strong>' + timeLeft + '</strong> detik';
+                } else if (timeLeft > 0) {
+                    statusDesc.innerHTML = 'Hampir siap! <strong>' + timeLeft + '</strong> detik lagi ⏳';
+                }
+            }
+            
+            function finishCountdown() {
                 downloadReady = true;
                 
-                countdownNumber.textContent = '✓';
-                countdownDisplay.classList.add('ready');
+                // Circle
+                circle.style.strokeDashoffset = 0;
                 progressFill.style.width = '100%';
+                progressFill.classList.add('done');
+                wrapper.classList.add('ready');
                 
+                // Number
+                numberEl.textContent = '✓';
+                numberEl.classList.add('done');
+                numberEl.querySelector('.sub-text')?.remove();
+                
+                // Status
                 statusBadge.className = 'status-badge status-ready';
+                statusIcon.className = 'fas fa-check-circle';
                 statusText.textContent = 'Siap download!';
-                statusDesc.innerHTML = '<span class="text-green-400">Link download sudah tersedia!</span>';
+                statusDesc.innerHTML = '<span class="text-green-400">Link download sudah tersedia ✅</span>';
                 
-                downloadButton.classList.add('active');
-                downloadButton.href = '/go/<%= mod.id %>';
+                // Button
+                btn.classList.add('active');
+                btn.href = '/go/<%= mod.id %>';
                 btnIcon.className = 'fas fa-download';
                 btnText.textContent = 'Download <%= mod.name %>';
-                hintText.innerHTML = '<i class="fas fa-check-circle mr-1 text-green-400"></i> Klik tombol di atas untuk memulai download';
                 
-                return;
+                // Hint
+                hint.className = 'hint-text ready';
+                hint.innerHTML = '<i class="fas fa-check-circle mr-1"></i> Klik tombol untuk mulai download';
             }
             
-            countdownNumber.textContent = timeLeft;
-            if (timeLeftSpan) timeLeftSpan.textContent = timeLeft;
-            
-            const progress = ((totalTime - timeLeft) / totalTime) * 100;
-            progressFill.style.width = progress + '%';
-            
-            if (timeLeft <= 5) {
-                statusDesc.innerHTML = 'Hampir siap! <strong>' + timeLeft + ' detik</strong> lagi';
+            function tick() {
+                timeLeft--;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    timer = null;
+                    finishCountdown();
+                    return;
+                }
+                
+                updateDisplay();
             }
             
-            timeLeft--;
-        }
-        
-        updateCountdown();
-        const timer = setInterval(updateCountdown, 1000);
-        
-        function handleDownload(event) {
-            if (!downloadReady) {
-                event.preventDefault();
-                return false;
-            }
+            // Start
+            updateDisplay();
+            timer = setInterval(tick, 1000);
             
-            downloadButton.classList.remove('active');
-            downloadButton.style.pointerEvents = 'none';
-            downloadButton.style.opacity = '0.7';
-            btnIcon.className = 'fas fa-spinner fa-spin';
-            btnText.textContent = 'Mengarahkan ke download...';
+            // Handle download click
+            window.handleDownload = function(event) {
+                if (!downloadReady) {
+                    event.preventDefault();
+                    return false;
+                }
+                
+                // Feedback
+                btn.classList.remove('active');
+                btn.style.opacity = '0.6';
+                btn.style.pointerEvents = 'none';
+                btnIcon.className = 'fas fa-spinner fa-spin';
+                btnText.textContent = 'Mengarahkan...';
+                
+                return true;
+            };
             
-            return true;
-        }
+            // Cleanup jika halaman di-unload
+            window.addEventListener('beforeunload', function() {
+                if (timer) clearInterval(timer);
+            });
+        })();
     </script>
 </body>
 </html>
