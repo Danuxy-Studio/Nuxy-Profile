@@ -18,8 +18,15 @@
       "icon_type": "fontawesome"
     },
     {
-      "name": "Saluran WA",
+      "name": "Saluran Danuxy Store",
       "url": "https://whatsapp.com/channel/0029Vb8UiHp0waju0U0dJU0j",
+      "icon": "fab fa-whatsapp",
+      "type": "community",
+      "icon_type": "fontawesome"
+    },
+    {
+      "name": "Saluran Komi-San Bot",
+      "url": "https://whatsapp.com/channel/0029Vb8mQRlF1YlTEn1fCT0n",
       "icon": "fab fa-whatsapp",
       "type": "community",
       "icon_type": "fontawesome"
