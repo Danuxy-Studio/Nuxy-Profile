@@ -1,15 +1,15 @@
 [
   {
-    "id": "1781317686404",
-    "name": "Queen Craft",
+    "id": "1787377697971",
+    "name": "GTH SMP",
     "has_java": true,
-    "java_ip": "queencraft.xyz",
+    "java_ip": "play.gthsmp.my.id:25641",
     "has_bedrock": true,
-    "bedrock_ip": "queencraft.xyz",
-    "bedrock_port": 19030,
+    "bedrock_ip": "play.gthsmp.my.id",
+    "bedrock_port": 25641,
     "community": {
-      "whatsapp": "https://wa.queencraft.xyz",
-      "discord": "https://discord.queencraft.xyz"
+      "whatsapp": "",
+      "discord": "https://discord.gg/ZRY9VbNYA"
     }
   }
 ]
