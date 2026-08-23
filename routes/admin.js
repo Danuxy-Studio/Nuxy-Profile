@@ -6,7 +6,7 @@ const fs = require('fs');
 const { v4: uuidv4 } = require('uuid');
 const { readJSON, writeJSON } = require('../utils/fileHandler');
 
-// Configure multer for file upload
+// Configure multer for avatar upload
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         const uploadDir = path.join(__dirname, '..', 'public', 'uploads', 'profiles');
@@ -28,18 +28,15 @@ const upload = multer({
         const allowedTypes = /jpeg|jpg|png|gif|webp/;
         const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
         const mimetype = allowedTypes.test(file.mimetype);
-        if (mimetype && extname) {
-            return cb(null, true);
-        } else {
-            cb(new Error('Only image files are allowed!'));
-        }
+        if (mimetype && extname) return cb(null, true);
+        cb(new Error('Only image files are allowed!'));
     }
 });
 
-// Auth middleware
+// Auth middleware — protects every route below
 const requireAuth = (req, res, next) => {
     if (!req.session.user) {
-        req.flash('error_msg', 'Please login first');
+        req.flash('error_msg', 'Silakan login terlebih dahulu');
         return res.redirect('/auth/login');
     }
     next();
@@ -49,7 +46,17 @@ router.use(requireAuth);
 
 // ==================== DASHBOARD ====================
 router.get('/', (req, res) => {
-    res.render('admin/dashboard', { title: 'Admin Dashboard' });
+    const profile = readJSON('profile.json');
+    const mods = readJSON('mods.json');
+    const servers = readJSON('servers.json');
+    res.render('admin/dashboard', {
+        title: 'Admin Dashboard',
+        stats: {
+            links: (profile.socials || []).length,
+            mods: mods.length,
+            servers: servers.length
+        }
+    });
 });
 
 // ==================== PROFILE ====================
@@ -60,13 +67,9 @@ router.get('/profile', (req, res) => {
 
 router.post('/profile', upload.single('avatar'), (req, res) => {
     try {
-        console.log('=== FORM DATA RECEIVED ===');
-        console.log('Body keys:', Object.keys(req.body));
-        console.log('Full body:', req.body);
-        
         const profile = readJSON('profile.json');
         const { name, bio } = req.body;
-        
+
         // Handle avatar
         let avatar_url = profile.avatar_url || '/img/avatar.png';
         if (req.file) {
@@ -76,54 +79,38 @@ router.post('/profile', upload.single('avatar'), (req, res) => {
             }
             avatar_url = '/uploads/profiles/' + req.file.filename;
         }
-        
-        // BUILD SOCIAL LINKS MANUALLY
+
+        // Build social links from indexed form fields
         const socials = [];
-        
         const allKeys = Object.keys(req.body);
-        console.log('All keys:', allKeys);
-        
         const nameKeys = allKeys.filter(key => key.startsWith('social_name_'));
-        console.log('Name keys found:', nameKeys);
-        
+
         nameKeys.sort().forEach(key => {
             const index = key.replace('social_name_', '');
-            const name = req.body[key] ? req.body[key].trim() : '';
+            const linkName = req.body[key] ? req.body[key].trim() : '';
             const url = req.body['social_url_' + index] ? req.body['social_url_' + index].trim() : '';
-            const icon = req.body['social_icon_' + index] ? req.body['social_icon_' + index].trim() : 'fas fa-link';
+            const icon = req.body['social_icon_' + index] ? req.body['social_icon_' + index].trim() : 'link';
             const type = req.body['social_type_' + index] ? req.body['social_type_' + index].trim() : 'social';
-            const iconType = req.body['social_icon_type_' + index] ? req.body['social_icon_type_' + index].trim() : 'fontawesome';
-            
-            console.log(`Link ${index}:`, { name, url, icon, type, iconType });
-            
-            if (name && url) {
-                socials.push({
-                    name: name,
-                    url: url,
-                    icon: icon,
-                    type: type,
-                    icon_type: iconType
-                });
+
+            if (linkName && url) {
+                socials.push({ name: linkName, url, icon, type, icon_type: 'lucide' });
             }
         });
-        
-        console.log('Final socials:', socials);
-        console.log('=== END ===');
-        
+
         const updatedProfile = {
-            avatar_url: avatar_url,
+            avatar_url,
             name: name || 'Nuxy MC',
             bio: bio || '',
-            socials: socials
+            socials
         };
-        
+
         writeJSON('profile.json', updatedProfile);
         req.flash('success_msg', 'Profile berhasil disimpan!');
     } catch (error) {
         console.error('Error:', error);
         req.flash('error_msg', 'Error: ' + error.message);
     }
-    
+
     res.redirect('/admin/profile');
 });
 
@@ -214,7 +201,7 @@ router.post('/servers/add', (req, res) => {
         const servers = readJSON('servers.json');
         const hasJava = req.body.has_java === 'on';
         const hasBedrock = req.body.has_bedrock === 'on';
-        
+
         const newServer = {
             id: Date.now().toString(),
             name: req.body.name || '',
@@ -244,7 +231,7 @@ router.post('/servers/edit/:id', (req, res) => {
         if (index !== -1) {
             const hasJava = req.body.has_java === 'on';
             const hasBedrock = req.body.has_bedrock === 'on';
-            
+
             servers[index] = {
                 ...servers[index],
                 name: req.body.name || servers[index].name,
@@ -279,31 +266,27 @@ router.get('/servers/delete/:id', (req, res) => {
     res.redirect('/admin/servers');
 });
 
-// ==================== OVERLAY ====================
+// ==================== OVERLAY (stream challenge goals) ====================
 router.get('/overlay', (req, res) => {
-    let challenges = [];
     const challengesPath = path.join(__dirname, '..', 'data', 'challenges.json');
-    
+    let challenges = [];
+
     if (fs.existsSync(challengesPath)) {
         try {
             challenges = JSON.parse(fs.readFileSync(challengesPath, 'utf8'));
-        } catch(e) {
+        } catch (e) {
             console.error('Error reading challenges.json:', e);
         }
     }
-    
+
     if (!challenges || challenges.length === 0) {
         challenges = [
-            { id: 1, amount: "5K", action: "Buang Item Dipegang", color: "#8B5CF6" },
-            { id: 2, amount: "10K", action: "Buang 5 Item", color: "#F59E0B" },
-            { id: 3, amount: "20K", action: "Kill Villager Armorer", color: "#EF4444" },
-            { id: 4, amount: "30K", action: "Kill Villager Mending", color: "#22C55E" },
-            { id: 5, amount: "50K", action: "Buang 1 Set Armor", color: "#06B6D4" },
-            { id: 6, amount: "100K", action: "Clear Inventory", color: "#A855F7" },
-            { id: 7, amount: "200K", action: "Bebas Atur Sendiri", color: "#14B8A6" }
+            { id: 1, amount: '5K', action: 'Buang Item Dipegang', color: '#A855F7' },
+            { id: 2, amount: '15K', action: 'Buang 5 Item', color: '#F59E0B' },
+            { id: 3, amount: '100K', action: 'Clear 1 Inventory', color: '#EF4444' }
         ];
     }
-    
+
     res.render('admin/overlay', { challenges, title: 'Edit Overlay' });
 });
 

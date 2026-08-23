@@ -18,7 +18,7 @@ app.use(session({
     secret: process.env.SESSION_SECRET || 'fallback-secret',
     resave: false,
     saveUninitialized: true,
-    cookie: { 
+    cookie: {
         secure: false,
         maxAge: 1000 * 60 * 60 * 24
     }
@@ -29,14 +29,14 @@ app.use(flash());
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-// Global middleware - tambahkan req untuk Open Graph
+// Global locals available to every view
 app.use((req, res, next) => {
     res.locals.user = req.session.user || null;
     res.locals.success_msg = req.flash('success_msg');
     res.locals.error_msg = req.flash('error_msg');
     res.locals.currentUrl = req.originalUrl;
     res.locals.path = req.path;
-    res.locals.req = req; // <-- Tambahkan ini untuk Open Graph
+    res.locals.req = req; // used for Open Graph absolute URLs
     next();
 });
 

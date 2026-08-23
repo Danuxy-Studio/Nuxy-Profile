@@ -1,0 +1,20 @@
+<% if (typeof success_msg !== 'undefined' && success_msg && success_msg.length > 0) { %>
+    <div class="fixed top-4 right-4 z-50 bg-purple-500/90 backdrop-blur text-white px-5 py-3 rounded-xl shadow-lg flex items-center gap-2" id="flashToast">
+        <i data-lucide="check-circle" class="w-4 h-4"></i>
+        <span class="text-sm"><%= success_msg %></span>
+        <button onclick="this.parentElement.remove()" class="ml-2 hover:text-white/70"><i data-lucide="x" class="w-3.5 h-3.5"></i></button>
+    </div>
+<% } %>
+<% if (typeof error_msg !== 'undefined' && error_msg && error_msg.length > 0) { %>
+    <div class="fixed top-4 right-4 z-50 bg-red-500/90 backdrop-blur text-white px-5 py-3 rounded-xl shadow-lg flex items-center gap-2" id="flashToast">
+        <i data-lucide="alert-circle" class="w-4 h-4"></i>
+        <span class="text-sm"><%= error_msg %></span>
+        <button onclick="this.parentElement.remove()" class="ml-2 hover:text-white/70"><i data-lucide="x" class="w-3.5 h-3.5"></i></button>
+    </div>
+<% } %>
+<script>
+    setTimeout(() => {
+        const t = document.getElementById('flashToast');
+        if (t) { t.style.transition = 'opacity .3s'; t.style.opacity = '0'; setTimeout(() => t.remove(), 300); }
+    }, 3500);
+</script>

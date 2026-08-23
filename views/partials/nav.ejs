@@ -1,0 +1,92 @@
+<!-- ============ TOP NAVBAR (glassmorphism, all breakpoints) ============ -->
+<header class="sticky top-0 z-40" id="mainHeader">
+    <div class="bg-slate-950/70 backdrop-blur-xl border-b border-slate-800/80">
+        <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
+            <!-- Logo -->
+            <a href="/" class="flex items-center gap-2 group">
+                <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center shadow-lg shadow-purple-500/20 transition-transform duration-300 group-hover:scale-105">
+                    <i data-lucide="box" class="w-4 h-4 text-white"></i>
+                </div>
+                <span class="font-bold gradient-text text-lg">Nuxy MC</span>
+            </a>
+
+            <!-- Desktop Nav Links -->
+            <nav class="hidden md:flex items-center gap-1">
+                <a href="/" class="flex items-center gap-1.5 text-sm text-slate-300 hover:text-purple-400 transition-colors px-3 py-2 rounded-lg hover:bg-purple-500/10 <%= path === '/' ? 'text-purple-400 bg-purple-500/10' : '' %>">
+                    <i data-lucide="home" class="w-4 h-4"></i> Home
+                </a>
+                <a href="/mods" class="flex items-center gap-1.5 text-sm text-slate-300 hover:text-purple-400 transition-colors px-3 py-2 rounded-lg hover:bg-purple-500/10 <%= path === '/mods' ? 'text-purple-400 bg-purple-500/10' : '' %>">
+                    <i data-lucide="boxes" class="w-4 h-4"></i> Mods
+                </a>
+                <a href="/servers" class="flex items-center gap-1.5 text-sm text-slate-300 hover:text-purple-400 transition-colors px-3 py-2 rounded-lg hover:bg-purple-500/10 <%= path === '/servers' ? 'text-purple-400 bg-purple-500/10' : '' %>">
+                    <i data-lucide="server" class="w-4 h-4"></i> Servers
+                </a>
+                <% if (user) { %>
+                <a href="/admin" class="flex items-center gap-1.5 text-sm text-slate-300 hover:text-purple-400 transition-colors px-3 py-2 rounded-lg hover:bg-purple-500/10">
+                    <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Admin
+                </a>
+                <a href="/auth/logout" class="flex items-center gap-1.5 text-sm text-red-400 hover:text-red-300 transition-colors px-3 py-2 rounded-lg hover:bg-red-500/10">
+                    <i data-lucide="log-out" class="w-4 h-4"></i> Logout
+                </a>
+                <% } %>
+            </nav>
+
+            <!-- Mobile menu toggle (only used for admin link / logout on small screens; primary nav is the bottom bar) -->
+            <% if (user) { %>
+            <a href="/admin" class="md:hidden text-slate-400 hover:text-purple-400 transition-colors p-2 rounded-lg hover:bg-purple-500/10">
+                <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+            </a>
+            <% } %>
+        </div>
+    </div>
+</header>
+
+<!-- ============ MOBILE BOTTOM NAV ============ -->
+<nav class="fixed bottom-0 left-0 right-0 z-40 md:hidden bg-slate-950/90 backdrop-blur-xl border-t border-slate-800/80 safe-area-bottom" id="bottomNav">
+    <div class="flex justify-around items-center py-1.5 px-2 max-w-md mx-auto">
+        <a href="/" class="flex flex-col items-center py-1.5 px-4 rounded-xl transition-colors <%= path === '/' ? 'text-purple-400' : 'text-slate-500' %>">
+            <i data-lucide="home" class="w-5 h-5"></i>
+            <span class="text-[10px] mt-0.5 font-medium">Home</span>
+        </a>
+        <a href="/mods" class="flex flex-col items-center py-1.5 px-4 rounded-xl transition-colors <%= path === '/mods' ? 'text-purple-400' : 'text-slate-500' %>">
+            <i data-lucide="boxes" class="w-5 h-5"></i>
+            <span class="text-[10px] mt-0.5 font-medium">Mods</span>
+        </a>
+        <a href="/servers" class="flex flex-col items-center py-1.5 px-4 rounded-xl transition-colors <%= path === '/servers' ? 'text-purple-400' : 'text-slate-500' %>">
+            <i data-lucide="server" class="w-5 h-5"></i>
+            <span class="text-[10px] mt-0.5 font-medium">Servers</span>
+        </a>
+        <% if (user) { %>
+        <a href="/admin" class="flex flex-col items-center py-1.5 px-4 rounded-xl transition-colors <%= path.startsWith('/admin') ? 'text-purple-400' : 'text-slate-500' %>">
+            <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+            <span class="text-[10px] mt-0.5 font-medium">Admin</span>
+        </a>
+        <% } %>
+    </div>
+</nav>
+<div class="h-16 md:hidden"></div>
+
+<script>
+    // Auto-hide bottom nav on scroll down, show on scroll up
+    (function () {
+        const bottomNav = document.getElementById('bottomNav');
+        if (!bottomNav || window.innerWidth >= 768) return;
+        let lastY = window.pageYOffset;
+        let ticking = false;
+
+        function onScroll() {
+            const y = window.pageYOffset;
+            if (y > lastY && y > 60) {
+                bottomNav.style.transform = 'translateY(120%)';
+            } else {
+                bottomNav.style.transform = 'translateY(0)';
+            }
+            lastY = y;
+            ticking = false;
+        }
+        bottomNav.style.transition = 'transform 0.3s ease';
+        window.addEventListener('scroll', () => {
+            if (!ticking) { requestAnimationFrame(onScroll); ticking = true; }
+        }, { passive: true });
+    })();
+</script>

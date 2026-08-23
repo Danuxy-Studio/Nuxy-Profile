@@ -3,249 +3,167 @@
 <head>
     <%- include('../partials/head') %>
 </head>
-<body class="min-h-screen bg-[#0a0a14]">
-    <%- include('../partials/header') %>
-    
-    <main class="max-w-4xl mx-auto px-4 py-8">
-        <!-- Header -->
-        <div class="flex items-center justify-between mb-8">
+<body class="min-h-screen">
+    <%- include('partials/sidebar') %>
+    <%- include('partials/toast') %>
+
+    <main class="max-w-4xl mx-auto px-4 md:px-8 py-8">
+        <div class="flex items-center justify-between mb-6 gap-3">
             <div>
-                <h1 class="text-2xl md:text-3xl font-bold gradient-text mb-1">
-                    <i class="fas fa-server mr-2"></i>Manage Servers
-                </h1>
-                <p class="text-gray-400 text-sm">Atur server & komunitas (WhatsApp/Discord)</p>
+                <h1 class="text-2xl font-bold gradient-text mb-1">Manage Servers</h1>
+                <p class="text-slate-400 text-sm"><%= servers.length %> server terdaftar</p>
             </div>
-            <a href="/admin" class="flex items-center text-gray-400 hover:text-purple-400 transition text-sm">
-                <i class="fas fa-arrow-left mr-2"></i>Dashboard
-            </a>
+            <button onclick="openAddModal()" class="btn-primary text-white px-4 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2 flex-shrink-0">
+                <i data-lucide="plus" class="w-4 h-4"></i> <span class="hidden sm:inline">Add Server</span>
+            </button>
         </div>
 
-        <!-- Toast -->
-        <% if (typeof success_msg !== 'undefined' && success_msg && success_msg.length > 0) { %>
-            <div class="fixed top-4 right-4 z-50 bg-emerald-500/90 backdrop-blur text-white px-5 py-3 rounded-xl shadow-lg flex items-center gap-2 animate-slide-in" id="toast">
-                <i class="fas fa-check-circle"></i>
-                <span class="text-sm"><%= success_msg %></span>
-                <button onclick="this.parentElement.remove()" class="ml-2 hover:text-white/70"><i class="fas fa-times"></i></button>
-            </div>
-        <% } %>
-        
-        <% if (typeof error_msg !== 'undefined' && error_msg && error_msg.length > 0) { %>
-            <div class="fixed top-4 right-4 z-50 bg-red-500/90 backdrop-blur text-white px-5 py-3 rounded-xl shadow-lg flex items-center gap-2 animate-slide-in" id="toast">
-                <i class="fas fa-exclamation-circle"></i>
-                <span class="text-sm"><%= error_msg %></span>
-                <button onclick="this.parentElement.remove()" class="ml-2 hover:text-white/70"><i class="fas fa-times"></i></button>
-            </div>
-        <% } %>
-
-        <!-- Add Form -->
-        <div class="glass-card rounded-2xl p-5 md:p-6 mb-6">
-            <h2 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
-                <span class="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center">
-                    <i class="fas fa-plus text-purple-400 text-sm"></i>
-                </span>
-                Add New Server
-            </h2>
-            <form action="/admin/servers/add" method="POST" class="space-y-3">
-                <!-- Nama Server -->
-                <input type="text" name="name" placeholder="Server name" required 
-                       class="w-full bg-gray-800/50 border border-purple-500/20 rounded-xl px-4 py-2.5 text-white text-sm focus:border-purple-500 focus:outline-none transition">
-                
-                <!-- Java & Bedrock -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div class="bg-gray-800/30 rounded-xl p-3">
-                        <label class="flex items-center gap-3 cursor-pointer">
-                            <input type="checkbox" name="has_java" onchange="document.getElementById('addJavaIp').classList.toggle('hidden')" 
-                                   class="w-4 h-4 rounded accent-purple-600">
-                            <div>
-                                <span class="text-white text-sm font-medium"><i class="fab fa-java mr-1"></i>Java Edition</span>
-                                <p class="text-gray-500 text-xs">Enable Java server</p>
+        <% if (servers && servers.length > 0) { %>
+            <div class="space-y-3">
+                <% servers.forEach(function (server) { %>
+                    <div class="glass-card p-4">
+                        <div class="flex items-center gap-4 mb-2">
+                            <div class="w-11 h-11 rounded-xl bg-purple-500/10 flex items-center justify-center flex-shrink-0">
+                                <i data-lucide="server" class="w-5 h-5 text-purple-400"></i>
                             </div>
-                        </label>
-                        <input type="text" name="java_ip" id="addJavaIp" placeholder="Java IP address" 
-                               class="hidden mt-2 w-full bg-gray-800/50 border border-purple-500/20 rounded-lg px-3 py-2 text-white text-sm">
-                    </div>
-                    <div class="bg-gray-800/30 rounded-xl p-3">
-                        <label class="flex items-center gap-3 cursor-pointer">
-                            <input type="checkbox" name="has_bedrock" onchange="document.getElementById('addBedrockGroup').classList.toggle('hidden')" 
-                                   class="w-4 h-4 rounded accent-purple-600">
-                            <div>
-                                <span class="text-white text-sm font-medium"><i class="fas fa-cube mr-1"></i>Bedrock Edition</span>
-                                <p class="text-gray-500 text-xs">Enable Bedrock server</p>
-                            </div>
-                        </label>
-                        <div id="addBedrockGroup" class="hidden mt-2 space-y-2">
-                            <input type="text" name="bedrock_ip" placeholder="Bedrock IP" 
-                                   class="w-full bg-gray-800/50 border border-purple-500/20 rounded-lg px-3 py-2 text-white text-sm">
-                            <input type="number" name="bedrock_port" placeholder="Port (default 19132)" 
-                                   class="w-full bg-gray-800/50 border border-purple-500/20 rounded-lg px-3 py-2 text-white text-sm">
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Community Section -->
-                <div class="bg-purple-500/5 border border-purple-500/20 rounded-xl p-4">
-                    <p class="text-white font-medium text-sm mb-3 flex items-center gap-2">
-                        <i class="fas fa-users text-purple-400"></i> Community Links
-                    </p>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <div>
-                            <label class="text-gray-400 text-xs mb-1 block">
-                                <i class="fab fa-whatsapp text-green-400 mr-1"></i> WhatsApp Group URL
-                            </label>
-                            <input type="url" name="whatsapp" placeholder="https://chat.whatsapp.com/..." 
-                                   class="w-full bg-gray-800/50 border border-purple-500/20 rounded-lg px-3 py-2 text-white text-sm focus:border-purple-500 focus:outline-none transition">
-                        </div>
-                        <div>
-                            <label class="text-gray-400 text-xs mb-1 block">
-                                <i class="fab fa-discord text-indigo-400 mr-1"></i> Discord Invite URL
-                            </label>
-                            <input type="url" name="discord" placeholder="https://discord.gg/..." 
-                                   class="w-full bg-gray-800/50 border border-purple-500/20 rounded-lg px-3 py-2 text-white text-sm focus:border-purple-500 focus:outline-none transition">
-                        </div>
-                    </div>
-                </div>
-                
-                <button type="submit" class="btn-primary text-white px-6 py-2.5 rounded-xl font-medium text-sm">
-                    <i class="fas fa-plus mr-2"></i>Add Server
-                </button>
-            </form>
-        </div>
-
-        <!-- Servers List -->
-        <div class="space-y-3">
-            <% if (servers && servers.length > 0) { %>
-                <% servers.forEach(function(server) { %>
-                    <div class="glass-card rounded-2xl p-5 md:p-6">
-                        <form action="/admin/servers/edit/<%= server.id %>" method="POST" class="space-y-3">
-                            <!-- Nama Server -->
-                            <input type="text" name="name" value="<%= server.name %>" required 
-                                   class="w-full bg-gray-800/50 border border-purple-500/20 rounded-xl px-4 py-2.5 text-white text-sm focus:border-purple-500 focus:outline-none">
-                            
-                            <!-- Java & Bedrock -->
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div class="bg-gray-800/30 rounded-xl p-3">
-                                    <label class="flex items-center gap-3 cursor-pointer">
-                                        <input type="checkbox" name="has_java" <%= server.has_java ? 'checked' : '' %> 
-                                               onchange="document.getElementById('javaIp<%= server.id %>').classList.toggle('hidden')" 
-                                               class="w-4 h-4 rounded accent-purple-600">
-                                        <div>
-                                            <span class="text-white text-sm font-medium"><i class="fab fa-java mr-1"></i>Java Edition</span>
-                                            <p class="text-gray-500 text-xs">Enable Java server</p>
-                                        </div>
-                                    </label>
-                                    <input type="text" name="java_ip" id="javaIp<%= server.id %>" value="<%= server.java_ip || '' %>" 
-                                           placeholder="Java IP" class="<%= server.has_java ? '' : 'hidden' %> mt-2 w-full bg-gray-800/50 border border-purple-500/20 rounded-lg px-3 py-2 text-white text-sm">
-                                </div>
-                                <div class="bg-gray-800/30 rounded-xl p-3">
-                                    <label class="flex items-center gap-3 cursor-pointer">
-                                        <input type="checkbox" name="has_bedrock" <%= server.has_bedrock ? 'checked' : '' %> 
-                                               onchange="document.getElementById('bedrockGroup<%= server.id %>').classList.toggle('hidden')" 
-                                               class="w-4 h-4 rounded accent-purple-600">
-                                        <div>
-                                            <span class="text-white text-sm font-medium"><i class="fas fa-cube mr-1"></i>Bedrock Edition</span>
-                                            <p class="text-gray-500 text-xs">Enable Bedrock server</p>
-                                        </div>
-                                    </label>
-                                    <div id="bedrockGroup<%= server.id %>" class="<%= server.has_bedrock ? '' : 'hidden' %> mt-2 space-y-2">
-                                        <input type="text" name="bedrock_ip" value="<%= server.bedrock_ip || '' %>" 
-                                               placeholder="Bedrock IP" class="w-full bg-gray-800/50 border border-purple-500/20 rounded-lg px-3 py-2 text-white text-sm">
-                                        <input type="number" name="bedrock_port" value="<%= server.bedrock_port || 19132 %>" 
-                                               placeholder="Port" class="w-full bg-gray-800/50 border border-purple-500/20 rounded-lg px-3 py-2 text-white text-sm">
-                                    </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-white font-semibold text-sm truncate"><%= server.name %></p>
+                                <div class="flex items-center gap-1.5 mt-1 flex-wrap">
+                                    <% if (server.has_java) { %><span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-400">Java</span><% } %>
+                                    <% if (server.has_bedrock) { %><span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-sky-500/15 text-sky-400">Bedrock</span><% } %>
                                 </div>
                             </div>
-                            
-                            <!-- Community Section -->
-                            <div class="bg-purple-500/5 border border-purple-500/20 rounded-xl p-4">
-                                <p class="text-white font-medium text-sm mb-3 flex items-center gap-2">
-                                    <i class="fas fa-users text-purple-400"></i> Community Links
-                                </p>
-                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                    <div>
-                                        <label class="text-gray-400 text-xs mb-1 block">
-                                            <i class="fab fa-whatsapp text-green-400 mr-1"></i> WhatsApp Group
-                                        </label>
-                                        <input type="url" name="whatsapp" value="<%= server.community && server.community.whatsapp ? server.community.whatsapp : '' %>" 
-                                               placeholder="https://chat.whatsapp.com/..." 
-                                               class="w-full bg-gray-800/50 border border-purple-500/20 rounded-lg px-3 py-2 text-white text-sm focus:border-purple-500 focus:outline-none transition">
-                                    </div>
-                                    <div>
-                                        <label class="text-gray-400 text-xs mb-1 block">
-                                            <i class="fab fa-discord text-indigo-400 mr-1"></i> Discord Server
-                                        </label>
-                                        <input type="url" name="discord" value="<%= server.community && server.community.discord ? server.community.discord : '' %>" 
-                                               placeholder="https://discord.gg/..." 
-                                               class="w-full bg-gray-800/50 border border-purple-500/20 rounded-lg px-3 py-2 text-white text-sm focus:border-purple-500 focus:outline-none transition">
-                                    </div>
-                                </div>
+                            <div class="flex gap-1 flex-shrink-0">
+                                <button onclick='openEditModal(<%- JSON.stringify(server) %>)' class="p-2 rounded-lg text-slate-400 hover:text-purple-400 hover:bg-purple-500/10 transition-colors"><i data-lucide="pencil" class="w-4 h-4"></i></button>
+                                <button onclick="confirmDelete('<%= server.id %>', '<%= server.name.replace(/'/g, `\\'`) %>')" class="p-2 rounded-lg text-slate-400 hover:text-red-400 hover:bg-red-500/10 transition-colors"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
                             </div>
-                            
-                            <div class="flex gap-2 flex-wrap">
-                                <button type="submit" class="btn-primary text-white px-5 py-2 rounded-xl font-medium text-sm">
-                                    <i class="fas fa-save mr-2"></i>Update
-                                </button>
-                                <button type="button" onclick="confirmDelete('/admin/servers/delete/<%= server.id %>')" 
-                                        class="bg-red-500/10 text-red-400 border border-red-500/20 px-5 py-2 rounded-xl font-medium text-sm hover:bg-red-500/20 transition">
-                                    <i class="fas fa-trash mr-2"></i>Delete
-                                </button>
-                            </div>
-                        </form>
+                        </div>
+                        <div class="text-xs text-slate-500 pl-[60px] space-y-0.5">
+                            <% if (server.has_java) { %><p><span class="text-slate-600">Java:</span> <code class="text-purple-400"><%= server.java_ip %></code></p><% } %>
+                            <% if (server.has_bedrock) { %><p><span class="text-slate-600">Bedrock:</span> <code class="text-purple-400"><%= server.bedrock_ip %>:<%= server.bedrock_port %></code></p><% } %>
+                        </div>
                     </div>
                 <% }); %>
-            <% } else { %>
-                <div class="glass-card rounded-2xl p-12 text-center">
-                    <i class="fas fa-server text-5xl text-gray-700 mb-4"></i>
-                    <p class="text-gray-500 text-lg">No servers yet</p>
-                    <p class="text-gray-600 text-sm mt-1">Add your first server above</p>
-                </div>
-            <% } %>
-        </div>
+            </div>
+        <% } else { %>
+            <div class="glass-card p-10 text-center">
+                <i data-lucide="server-off" class="w-12 h-12 text-slate-600 mx-auto mb-3"></i>
+                <p class="text-slate-400">Belum ada server</p>
+                <p class="text-slate-600 text-sm mt-1">Klik "Add Server" untuk menambahkan</p>
+            </div>
+        <% } %>
     </main>
 
-    <!-- Confirm Modal -->
-    <div id="confirmModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
-        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeModal()"></div>
+    <!-- Add/Edit Modal -->
+    <div id="serverModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeServerModal()"></div>
+        <div class="glass-card rounded-2xl p-6 max-w-md w-full relative z-10 max-h-[90vh] overflow-y-auto">
+            <h3 class="text-white font-bold text-lg mb-4 flex items-center gap-2" id="serverModalTitle">
+                <i data-lucide="server" class="w-5 h-5 text-purple-400"></i> Add Server
+            </h3>
+            <form id="serverForm" method="POST" class="space-y-3">
+                <div>
+                    <label class="block text-slate-400 text-xs font-medium mb-1.5">Nama Server <span class="text-red-400">*</span></label>
+                    <input type="text" name="name" id="srvName" required placeholder="Queen Craft" class="w-full bg-slate-900/60 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white text-sm focus:border-purple-500 focus:outline-none transition-colors">
+                </div>
+
+                <div class="bg-slate-900/40 rounded-xl p-3 space-y-2">
+                    <label class="flex items-center gap-2 text-sm text-white cursor-pointer">
+                        <input type="checkbox" name="has_java" id="srvHasJava" onchange="toggleField('java')" class="w-4 h-4 accent-purple-500"> Java Edition
+                    </label>
+                    <input type="text" name="java_ip" id="srvJavaIp" placeholder="play.example.com" class="w-full bg-slate-800/60 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm focus:border-purple-500 focus:outline-none transition-colors hidden" data-field="java">
+                </div>
+
+                <div class="bg-slate-900/40 rounded-xl p-3 space-y-2">
+                    <label class="flex items-center gap-2 text-sm text-white cursor-pointer">
+                        <input type="checkbox" name="has_bedrock" id="srvHasBedrock" onchange="toggleField('bedrock')" class="w-4 h-4 accent-purple-500"> Bedrock Edition
+                    </label>
+                    <div class="grid grid-cols-2 gap-2 hidden" id="bedrockFields" data-field="bedrock">
+                        <input type="text" name="bedrock_ip" id="srvBedrockIp" placeholder="IP" class="w-full bg-slate-800/60 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm focus:border-purple-500 focus:outline-none transition-colors">
+                        <input type="number" name="bedrock_port" id="srvBedrockPort" placeholder="19132" class="w-full bg-slate-800/60 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm focus:border-purple-500 focus:outline-none transition-colors">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-slate-400 text-xs font-medium mb-1.5">WhatsApp Community</label>
+                    <input type="text" name="whatsapp" id="srvWhatsapp" placeholder="https://wa.me/..." class="w-full bg-slate-900/60 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white text-sm focus:border-purple-500 focus:outline-none transition-colors">
+                </div>
+                <div>
+                    <label class="block text-slate-400 text-xs font-medium mb-1.5">Discord Community</label>
+                    <input type="text" name="discord" id="srvDiscord" placeholder="https://discord.gg/..." class="w-full bg-slate-900/60 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white text-sm focus:border-purple-500 focus:outline-none transition-colors">
+                </div>
+
+                <div class="flex gap-2 pt-2">
+                    <button type="submit" class="btn-primary text-white flex-1 py-2.5 rounded-xl text-sm font-semibold flex items-center justify-center gap-2"><i data-lucide="save" class="w-4 h-4"></i>Save</button>
+                    <button type="button" onclick="closeServerModal()" class="bg-slate-800 text-slate-300 px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-slate-700 transition-colors">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Delete confirm modal -->
+    <div id="deleteModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeDeleteModal()"></div>
         <div class="glass-card rounded-2xl p-6 max-w-sm w-full relative z-10 text-center">
-            <div class="w-14 h-14 rounded-full bg-red-500/10 flex items-center justify-center mx-auto mb-4">
-                <i class="fas fa-trash text-2xl text-red-400"></i>
-            </div>
-            <h3 class="text-white font-bold text-lg mb-2">Delete Server?</h3>
-            <p class="text-gray-400 text-sm mb-6">This action cannot be undone.</p>
+            <div class="w-14 h-14 rounded-full bg-red-500/10 flex items-center justify-center mx-auto mb-4"><i data-lucide="trash-2" class="w-6 h-6 text-red-400"></i></div>
+            <h3 class="text-white font-bold text-lg mb-2">Hapus server?</h3>
+            <p class="text-slate-400 text-sm mb-6">"<span id="deleteModName"></span>" akan dihapus permanen.</p>
             <div class="flex gap-2 justify-center">
-                <button onclick="closeModal()" class="bg-gray-700 text-gray-300 px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-gray-600 transition">Cancel</button>
-                <a href="#" id="confirmDeleteBtn" class="bg-red-500 text-white px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-red-600 transition">Delete</a>
+                <button onclick="closeDeleteModal()" class="bg-slate-800 text-slate-300 px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-slate-700 transition-colors">Cancel</button>
+                <a id="deleteConfirmLink" href="#" class="bg-red-500 text-white px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-red-600 transition-colors">Delete</a>
             </div>
         </div>
     </div>
 
-    <style>
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-        .animate-slide-in { animation: slideIn 0.3s ease; }
-    </style>
+    <%- include('partials/close') %>
 
     <script>
-        // Auto-hide toast
-        setTimeout(() => {
-            const toast = document.getElementById('toast');
-            if (toast) { 
-                toast.style.opacity = '0'; 
-                toast.style.transition = 'opacity 0.3s'; 
-                setTimeout(() => { if (toast && toast.parentElement) toast.remove(); }, 300); 
-            }
-        }, 3000);
+        refreshIcons();
 
-        function confirmDelete(url) {
-            document.getElementById('confirmModal').classList.remove('hidden');
-            document.getElementById('confirmDeleteBtn').href = url;
+        function toggleField(field) {
+            const el = document.querySelector(`[data-field="${field}"]`);
+            const checkbox = field === 'java' ? document.getElementById('srvHasJava') : document.getElementById('srvHasBedrock');
+            if (el) el.classList.toggle('hidden', !checkbox.checked);
         }
-        function closeModal() {
-            document.getElementById('confirmModal').classList.add('hidden');
-            document.getElementById('confirmDeleteBtn').href = '#';
+
+        function openAddModal() {
+            document.getElementById('serverModalTitle').innerHTML = '<i data-lucide="server" class="w-5 h-5 text-purple-400"></i> Add Server';
+            document.getElementById('serverForm').action = '/admin/servers/add';
+            document.getElementById('serverForm').reset();
+            document.querySelectorAll('[data-field]').forEach(el => el.classList.add('hidden'));
+            document.getElementById('serverModal').classList.remove('hidden');
+            refreshIcons();
         }
-        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+        function openEditModal(server) {
+            document.getElementById('serverModalTitle').innerHTML = '<i data-lucide="pencil" class="w-5 h-5 text-purple-400"></i> Edit Server';
+            document.getElementById('serverForm').action = '/admin/servers/edit/' + server.id;
+            document.getElementById('srvName').value = server.name || '';
+            document.getElementById('srvHasJava').checked = !!server.has_java;
+            document.getElementById('srvJavaIp').value = server.java_ip || '';
+            document.getElementById('srvHasBedrock').checked = !!server.has_bedrock;
+            document.getElementById('srvBedrockIp').value = server.bedrock_ip || '';
+            document.getElementById('srvBedrockPort').value = server.bedrock_port || 19132;
+            document.getElementById('srvWhatsapp').value = (server.community && server.community.whatsapp) || '';
+            document.getElementById('srvDiscord').value = (server.community && server.community.discord) || '';
+            toggleField('java');
+            toggleField('bedrock');
+            document.getElementById('serverModal').classList.remove('hidden');
+            refreshIcons();
+        }
+
+        function closeServerModal() { document.getElementById('serverModal').classList.add('hidden'); }
+
+        function confirmDelete(id, name) {
+            document.getElementById('deleteModName').textContent = name;
+            document.getElementById('deleteConfirmLink').href = '/admin/servers/delete/' + id;
+            document.getElementById('deleteModal').classList.remove('hidden');
+        }
+        function closeDeleteModal() { document.getElementById('deleteModal').classList.add('hidden'); }
+
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') { closeServerModal(); closeDeleteModal(); }
+        });
     </script>
 </body>
 </html>

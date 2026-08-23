@@ -1,39 +1,29 @@
-<!-- Preloader - Hilangkan Semua Glitch -->
-<div class="preloader" id="preloader">
-    <div class="loader">
-        <div class="cube cube1"></div>
-        <div class="cube cube2"></div>
-        <div class="cube cube3"></div>
-        <div class="cube cube4"></div>
+<div class="fixed inset-0 z-[9999] bg-slate-950 flex items-center justify-center transition-opacity duration-500" id="preloader">
+    <div class="flex flex-col items-center gap-3">
+        <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center animate-pulse">
+            <i data-lucide="box" class="w-6 h-6 text-white"></i>
+        </div>
+        <div class="w-24 h-1 rounded-full bg-slate-800 overflow-hidden">
+            <div class="h-full w-1/2 bg-purple-500 rounded-full animate-[loaderbar_1s_ease-in-out_infinite]"></div>
+        </div>
     </div>
 </div>
-
+<style>
+    @keyframes loaderbar {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(200%); }
+    }
+</style>
 <script>
-    (function() {
-        // Hilangkan preloader secepat mungkin
-        const preloader = document.getElementById('preloader');
-        
-        // Function to hide preloader
+    (function () {
         function hidePreloader() {
-            if (preloader && !preloader.classList.contains('hide')) {
-                preloader.classList.add('hide');
-                setTimeout(function() {
-                    if (preloader) preloader.style.display = 'none';
-                }, 500);
-            }
+            const p = document.getElementById('preloader');
+            if (!p) return;
+            p.style.opacity = '0';
+            setTimeout(() => { p.style.display = 'none'; }, 400);
         }
-        
-        // Hide immediately if DOM is already loaded
-        if (document.readyState === 'complete') {
-            hidePreloader();
-        } else {
-            window.addEventListener('load', hidePreloader);
-        }
-        
-        // Force hide after 1.5 second (max)
-        setTimeout(hidePreloader, 1500);
-        
-        // Extra: tambahkan class loaded ke body
-        document.body.classList.add('js-loaded');
+        if (document.readyState === 'complete') hidePreloader();
+        else window.addEventListener('load', hidePreloader);
+        setTimeout(hidePreloader, 1200);
     })();
 </script>
