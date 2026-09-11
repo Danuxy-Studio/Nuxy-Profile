@@ -3,10 +3,10 @@
     "id": "1787443776613",
     "name": "GTH SMP",
     "has_java": true,
-    "java_ip": "play.gthsmp.my.id:25641",
+    "java_ip": "gthsmp.my.id",
     "has_bedrock": true,
-    "bedrock_ip": "play.gthsmp.my.id",
-    "bedrock_port": 25641,
+    "bedrock_ip": "gthsmp.my.id",
+    "bedrock_port": 25575,
     "community": {
       "whatsapp": "",
       "discord": "https://discord.gg/QCJzfmSWgF"
