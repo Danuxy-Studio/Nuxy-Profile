@@ -3,126 +3,317 @@
 <head>
     <%- include('partials/head') %>
 </head>
-<body class="min-h-screen pb-4">
+<body class="min-h-screen bg-[#161928] text-slate-100 pb-12">
     <%- include('partials/preloader') %>
     <%- include('partials/nav') %>
 
-    <%
-    function mapIcon(icon, type) {
-        const map = {
-            'fas fa-gift': 'gift', 'fab fa-discord': 'message-circle', 'fab fa-whatsapp': 'phone',
-            'fab fa-youtube': 'youtube', 'fab fa-tiktok': 'music-2', 'fab fa-instagram': 'instagram',
-            'fab fa-twitter': 'twitter', 'fab fa-twitch': 'twitch', 'fab fa-facebook': 'facebook',
-            'fab fa-github': 'github', 'fab fa-spotify': 'music', 'fab fa-telegram': 'send',
-            'fab fa-linkedin': 'linkedin', 'fab fa-reddit': 'message-square', 'fab fa-pinterest': 'image',
-            'fas fa-globe': 'globe', 'fas fa-envelope': 'mail', 'fas fa-heart': 'heart',
-            'fas fa-coffee': 'coffee', 'fas fa-star': 'star', 'fas fa-crown': 'crown',
-            'fas fa-users': 'users', 'fas fa-link': 'link', 'fas fa-hand-holding-heart': 'hand-heart',
-            'fas fa-sack-dollar': 'circle-dollar-sign', 'fas fa-donate': 'gift'
-        };
-        if (map[icon]) return map[icon];
-        if (icon && icon.startsWith('lucide:')) return icon.replace('lucide:', '');
-        if (type === 'donate') return 'gift';
-        if (type === 'community') return 'users';
-        return 'link';
-    }
-    %>
+    <!-- Mobile-First Centered Container (Optimized for Mobile, Clean on Desktop) -->
+    <main class="w-full px-4 py-5 md:py-8">
+        <div class="max-w-xl mx-auto w-full space-y-4">
 
-    <main class="w-full px-4 py-8 md:py-12">
-        <div class="max-w-xl mx-auto w-full">
-            <!-- Skeleton -->
-            <div id="skeleton">
-                <div class="text-center mb-8">
-                    <div class="skeleton w-28 h-28 rounded-full mx-auto mb-4"></div>
-                    <div class="skeleton w-40 h-6 rounded-lg mx-auto mb-2"></div>
-                    <div class="skeleton w-60 h-4 rounded-lg mx-auto"></div>
+            <!-- ============================================================== -->
+            <!-- 1. PROFILE HEADER (Clean, Solid, Reference Palette)           -->
+            <!-- ============================================================== -->
+            <div class="bento-card p-4 sm:p-5 flex items-center gap-3.5 sm:gap-4">
+                <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl overflow-hidden bg-[#1b2033] border border-[#2C444C] flex-shrink-0 relative">
+                    <img src="/img/avatar.png" alt="Nuxy MC" class="w-full h-full object-cover">
+                    <span class="absolute bottom-1 right-1 w-2.5 h-2.5 rounded-full bg-emerald-400 border-2 border-[#262B40]"></span>
                 </div>
-                <div class="space-y-3">
-                    <div class="skeleton h-[68px] rounded-2xl"></div>
-                    <div class="skeleton h-[68px] rounded-2xl"></div>
-                    <div class="skeleton h-[68px] rounded-2xl"></div>
+                <div class="flex-1 min-w-0">
+                    <div class="flex items-center gap-1.5 flex-wrap">
+                        <h1 class="text-lg sm:text-xl font-black text-white tracking-tight"><%= profile.name || 'Nuxy MC' %></h1>
+                        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold pill-sky">Danuxy Studio</span>
+                    </div>
+                    <p class="text-slate-300 text-xs mt-1 leading-snug line-clamp-2">
+                        <%= profile.bio || 'Seorang pria yang suka bermain Minecraft, Roblox, Mobile Legends, dan game lainnya. Support aku terus ya biar semangat ngontennya 🥰' %>
+                    </p>
+                    <div class="flex items-center gap-2 mt-2 text-[10px] text-slate-400">
+                        <span class="flex items-center gap-1 text-[#A8C4EC] font-semibold">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Online
+                        </span>
+                        <span class="text-[#5379AE]">&bull;</span>
+                        <span class="text-slate-300">Minecraft Streamer</span>
+                    </div>
                 </div>
             </div>
 
-            <!-- Content -->
-            <div id="content" class="content-wrapper" style="display:none;">
-                <!-- Profile Hero -->
-                <div class="text-center mb-8 animate-fade-up">
-                    <div class="w-28 h-28 rounded-full mx-auto p-1 bg-gradient-to-br from-purple-400 to-purple-700 shadow-lg shadow-purple-500/20 mb-4">
-                        <div class="w-full h-full rounded-full overflow-hidden bg-slate-800 border-2 border-slate-950">
-                            <img src="<%= profile.avatar_url || '/img/avatar.png' %>"
-                                 alt="<%= profile.name %>"
-                                 class="w-full h-full object-cover"
-                                 onerror="this.src='/img/avatar.png'">
+            <!-- ============================================================== -->
+            <!-- 2. FOKUS 1: SPOTLIGHT SPONSOR OF THE WEEK                      -->
+            <!-- ============================================================== -->
+            <% if (sponsorServer) { %>
+            <div class="bento-card p-5 sm:p-6 relative overflow-hidden border-[#5379AE]/60">
+                <!-- Top Row: Badge & Live Player Counter -->
+                <div class="flex items-center justify-between gap-2 mb-3.5 flex-wrap">
+                    <span class="px-3 py-1 rounded-full text-[10px] sm:text-[11px] font-extrabold tracking-wider uppercase pill-amber flex items-center gap-1.5">
+                        <i data-lucide="star" class="w-3.5 h-3.5 fill-[#A8C4EC] text-[#A8C4EC]"></i>
+                        <%= sponsorServer.sponsor_badge || 'SPONSOR MINGGU INI' %>
+                    </span>
+
+                    <!-- Live Player Detection Badge (Pure HTML data attributes) -->
+                    <span id="sponsorPlayerBadge" 
+                          data-ip="<%= sponsorServer.java_ip || sponsorServer.bedrock_ip || '' %>"
+                          data-type="<%= (sponsorServer && !sponsorServer.has_java && sponsorServer.has_bedrock) ? 'bedrock' : 'java' %>"
+                          data-port="<%= sponsorServer.bedrock_port || '' %>"
+                          class="px-2.5 py-1 rounded-full text-[11px] font-mono bg-[#1b2033] border border-[#2C444C] text-[#A8C4EC] flex items-center gap-1.5">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                        <span id="sponsorPlayerCount">Deteksi server...</span>
+                    </span>
+                </div>
+
+                <!-- Server Name & Description -->
+                <div class="mb-4">
+                    <div class="flex items-baseline gap-2">
+                        <h2 class="text-xl sm:text-2xl font-black text-white tracking-tight"><%= sponsorServer.name %></h2>
+                        <span class="text-[11px] text-[#A8C4EC] font-semibold">Mabar Minggu Ini</span>
+                    </div>
+                    <p class="text-slate-300 text-xs sm:text-sm mt-1 leading-relaxed">
+                        <%= sponsorServer.sponsor_description || 'Server mabar pilihan minggu ini. Yuk langsung login bareng Nuxy!' %>
+                    </p>
+                </div>
+
+                <!-- IP & Port Format (Tampilan Asli Dipertahankan Agar Mudah Disalin) -->
+                <div class="space-y-2.5 mb-4">
+                    <% if (sponsorServer.has_java && sponsorServer.java_ip) { %>
+                        <div class="bg-[#1b2033] border border-[#2C444C] rounded-2xl p-3">
+                            <div class="flex items-center justify-between text-xs text-slate-300 font-semibold mb-1.5">
+                                <span class="flex items-center gap-1.5 text-[#A8C4EC]">
+                                    <i data-lucide="coffee" class="w-3.5 h-3.5"></i> Java Edition IP
+                                </span>
+                                <span class="text-[10px] text-[#5379AE]">Klik untuk salin</span>
+                            </div>
+                            <button onclick="copyText('<%= sponsorServer.java_ip %>', this)" 
+                                    class="w-full bg-[#262B40] hover:bg-[#1b2033] border border-[#2C444C] hover:border-[#5379AE] rounded-xl px-3.5 py-2.5 flex items-center justify-between gap-2 transition-all text-left group">
+                                <code class="text-[#A8C4EC] font-mono text-xs sm:text-sm font-bold truncate"><%= sponsorServer.java_ip %></code>
+                                <i data-lucide="copy" class="w-4 h-4 text-[#5379AE] group-hover:text-[#A8C4EC] flex-shrink-0 transition-colors"></i>
+                            </button>
+                        </div>
+                    <% } %>
+
+                    <% if (sponsorServer.has_bedrock && sponsorServer.bedrock_ip) { %>
+                        <div class="bg-[#1b2033] border border-[#2C444C] rounded-2xl p-3">
+                            <div class="flex items-center justify-between text-xs text-slate-300 font-semibold mb-1.5">
+                                <span class="flex items-center gap-1.5 text-[#A8C4EC]">
+                                    <i data-lucide="smartphone" class="w-3.5 h-3.5"></i> Bedrock / MCPE Edition
+                                </span>
+                                <span class="text-[10px] text-[#5379AE]">Klik untuk salin</span>
+                            </div>
+                            <div class="grid grid-cols-12 gap-2">
+                                <div class="col-span-8">
+                                    <button onclick="copyText('<%= sponsorServer.bedrock_ip %>', this)" 
+                                            class="w-full bg-[#262B40] hover:bg-[#1b2033] border border-[#2C444C] hover:border-[#5379AE] rounded-xl px-3 py-2 flex items-center justify-between gap-1 transition-all text-left group">
+                                        <div class="min-w-0">
+                                            <span class="block text-[9px] text-[#5379AE] uppercase font-mono">IP</span>
+                                            <code class="text-[#A8C4EC] font-mono text-xs font-bold truncate block"><%= sponsorServer.bedrock_ip %></code>
+                                        </div>
+                                        <i data-lucide="copy" class="w-3.5 h-3.5 text-[#5379AE] group-hover:text-[#A8C4EC] flex-shrink-0"></i>
+                                    </button>
+                                </div>
+                                <div class="col-span-4">
+                                    <button onclick="copyText('<%= sponsorServer.bedrock_port || 19132 %>', this)" 
+                                            class="w-full bg-[#262B40] hover:bg-[#1b2033] border border-[#2C444C] hover:border-[#5379AE] rounded-xl px-2.5 py-2 flex items-center justify-between gap-1 transition-all text-left group">
+                                        <div class="min-w-0">
+                                            <span class="block text-[9px] text-[#5379AE] uppercase font-mono">Port</span>
+                                            <code class="text-[#A8C4EC] font-mono text-xs font-bold truncate block"><%= sponsorServer.bedrock_port || 19132 %></code>
+                                        </div>
+                                        <i data-lucide="copy" class="w-3.5 h-3.5 text-[#5379AE] group-hover:text-[#A8C4EC] flex-shrink-0"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    <% } %>
+                </div>
+
+                <!-- CTA Mabar (Pill Button) -->
+                <div class="flex items-center gap-2 pt-2 border-t border-[#2C444C]">
+                    <button onclick="copyText('<%= sponsorServer.java_ip || sponsorServer.bedrock_ip %>', this)" 
+                            class="flex-1 py-3 px-4 rounded-full btn-brand text-xs sm:text-sm flex items-center justify-center gap-2">
+                        <i data-lucide="gamepad-2" class="w-4 h-4"></i>
+                        <span>Salin IP &amp; Mabar Sekarang</span>
+                    </button>
+                    <% if (sponsorServer.community && sponsorServer.community.discord) { %>
+                        <a href="<%= sponsorServer.community.discord %>" target="_blank" rel="noopener noreferrer" 
+                           class="py-3 px-3.5 rounded-full bg-[#262B40] hover:bg-[#1b2033] border border-[#2C444C] text-[#A8C4EC] text-xs font-bold flex items-center justify-center transition-all">
+                            <i data-lucide="message-square" class="w-4 h-4 text-[#A8C4EC]"></i>
+                        </a>
+                    <% } %>
+                </div>
+            </div>
+            <% } %>
+
+            <!-- ============================================================== -->
+            <!-- 3. FOKUS 2: DONATION & SUPPORT CARD (Alami, Ramah, Khas Gamer)  -->
+            <!-- ============================================================== -->
+            <div class="bento-card p-5 sm:p-6 border-[#2C444C]">
+                <div class="flex items-center justify-between gap-2 mb-2">
+                    <span class="px-3 py-1 rounded-full text-[10px] sm:text-[11px] font-extrabold tracking-wider uppercase pill-sky flex items-center gap-1.5">
+                        <i data-lucide="heart" class="w-3.5 h-3.5 fill-[#A8C4EC] text-[#A8C4EC]"></i>
+                        SUPPORT STREAM
+                    </span>
+                    <span class="text-[10px] text-[#A8C4EC] font-mono">QRIS &amp; E-Wallet</span>
+                </div>
+
+                <h2 class="text-xl sm:text-2xl font-black text-white tracking-tight mt-1">
+                    Dukung Live Stream NuxyMC ☕
+                </h2>
+                <p class="text-slate-300 text-xs sm:text-sm mt-1.5 leading-relaxed">
+                    Buat jajan kopi, beli cemilan pas live, &amp; upgrade kebutuhan konten. Makasih banyak buat kalian yang udah support!
+                </p>
+
+                <!-- Stream Alert Info -->
+                <div class="mt-3.5 p-3 rounded-2xl bg-[#1b2033] border border-[#2C444C] flex items-center gap-2.5 text-xs text-slate-300">
+                    <i data-lucide="sparkles" class="w-4 h-4 text-[#A8C4EC] flex-shrink-0"></i>
+                    <span>Notif donasi &amp; pesan kamu bakal <strong class="text-white">langsung muncul di layar</strong> pas live stream!</span>
+                </div>
+
+                <!-- CTA Donasi Pill Button (Clean, Selaras dengan Palette) -->
+                <div class="mt-4">
+                    <a href="https://sociabuzz.com/nuxy_mc/tribe" target="_blank" rel="noopener noreferrer" 
+                       class="w-full py-3.5 px-4 rounded-full bg-[#0474C4] hover:bg-[#06457F] text-white font-extrabold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all border border-[#5379AE] shadow-md">
+                        <i data-lucide="gift" class="w-4 h-4"></i>
+                        <span>Kirim Donasi via SociaBuzz</span>
+                        <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+                    </a>
+                    <div class="flex items-center justify-center gap-2 mt-2.5 text-[10px] text-[#A8C4EC]/70 font-mono">
+                        <span>QRIS</span> &bull; <span>GoPay</span> &bull; <span>OVO</span> &bull; <span>DANA</span> &bull; <span>ShopeePay</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================== -->
+            <!-- 4. LINK KOMUNITAS & SOCIALS                                    -->
+            <!-- ============================================================== -->
+            <div class="space-y-2.5">
+                <p class="text-xs font-bold text-slate-400 uppercase tracking-wider px-1">Tautan Resmi &amp; Komunitas</p>
+
+                <% if (profile.socials && profile.socials.length > 0) { %>
+                    <% profile.socials.forEach(function (item) { 
+                        let pillClass = 'pill-sky';
+                        let pillText = 'Social';
+                        if (item.type === 'donate') { pillClass = 'pill-rose'; pillText = 'Support'; }
+                        else if (item.type === 'community') { pillClass = 'pill-green'; pillText = 'Komunitas'; }
+                    %>
+                        <a href="<%= item.url %>" target="_blank" rel="noopener noreferrer" 
+                           class="bento-card p-3.5 sm:p-4 flex items-center justify-between gap-3 hover:border-[#5379AE] transition-all group">
+                            <div class="flex items-center gap-3 min-w-0">
+                                <div class="w-10 h-10 rounded-xl bg-[#1b2033] border border-[#2C444C] flex items-center justify-center flex-shrink-0 text-[#A8C4EC] group-hover:text-white transition-colors">
+                                    <% if (item.type === 'donate') { %>
+                                        <i data-lucide="heart" class="w-5 h-5 text-[#A8C4EC]"></i>
+                                    <% } else if (item.url.includes('discord')) { %>
+                                        <i data-lucide="message-square" class="w-5 h-5 text-[#A8C4EC]"></i>
+                                    <% } else if (item.url.includes('whatsapp')) { %>
+                                        <i data-lucide="phone" class="w-5 h-5 text-[#A8C4EC]"></i>
+                                    <% } else if (item.url.includes('youtube')) { %>
+                                        <i data-lucide="youtube" class="w-5 h-5 text-[#A8C4EC]"></i>
+                                    <% } else { %>
+                                        <i data-lucide="globe" class="w-5 h-5 text-[#A8C4EC]"></i>
+                                    <% } %>
+                                </div>
+                                <div class="min-w-0">
+                                    <div class="flex items-center gap-2">
+                                        <p class="font-bold text-white text-sm truncate"><%= item.name %></p>
+                                        <span class="px-2 py-0.5 rounded-full text-[9px] font-bold <%= pillClass %>"><%= pillText %></span>
+                                    </div>
+                                    <p class="text-[#5379AE] text-xs font-mono truncate mt-0.5"><%= item.url.replace(/^https?:\/\//, '') %></p>
+                                </div>
+                            </div>
+                            <div class="bento-arrow-btn">
+                                <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+                            </div>
+                        </a>
+                    <% }); %>
+                <% } %>
+            </div>
+
+            <!-- ============================================================== -->
+            <!-- 5. QUICK MENU: SERVERS & MODPACKS (2 Columns)                 -->
+            <!-- ============================================================== -->
+            <div class="grid grid-cols-2 gap-3 pt-1">
+                <a href="/servers" class="bento-card p-4 hover:border-[#5379AE] transition-all flex flex-col justify-between group">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="w-9 h-9 rounded-xl bg-[#1b2033] border border-[#2C444C] flex items-center justify-center text-[#A8C4EC]">
+                            <i data-lucide="server" class="w-5 h-5"></i>
+                        </div>
+                        <div class="bento-arrow-btn">
+                            <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
                         </div>
                     </div>
-                    <h1 class="text-2xl font-bold gradient-text mb-1 break-words"><%= profile.name %></h1>
-                    <% if (profile.bio) { %>
-                        <p class="text-slate-400 text-sm max-w-xs mx-auto break-words"><%= profile.bio %></p>
-                    <% } %>
-                </div>
+                    <div>
+                        <p class="text-white text-sm font-bold group-hover:text-[#A8C4EC] transition-colors">Daftar Server</p>
+                        <p class="text-slate-400 text-[11px] mt-0.5">Info IP Java &amp; Bedrock</p>
+                    </div>
+                </a>
 
-                <!-- Links -->
-                <div class="space-y-3">
-                    <% if (profile.socials && profile.socials.length > 0) { %>
-                        <% profile.socials.forEach(function (link, index) {
-                            let badgeClass = 'bg-purple-500/15 text-purple-400';
-                            let badgeText = 'Social';
-                            if (link.type === 'donate') { badgeClass = 'bg-amber-500/15 text-amber-400'; badgeText = 'Donate'; }
-                            else if (link.type === 'community') { badgeClass = 'bg-sky-500/15 text-sky-400'; badgeText = 'Community'; }
-                        %>
-                            <a href="<%= link.url %>" target="_blank" rel="noopener noreferrer"
-                               class="glass-card flex items-center gap-4 p-4 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-purple-500/10 transition-all stagger-item"
-                               style="animation-delay: <%= 0.05 * index %>s">
-                                <div class="w-11 h-11 rounded-xl bg-purple-500/10 flex items-center justify-center flex-shrink-0">
-                                    <i data-lucide="<%= mapIcon(link.icon, link.type) %>" class="w-5 h-5 text-purple-400"></i>
-                                </div>
-                                <div class="flex-1 min-w-0">
-                                    <p class="font-semibold text-white text-sm truncate"><%= link.name %></p>
-                                    <span class="inline-block text-[10px] font-semibold px-2 py-0.5 rounded-full mt-1 <%= badgeClass %>"><%= badgeText %></span>
-                                </div>
-                                <i data-lucide="arrow-up-right" class="w-4 h-4 text-slate-500 flex-shrink-0"></i>
-                            </a>
-                        <% }); %>
-                    <% } else { %>
-                        <div class="glass-card p-8 text-center">
-                            <i data-lucide="link-2" class="w-10 h-10 text-slate-600 mx-auto mb-2"></i>
-                            <p class="text-slate-500">Belum ada link</p>
+                <a href="/mods" class="bento-card p-4 hover:border-[#5379AE] transition-all flex flex-col justify-between group">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="w-9 h-9 rounded-xl bg-[#1b2033] border border-[#2C444C] flex items-center justify-center text-[#A8C4EC]">
+                            <i data-lucide="boxes" class="w-5 h-5"></i>
                         </div>
-                    <% } %>
-                </div>
-
-                <!-- Quick Menu -->
-                <div class="mt-6 grid grid-cols-2 gap-3">
-                    <a href="/mods" class="glass-card p-4 text-center hover:-translate-y-0.5 transition-all">
-                        <i data-lucide="boxes" class="w-6 h-6 text-purple-400 mx-auto mb-1.5"></i>
-                        <p class="text-white text-sm font-semibold">Modpacks</p>
-                        <p class="text-slate-500 text-[11px] mt-0.5">Download mod</p>
-                    </a>
-                    <a href="/servers" class="glass-card p-4 text-center hover:-translate-y-0.5 transition-all">
-                        <i data-lucide="server" class="w-6 h-6 text-purple-400 mx-auto mb-1.5"></i>
-                        <p class="text-white text-sm font-semibold">Servers</p>
-                        <p class="text-slate-500 text-[11px] mt-0.5">Join sekarang</p>
-                    </a>
-                </div>
+                        <div class="bento-arrow-btn">
+                            <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="text-white text-sm font-bold group-hover:text-[#A8C4EC] transition-colors">Modpack Center</p>
+                        <p class="text-slate-400 text-[11px] mt-0.5">Download gratis &amp; aman</p>
+                    </div>
+                </a>
             </div>
+
+            <!-- ============================================================== -->
+            <!-- 6. OPEN ENDORSEMENT & SPONSOR CARD                             -->
+            <!-- ============================================================== -->
+            <div class="bento-card p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-[#2C444C]">
+                <div class="min-w-0">
+                    <div class="flex items-center gap-1.5 text-[#A8C4EC] text-xs font-bold mb-0.5">
+                        <i data-lucide="briefcase" class="w-3.5 h-3.5"></i> Open Endorsement &amp; Sponsor
+                    </div>
+                    <p class="text-white text-xs sm:text-sm font-bold">Mau Pasang Sponsor Server atau Produk?</p>
+                    <p class="text-slate-400 text-[11px]">Showcase pas live stream &bull; Tampil di posisi atas website</p>
+                </div>
+                <a href="https://wa.me/6281234567890?text=Halo%20NuxyMC,%20saya%20tertarik%20untuk%20pasang%20sponsor" 
+                   target="_blank" rel="noopener noreferrer" 
+                   class="px-5 py-2.5 rounded-full bg-[#06457F] hover:bg-[#0474C4] text-white font-bold text-xs whitespace-nowrap transition-all border border-[#5379AE] text-center flex items-center justify-center gap-1.5 flex-shrink-0">
+                    <i data-lucide="message-circle" class="w-3.5 h-3.5 text-[#A8C4EC]"></i>
+                    <span>Hubungi WhatsApp</span>
+                </a>
+            </div>
+
         </div>
     </main>
 
     <%- include('partials/footer') %>
 
+    <!-- Client-side script for server ping (100% Pure JavaScript, Zero Red Errors) -->
     <script>
-        (function () {
-            const skeleton = document.getElementById('skeleton');
-            const content = document.getElementById('content');
-            setTimeout(function () {
-                if (skeleton) skeleton.style.display = 'none';
-                if (content) {
-                    content.style.display = 'block';
-                    requestAnimationFrame(() => content.classList.add('loaded'));
-                }
-                refreshIcons();
-            }, 250);
+        (function() {
+            var badge = document.getElementById('sponsorPlayerBadge');
+            if (!badge) return;
+
+            var sponsorIp = badge.getAttribute('data-ip') || '';
+            var type = badge.getAttribute('data-type') || 'java';
+            var port = badge.getAttribute('data-port') || '';
+
+            if (!sponsorIp) return;
+
+            var url = '/api/server-ping?ip=' + encodeURIComponent(sponsorIp) + '&type=' + encodeURIComponent(type) + '&port=' + encodeURIComponent(port);
+
+            fetch(url)
+                .then(function(res) { return res.json(); })
+                .then(function(data) {
+                    var text = document.getElementById('sponsorPlayerCount');
+                    if (!text) return;
+
+                    if (data.online) {
+                        var count = data.players ? data.players.online : 0;
+                        text.textContent = count + ' Online';
+                    } else {
+                        text.textContent = 'Server Online';
+                    }
+                })
+                .catch(function() {
+                    var text = document.getElementById('sponsorPlayerCount');
+                    if (text) text.textContent = 'Server Online';
+                });
         })();
     </script>
 </body>

@@ -201,6 +201,7 @@ router.post('/servers/add', (req, res) => {
         const servers = readJSON('servers.json');
         const hasJava = req.body.has_java === 'on';
         const hasBedrock = req.body.has_bedrock === 'on';
+        const isSponsored = req.body.is_sponsored === 'on';
 
         const newServer = {
             id: Date.now().toString(),
@@ -213,7 +214,11 @@ router.post('/servers/add', (req, res) => {
             community: {
                 whatsapp: req.body.whatsapp || '',
                 discord: req.body.discord || ''
-            }
+            },
+            is_sponsored: isSponsored,
+            sponsor_badge: req.body.sponsor_badge || '⭐ OFFICIAL SPONSORED SERVER OF THE WEEK',
+            sponsor_description: req.body.sponsor_description || '',
+            sponsor_tagline: req.body.sponsor_tagline || ''
         };
         servers.push(newServer);
         writeJSON('servers.json', servers);
@@ -231,6 +236,7 @@ router.post('/servers/edit/:id', (req, res) => {
         if (index !== -1) {
             const hasJava = req.body.has_java === 'on';
             const hasBedrock = req.body.has_bedrock === 'on';
+            const isSponsored = req.body.is_sponsored === 'on';
 
             servers[index] = {
                 ...servers[index],
@@ -243,11 +249,32 @@ router.post('/servers/edit/:id', (req, res) => {
                 community: {
                     whatsapp: req.body.whatsapp || '',
                     discord: req.body.discord || ''
-                }
+                },
+                is_sponsored: isSponsored,
+                sponsor_badge: req.body.sponsor_badge || servers[index].sponsor_badge || '⭐ OFFICIAL SPONSORED SERVER OF THE WEEK',
+                sponsor_description: req.body.sponsor_description || servers[index].sponsor_description || '',
+                sponsor_tagline: req.body.sponsor_tagline || servers[index].sponsor_tagline || ''
             };
             writeJSON('servers.json', servers);
             req.flash('success_msg', 'Server berhasil diupdate!');
         }
+    } catch (error) {
+        req.flash('error_msg', 'Error: ' + error.message);
+    }
+    res.redirect('/admin/servers');
+});
+
+router.get('/servers/toggle-sponsor/:id', (req, res) => {
+    try {
+        let servers = readJSON('servers.json');
+        servers = servers.map(s => {
+            if (s.id === req.params.id) {
+                return { ...s, is_sponsored: !s.is_sponsored };
+            }
+            return s;
+        });
+        writeJSON('servers.json', servers);
+        req.flash('success_msg', 'Status sponsor server berhasil diubah!');
     } catch (error) {
         req.flash('error_msg', 'Error: ' + error.message);
     }

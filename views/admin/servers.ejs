@@ -1,101 +1,143 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <%- include('../partials/head') %>
 </head>
-<body class="min-h-screen">
+<body class="min-h-screen bg-[#161928] text-slate-100 pb-12">
     <%- include('partials/sidebar') %>
     <%- include('partials/toast') %>
 
     <main class="max-w-4xl mx-auto px-4 md:px-8 py-8">
         <div class="flex items-center justify-between mb-6 gap-3">
             <div>
-                <h1 class="text-2xl font-bold gradient-text mb-1">Manage Servers</h1>
-                <p class="text-slate-400 text-sm"><%= servers.length %> server terdaftar</p>
+                <h1 class="text-2xl font-black text-white mb-1">Manage Servers &amp; Sponsorship</h1>
+                <p class="text-slate-400 text-xs md:text-sm"><%= servers.length %> server terdaftar &bull; Atur server sponsor &amp; mabar minggu ini</p>
             </div>
-            <button onclick="openAddModal()" class="btn-primary text-white px-4 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2 flex-shrink-0">
-                <i data-lucide="plus" class="w-4 h-4"></i> <span class="hidden sm:inline">Add Server</span>
+            <button onclick="openAddModal()" class="px-4 py-2.5 rounded-xl text-xs md:text-sm font-bold flex items-center gap-2 flex-shrink-0 bg-[#0474C4] hover:bg-[#06457F] text-white transition-all shadow-lg shadow-[#0474C4]/20">
+                <i data-lucide="plus" class="w-4 h-4"></i> <span>Tambah Server</span>
             </button>
         </div>
 
         <% if (servers && servers.length > 0) { %>
-            <div class="space-y-3">
-                <% servers.forEach(function (server) { %>
-                    <div class="glass-card p-4">
+            <div class="space-y-4">
+                <% servers.forEach(function (server) { 
+                    const isSponsor = !!server.is_sponsored;
+                %>
+                    <div class="bento-card p-5 <%= isSponsor ? 'border-[#5379AE]' : '' %>">
                         <div class="flex items-center gap-4 mb-2">
-                            <div class="w-11 h-11 rounded-xl bg-purple-500/10 flex items-center justify-center flex-shrink-0">
-                                <i data-lucide="server" class="w-5 h-5 text-purple-400"></i>
+                            <div class="w-11 h-11 rounded-xl <%= isSponsor ? 'bg-[#0474C4] text-white' : 'bg-[#1b2033] border border-[#2C444C] text-[#A8C4EC]' %> flex items-center justify-center flex-shrink-0">
+                                <i data-lucide="server" class="w-5 h-5"></i>
                             </div>
                             <div class="flex-1 min-w-0">
-                                <p class="text-white font-semibold text-sm truncate"><%= server.name %></p>
-                                <div class="flex items-center gap-1.5 mt-1 flex-wrap">
-                                    <% if (server.has_java) { %><span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-400">Java</span><% } %>
-                                    <% if (server.has_bedrock) { %><span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-sky-500/15 text-sky-400">Bedrock</span><% } %>
+                                <div class="flex items-center gap-2 flex-wrap">
+                                    <p class="text-white font-extrabold text-base truncate"><%= server.name %></p>
+                                    <% if (isSponsor) { %>
+                                        <span class="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-[#06457F] text-[#A8C4EC] border border-[#5379AE]/40">
+                                            ⭐ Active Sponsor (Hero)
+                                        </span>
+                                    <% } %>
+                                </div>
+                                <div class="flex items-center gap-1.5 mt-1.5 flex-wrap">
+                                    <% if (server.has_java) { %><span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#06457F]/60 text-[#A8C4EC] border border-[#5379AE]/30">Java Edition</span><% } %>
+                                    <% if (server.has_bedrock) { %><span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-950/40 text-emerald-300 border border-emerald-700/30">Bedrock / MCPE</span><% } %>
                                 </div>
                             </div>
-                            <div class="flex gap-1 flex-shrink-0">
-                                <button onclick='openEditModal(<%- JSON.stringify(server) %>)' class="p-2 rounded-lg text-slate-400 hover:text-purple-400 hover:bg-purple-500/10 transition-colors"><i data-lucide="pencil" class="w-4 h-4"></i></button>
-                                <button onclick="confirmDelete('<%= server.id %>', '<%= server.name.replace(/'/g, `\\'`) %>')" class="p-2 rounded-lg text-slate-400 hover:text-red-400 hover:bg-red-500/10 transition-colors"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                            <div class="flex items-center gap-1.5 flex-shrink-0">
+                                <!-- Quick Toggle Sponsor -->
+                                <a href="/admin/servers/toggle-sponsor/<%= server.id %>" 
+                                   title="<%= isSponsor ? 'Nonaktifkan Sponsor' : 'Jadikan Sponsor Minggu Ini' %>"
+                                   class="p-2.5 rounded-xl text-xs font-bold transition-all <%= isSponsor ? 'bg-[#06457F] text-[#A8C4EC] hover:bg-[#0474C4] hover:text-white border border-[#5379AE]' : 'bg-[#1b2033] border border-[#2C444C] text-slate-400 hover:text-white' %>">
+                                    <i data-lucide="star" class="w-4 h-4 <%= isSponsor ? 'fill-[#A8C4EC] text-[#A8C4EC]' : '' %>"></i>
+                                </a>
+                                <button onclick='openEditModal(<%- JSON.stringify(server) %>)' class="p-2.5 rounded-xl text-slate-400 hover:text-[#A8C4EC] hover:bg-[#1b2033] border border-transparent hover:border-[#2C444C] transition-colors" title="Edit">
+                                    <i data-lucide="pencil" class="w-4 h-4"></i>
+                                </button>
+                                <button onclick="confirmDelete('<%= server.id %>', '<%= server.name.replace(/'/g, `\\'`) %>')" class="p-2.5 rounded-xl text-slate-400 hover:text-red-400 hover:bg-red-500/10 transition-colors" title="Hapus">
+                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                </button>
                             </div>
                         </div>
-                        <div class="text-xs text-slate-500 pl-[60px] space-y-0.5">
-                            <% if (server.has_java) { %><p><span class="text-slate-600">Java:</span> <code class="text-purple-400"><%= server.java_ip %></code></p><% } %>
-                            <% if (server.has_bedrock) { %><p><span class="text-slate-600">Bedrock:</span> <code class="text-purple-400"><%= server.bedrock_ip %>:<%= server.bedrock_port %></code></p><% } %>
+
+                        <% if (server.sponsor_description) { %>
+                            <p class="text-xs text-[#A8C4EC] pl-[60px] mb-2 bg-[#1b2033] border border-[#2C444C] p-2.5 rounded-xl"><%= server.sponsor_description %></p>
+                        <% } %>
+
+                        <div class="text-xs text-slate-400 pl-[60px] space-y-1 font-mono">
+                            <% if (server.has_java) { %><p><span class="text-slate-500">Java IP:</span> <code class="text-[#A8C4EC] font-bold"><%= server.java_ip %></code></p><% } %>
+                            <% if (server.has_bedrock) { %><p><span class="text-slate-500">Bedrock IP:</span> <code class="text-[#A8C4EC] font-bold"><%= server.bedrock_ip %>:<%= server.bedrock_port %></code></p><% } %>
                         </div>
                     </div>
                 <% }); %>
             </div>
         <% } else { %>
-            <div class="glass-card p-10 text-center">
+            <div class="bento-card p-10 text-center">
                 <i data-lucide="server-off" class="w-12 h-12 text-slate-600 mx-auto mb-3"></i>
-                <p class="text-slate-400">Belum ada server</p>
-                <p class="text-slate-600 text-sm mt-1">Klik "Add Server" untuk menambahkan</p>
+                <p class="text-slate-400 font-bold">Belum ada server</p>
+                <p class="text-slate-500 text-xs mt-1">Klik "Tambah Server" untuk menambahkan</p>
             </div>
         <% } %>
     </main>
 
-    <!-- Add/Edit Modal -->
+    <!-- Add/Edit Modal (Solid Theme) -->
     <div id="serverModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
-        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeServerModal()"></div>
-        <div class="glass-card rounded-2xl p-6 max-w-md w-full relative z-10 max-h-[90vh] overflow-y-auto">
-            <h3 class="text-white font-bold text-lg mb-4 flex items-center gap-2" id="serverModalTitle">
-                <i data-lucide="server" class="w-5 h-5 text-purple-400"></i> Add Server
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeServerModal()"></div>
+        <div class="bento-card rounded-2xl p-6 max-w-md w-full relative z-10 max-h-[90vh] overflow-y-auto border border-[#2C444C] shadow-2xl bg-[#262B40]">
+            <h3 class="text-white font-extrabold text-lg mb-4 flex items-center gap-2" id="serverModalTitle">
+                <i data-lucide="server" class="w-5 h-5 text-[#A8C4EC]"></i> Tambah Server
             </h3>
-            <form id="serverForm" method="POST" class="space-y-3">
+            <form id="serverForm" method="POST" class="space-y-3.5">
                 <div>
-                    <label class="block text-slate-400 text-xs font-medium mb-1.5">Nama Server <span class="text-red-400">*</span></label>
-                    <input type="text" name="name" id="srvName" required placeholder="Queen Craft" class="w-full bg-slate-900/60 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white text-sm focus:border-purple-500 focus:outline-none transition-colors">
+                    <label class="block text-slate-300 text-xs font-semibold mb-1">Nama Server <span class="text-red-400">*</span></label>
+                    <input type="text" name="name" id="srvName" required placeholder="GTH SMP" class="w-full bg-[#1b2033] border border-[#2C444C] rounded-xl px-3.5 py-2.5 text-white text-xs md:text-sm focus:border-[#0474C4] focus:outline-none transition-colors">
                 </div>
 
-                <div class="bg-slate-900/40 rounded-xl p-3 space-y-2">
-                    <label class="flex items-center gap-2 text-sm text-white cursor-pointer">
-                        <input type="checkbox" name="has_java" id="srvHasJava" onchange="toggleField('java')" class="w-4 h-4 accent-purple-500"> Java Edition
+                <!-- Sponsorship Settings -->
+                <div class="bg-[#1b2033] border border-[#2C444C] rounded-xl p-3.5 space-y-2.5">
+                    <label class="flex items-center gap-2 text-xs md:text-sm text-[#A8C4EC] font-bold cursor-pointer">
+                        <input type="checkbox" name="is_sponsored" id="srvIsSponsored" class="w-4 h-4 accent-[#0474C4] rounded">
+                        <span>Jadikan Sponsor Minggu Ini (Hero Spotlight)</span>
                     </label>
-                    <input type="text" name="java_ip" id="srvJavaIp" placeholder="play.example.com" class="w-full bg-slate-800/60 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm focus:border-purple-500 focus:outline-none transition-colors hidden" data-field="java">
+                    <div>
+                        <label class="block text-slate-400 text-[11px] mb-1 font-semibold">Pesan Promosi Sponsor</label>
+                        <input type="text" name="sponsor_description" id="srvSponsorDesc" placeholder="NuxyMC lagi main di server ini selama seminggu!" class="w-full bg-[#161928] border border-[#2C444C] rounded-lg px-3 py-2 text-white text-xs focus:border-[#0474C4] focus:outline-none">
+                    </div>
                 </div>
 
-                <div class="bg-slate-900/40 rounded-xl p-3 space-y-2">
-                    <label class="flex items-center gap-2 text-sm text-white cursor-pointer">
-                        <input type="checkbox" name="has_bedrock" id="srvHasBedrock" onchange="toggleField('bedrock')" class="w-4 h-4 accent-purple-500"> Bedrock Edition
+                <!-- Java Edition -->
+                <div class="bg-[#1b2033] border border-[#2C444C] rounded-xl p-3 space-y-2">
+                    <label class="flex items-center gap-2 text-xs md:text-sm text-white font-semibold cursor-pointer">
+                        <input type="checkbox" name="has_java" id="srvHasJava" onchange="toggleField('java')" class="w-4 h-4 accent-[#0474C4] rounded"> Java Edition
+                    </label>
+                    <input type="text" name="java_ip" id="srvJavaIp" placeholder="play.gthsmp.net" class="w-full bg-[#161928] border border-[#2C444C] rounded-lg px-3 py-2 text-white text-xs focus:border-[#0474C4] focus:outline-none hidden" data-field="java">
+                </div>
+
+                <!-- Bedrock Edition -->
+                <div class="bg-[#1b2033] border border-[#2C444C] rounded-xl p-3 space-y-2">
+                    <label class="flex items-center gap-2 text-xs md:text-sm text-white font-semibold cursor-pointer">
+                        <input type="checkbox" name="has_bedrock" id="srvHasBedrock" onchange="toggleField('bedrock')" class="w-4 h-4 accent-[#0474C4] rounded"> Bedrock Edition (MCPE)
                     </label>
                     <div class="grid grid-cols-2 gap-2 hidden" id="bedrockFields" data-field="bedrock">
-                        <input type="text" name="bedrock_ip" id="srvBedrockIp" placeholder="IP" class="w-full bg-slate-800/60 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm focus:border-purple-500 focus:outline-none transition-colors">
-                        <input type="number" name="bedrock_port" id="srvBedrockPort" placeholder="19132" class="w-full bg-slate-800/60 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm focus:border-purple-500 focus:outline-none transition-colors">
+                        <input type="text" name="bedrock_ip" id="srvBedrockIp" placeholder="mcpe.gthsmp.net" class="w-full bg-[#161928] border border-[#2C444C] rounded-lg px-3 py-2 text-white text-xs focus:border-[#0474C4] focus:outline-none">
+                        <input type="number" name="bedrock_port" id="srvBedrockPort" placeholder="19132" class="w-full bg-[#161928] border border-[#2C444C] rounded-lg px-3 py-2 text-white text-xs focus:border-[#0474C4] focus:outline-none">
                     </div>
                 </div>
 
                 <div>
-                    <label class="block text-slate-400 text-xs font-medium mb-1.5">WhatsApp Community</label>
-                    <input type="text" name="whatsapp" id="srvWhatsapp" placeholder="https://wa.me/..." class="w-full bg-slate-900/60 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white text-sm focus:border-purple-500 focus:outline-none transition-colors">
+                    <label class="block text-slate-300 text-xs font-semibold mb-1">WhatsApp Komunitas</label>
+                    <input type="text" name="whatsapp" id="srvWhatsapp" placeholder="https://chat.whatsapp.com/..." class="w-full bg-[#1b2033] border border-[#2C444C] rounded-xl px-3.5 py-2.5 text-white text-xs focus:border-[#0474C4] focus:outline-none">
                 </div>
                 <div>
-                    <label class="block text-slate-400 text-xs font-medium mb-1.5">Discord Community</label>
-                    <input type="text" name="discord" id="srvDiscord" placeholder="https://discord.gg/..." class="w-full bg-slate-900/60 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white text-sm focus:border-purple-500 focus:outline-none transition-colors">
+                    <label class="block text-slate-300 text-xs font-semibold mb-1">Discord Server</label>
+                    <input type="text" name="discord" id="srvDiscord" placeholder="https://discord.gg/..." class="w-full bg-[#1b2033] border border-[#2C444C] rounded-xl px-3.5 py-2.5 text-white text-xs focus:border-[#0474C4] focus:outline-none">
                 </div>
 
                 <div class="flex gap-2 pt-2">
-                    <button type="submit" class="btn-primary text-white flex-1 py-2.5 rounded-xl text-sm font-semibold flex items-center justify-center gap-2"><i data-lucide="save" class="w-4 h-4"></i>Save</button>
-                    <button type="button" onclick="closeServerModal()" class="bg-slate-800 text-slate-300 px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-slate-700 transition-colors">Cancel</button>
+                    <button type="submit" class="flex-1 py-2.5 rounded-xl text-xs md:text-sm font-bold flex items-center justify-center gap-2 bg-[#0474C4] hover:bg-[#06457F] text-white transition-all shadow-lg shadow-[#0474C4]/20">
+                        <i data-lucide="save" class="w-4 h-4"></i> Simpan
+                    </button>
+                    <button type="button" onclick="closeServerModal()" class="bg-[#1b2033] border border-[#2C444C] text-slate-300 px-5 py-2.5 rounded-xl text-xs md:text-sm font-semibold hover:bg-[#161928] transition-colors">
+                        Batal
+                    </button>
                 </div>
             </form>
         </div>
@@ -103,14 +145,16 @@
 
     <!-- Delete confirm modal -->
     <div id="deleteModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
-        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeDeleteModal()"></div>
-        <div class="glass-card rounded-2xl p-6 max-w-sm w-full relative z-10 text-center">
-            <div class="w-14 h-14 rounded-full bg-red-500/10 flex items-center justify-center mx-auto mb-4"><i data-lucide="trash-2" class="w-6 h-6 text-red-400"></i></div>
-            <h3 class="text-white font-bold text-lg mb-2">Hapus server?</h3>
-            <p class="text-slate-400 text-sm mb-6">"<span id="deleteModName"></span>" akan dihapus permanen.</p>
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeDeleteModal()"></div>
+        <div class="bento-card rounded-2xl p-6 max-w-sm w-full relative z-10 text-center border border-[#2C444C] bg-[#262B40]">
+            <div class="w-14 h-14 rounded-full bg-red-500/10 flex items-center justify-center mx-auto mb-4 text-red-400">
+                <i data-lucide="trash-2" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-white font-extrabold text-lg mb-2">Hapus Server?</h3>
+            <p class="text-slate-400 text-xs mb-6">"<span id="deleteModName" class="text-white font-semibold"></span>" akan dihapus secara permanen.</p>
             <div class="flex gap-2 justify-center">
-                <button onclick="closeDeleteModal()" class="bg-slate-800 text-slate-300 px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-slate-700 transition-colors">Cancel</button>
-                <a id="deleteConfirmLink" href="#" class="bg-red-500 text-white px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-red-600 transition-colors">Delete</a>
+                <button onclick="closeDeleteModal()" class="bg-[#1b2033] border border-[#2C444C] text-slate-300 px-5 py-2.5 rounded-xl text-xs font-semibold hover:bg-[#161928] transition-colors">Batal</button>
+                <a id="deleteConfirmLink" href="#" class="bg-red-500 hover:bg-red-600 text-white px-5 py-2.5 rounded-xl text-xs font-bold transition-colors">Hapus</a>
             </div>
         </div>
     </div>
@@ -121,24 +165,26 @@
         refreshIcons();
 
         function toggleField(field) {
-            const el = document.querySelector(`[data-field="${field}"]`);
-            const checkbox = field === 'java' ? document.getElementById('srvHasJava') : document.getElementById('srvHasBedrock');
+            var el = document.querySelector('[data-field="' + field + '"]');
+            var checkbox = field === 'java' ? document.getElementById('srvHasJava') : document.getElementById('srvHasBedrock');
             if (el) el.classList.toggle('hidden', !checkbox.checked);
         }
 
         function openAddModal() {
-            document.getElementById('serverModalTitle').innerHTML = '<i data-lucide="server" class="w-5 h-5 text-purple-400"></i> Add Server';
+            document.getElementById('serverModalTitle').innerHTML = '<i data-lucide="server" class="w-5 h-5 text-[#A8C4EC]"></i> Tambah Server';
             document.getElementById('serverForm').action = '/admin/servers/add';
             document.getElementById('serverForm').reset();
-            document.querySelectorAll('[data-field]').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('[data-field]').forEach(function(el) { el.classList.add('hidden'); });
             document.getElementById('serverModal').classList.remove('hidden');
             refreshIcons();
         }
 
         function openEditModal(server) {
-            document.getElementById('serverModalTitle').innerHTML = '<i data-lucide="pencil" class="w-5 h-5 text-purple-400"></i> Edit Server';
+            document.getElementById('serverModalTitle').innerHTML = '<i data-lucide="pencil" class="w-5 h-5 text-[#A8C4EC]"></i> Edit Server';
             document.getElementById('serverForm').action = '/admin/servers/edit/' + server.id;
             document.getElementById('srvName').value = server.name || '';
+            document.getElementById('srvIsSponsored').checked = !!server.is_sponsored;
+            document.getElementById('srvSponsorDesc').value = server.sponsor_description || '';
             document.getElementById('srvHasJava').checked = !!server.has_java;
             document.getElementById('srvJavaIp').value = server.java_ip || '';
             document.getElementById('srvHasBedrock').checked = !!server.has_bedrock;
@@ -161,7 +207,7 @@
         }
         function closeDeleteModal() { document.getElementById('deleteModal').classList.add('hidden'); }
 
-        document.addEventListener('keydown', e => {
+        document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') { closeServerModal(); closeDeleteModal(); }
         });
     </script>

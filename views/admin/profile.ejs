@@ -1,54 +1,56 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <%- include('../partials/head') %>
 </head>
-<body class="min-h-screen">
+<body class="min-h-screen bg-[#161928] text-slate-100 pb-12">
     <%- include('partials/sidebar') %>
     <%- include('partials/toast') %>
 
     <main class="max-w-3xl mx-auto px-4 md:px-8 py-8">
         <div class="flex items-center justify-between mb-6 gap-3">
             <div>
-                <h1 class="text-2xl font-bold gradient-text mb-1">Edit Profile</h1>
-                <p class="text-slate-400 text-sm">Kelola info profil &amp; link kamu</p>
+                <h1 class="text-2xl font-black text-white mb-1">Edit Profile</h1>
+                <p class="text-slate-400 text-xs md:text-sm">Kelola foto profil, bio streamer &amp; link sosial</p>
             </div>
-            <a href="/" target="_blank" class="bg-slate-800/60 text-slate-300 px-3 py-2 rounded-lg text-xs hover:bg-slate-800 transition-colors flex items-center gap-1.5 flex-shrink-0">
-                <i data-lucide="eye" class="w-3.5 h-3.5"></i> View
+            <a href="/" target="_blank" class="bg-[#1b2033] border border-[#2C444C] text-slate-300 px-3.5 py-2 rounded-xl text-xs hover:text-white transition-colors flex items-center gap-1.5 flex-shrink-0">
+                <i data-lucide="eye" class="w-3.5 h-3.5 text-[#A8C4EC]"></i> View Site
             </a>
         </div>
 
         <form action="/admin/profile" method="POST" enctype="multipart/form-data" id="profileForm">
             <!-- Avatar -->
-            <div class="glass-card rounded-2xl p-5 md:p-6 mb-5">
+            <div class="bento-card p-5 md:p-6 mb-5">
                 <h2 class="text-base font-bold text-white mb-4 flex items-center gap-2">
-                    <span class="w-7 h-7 rounded-lg bg-purple-500/15 flex items-center justify-center"><i data-lucide="camera" class="w-3.5 h-3.5 text-purple-400"></i></span>
+                    <span class="w-8 h-8 rounded-xl bg-[#1b2033] border border-[#2C444C] flex items-center justify-center text-[#A8C4EC]">
+                        <i data-lucide="camera" class="w-4 h-4"></i>
+                    </span>
                     Profile Photo
                 </h2>
                 <div class="flex flex-col md:flex-row items-center gap-6">
                     <div class="text-center flex-shrink-0">
-                        <div class="w-28 h-28 rounded-full p-0.5 bg-gradient-to-br from-purple-400 to-purple-700 mx-auto mb-2">
+                        <div class="w-28 h-28 rounded-full p-1 border-2 border-[#0474C4] mx-auto mb-2 bg-[#161928]">
                             <img src="<%= profile.avatar_url || '/img/avatar.png' %>" alt="Avatar" id="avatarPreview"
-                                 class="w-full h-full rounded-full object-cover border-2 border-slate-950"
+                                 class="w-full h-full rounded-full object-cover"
                                  onerror="this.src='/img/avatar.png'">
                         </div>
-                        <p class="text-slate-500 text-xs"><%= (profile.avatar_url && profile.avatar_url !== '/img/avatar.png') ? 'Custom photo' : 'Default photo' %></p>
+                        <p class="text-slate-400 text-xs font-mono"><%= (profile.avatar_url && profile.avatar_url !== '/img/avatar.png') ? 'Custom photo' : 'Default photo' %></p>
                     </div>
                     <div class="flex-1 w-full space-y-3">
-                        <label for="avatarUpload" class="block border-2 border-dashed border-slate-700 rounded-xl p-5 text-center cursor-pointer hover:border-purple-500/50 hover:bg-purple-500/5 transition-colors" id="uploadArea">
-                            <i data-lucide="upload-cloud" class="w-7 h-7 text-purple-400 mx-auto mb-2"></i>
-                            <p class="text-white font-medium text-sm mb-1">Upload Photo</p>
-                            <p class="text-slate-500 text-xs">JPG, PNG, GIF, WebP • Max 5MB</p>
+                        <label for="avatarUpload" class="block border-2 border-dashed border-[#2C444C] rounded-xl p-5 text-center cursor-pointer hover:border-[#5379AE] hover:bg-[#1b2033] transition-colors" id="uploadArea">
+                            <i data-lucide="upload-cloud" class="w-7 h-7 text-[#A8C4EC] mx-auto mb-2"></i>
+                            <p class="text-white font-bold text-sm mb-1">Upload Photo Baru</p>
+                            <p class="text-slate-400 text-xs">JPG, PNG, WebP • Max 5MB</p>
                             <input type="file" id="avatarUpload" name="avatar" accept="image/*" class="hidden" onchange="handleFileSelect(event)">
                         </label>
-                        <div id="fileInfo" class="hidden bg-slate-800/50 rounded-xl p-3 flex items-center justify-between">
-                            <span class="text-slate-300 text-sm truncate mr-2"><i data-lucide="image" class="w-4 h-4 text-purple-400 inline -mt-0.5 mr-1.5"></i><span id="fileName"></span></span>
+                        <div id="fileInfo" class="hidden bg-[#1b2033] border border-[#2C444C] rounded-xl p-3 flex items-center justify-between">
+                            <span class="text-slate-300 text-sm truncate mr-2"><i data-lucide="image" class="w-4 h-4 text-[#A8C4EC] inline -mt-0.5 mr-1.5"></i><span id="fileName"></span></span>
                             <button type="button" onclick="clearFile()" class="text-red-400 hover:text-red-300 flex-shrink-0"><i data-lucide="x" class="w-4 h-4"></i></button>
                         </div>
                         <% if (profile.avatar_url && profile.avatar_url !== '/img/avatar.png') { %>
                             <button type="button" onclick="document.getElementById('deleteAvatarModal').classList.remove('hidden')"
-                                    class="bg-red-500/10 text-red-400 border border-red-500/20 px-4 py-2 rounded-xl text-sm hover:bg-red-500/20 transition-colors flex items-center gap-1.5">
-                                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Remove Photo
+                                    class="bg-red-500/10 text-red-400 border border-red-500/20 px-4 py-2 rounded-xl text-xs md:text-sm font-semibold hover:bg-red-500/20 transition-colors flex items-center gap-1.5">
+                                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Hapus Foto Custom
                             </button>
                         <% } %>
                     </div>
@@ -56,23 +58,25 @@
             </div>
 
             <!-- Basic Info -->
-            <div class="glass-card rounded-2xl p-5 md:p-6 mb-5">
+            <div class="bento-card p-5 md:p-6 mb-5">
                 <h2 class="text-base font-bold text-white mb-4 flex items-center gap-2">
-                    <span class="w-7 h-7 rounded-lg bg-purple-500/15 flex items-center justify-center"><i data-lucide="user" class="w-3.5 h-3.5 text-purple-400"></i></span>
+                    <span class="w-8 h-8 rounded-xl bg-[#1b2033] border border-[#2C444C] flex items-center justify-center text-[#A8C4EC]">
+                        <i data-lucide="user" class="w-4 h-4"></i>
+                    </span>
                     Basic Info
                 </h2>
                 <div class="space-y-4">
                     <div>
-                        <label class="block text-slate-300 mb-1.5 text-sm font-medium">Name <span class="text-red-400">*</span></label>
-                        <input type="text" name="name" value="<%= profile.name %>" required placeholder="Nama kamu"
-                               class="w-full bg-slate-900/60 border border-slate-700 rounded-xl px-4 py-2.5 text-white text-sm focus:border-purple-500 focus:outline-none transition-colors">
+                        <label class="block text-slate-300 mb-1.5 text-xs font-semibold">Nama Creator <span class="text-red-400">*</span></label>
+                        <input type="text" name="name" value="<%= profile.name %>" required placeholder="Nuxy MC"
+                               class="w-full bg-[#1b2033] border border-[#2C444C] rounded-xl px-4 py-2.5 text-white text-sm focus:border-[#0474C4] focus:outline-none transition-colors">
                     </div>
                     <div>
-                        <label class="block text-slate-300 mb-1.5 text-sm font-medium">Bio</label>
+                        <label class="block text-slate-300 mb-1.5 text-xs font-semibold">Bio Profil</label>
                         <textarea name="bio" rows="3" maxlength="200" placeholder="Bio singkat..."
-                                  class="w-full bg-slate-900/60 border border-slate-700 rounded-xl px-4 py-2.5 text-white text-sm focus:border-purple-500 focus:outline-none transition-colors resize-none"><%= profile.bio || '' %></textarea>
-                        <p class="text-slate-500 text-xs mt-1 flex justify-between">
-                            <span>Deskripsi singkat untuk profil kamu</span>
+                                  class="w-full bg-[#1b2033] border border-[#2C444C] rounded-xl px-4 py-2.5 text-white text-sm focus:border-[#0474C4] focus:outline-none transition-colors resize-none"><%= profile.bio || '' %></textarea>
+                        <p class="text-slate-500 text-xs mt-1 flex justify-between font-mono">
+                            <span>Maksimal 200 karakter</span>
                             <span id="bioCount"><%= profile.bio ? profile.bio.length : 0 %>/200</span>
                         </p>
                     </div>
@@ -80,31 +84,33 @@
             </div>
 
             <!-- Links -->
-            <div class="glass-card rounded-2xl p-5 md:p-6 mb-6">
+            <div class="bento-card p-5 md:p-6 mb-6">
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-3">
                     <h2 class="text-base font-bold text-white flex items-center gap-2">
-                        <span class="w-7 h-7 rounded-lg bg-purple-500/15 flex items-center justify-center"><i data-lucide="link" class="w-3.5 h-3.5 text-purple-400"></i></span>
-                        Links
+                        <span class="w-8 h-8 rounded-xl bg-[#1b2033] border border-[#2C444C] flex items-center justify-center text-[#A8C4EC]">
+                            <i data-lucide="link" class="w-4 h-4"></i>
+                        </span>
+                        Links &amp; Socials
                     </h2>
                     <div class="flex gap-2 flex-wrap">
-                        <button type="button" onclick="addLink('social')" class="btn-primary text-white px-3 py-2 rounded-lg text-xs font-medium flex items-center gap-1"><i data-lucide="plus" class="w-3.5 h-3.5"></i>Social</button>
-                        <button type="button" onclick="addLink('donate')" class="bg-amber-500/15 text-amber-400 border border-amber-500/25 px-3 py-2 rounded-lg text-xs font-medium hover:bg-amber-500/25 transition-colors flex items-center gap-1"><i data-lucide="gift" class="w-3.5 h-3.5"></i>Donate</button>
-                        <button type="button" onclick="addLink('community')" class="bg-sky-500/15 text-sky-400 border border-sky-500/25 px-3 py-2 rounded-lg text-xs font-medium hover:bg-sky-500/25 transition-colors flex items-center gap-1"><i data-lucide="users" class="w-3.5 h-3.5"></i>Community</button>
+                        <button type="button" onclick="addLink('social')" class="bg-[#0474C4] hover:bg-[#06457F] text-white px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1 transition-all"><i data-lucide="plus" class="w-3.5 h-3.5"></i>Social</button>
+                        <button type="button" onclick="addLink('donate')" class="bg-[#06457F] text-[#A8C4EC] border border-[#5379AE] px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1 hover:bg-[#0474C4] hover:text-white transition-all"><i data-lucide="gift" class="w-3.5 h-3.5"></i>Donate</button>
+                        <button type="button" onclick="addLink('community')" class="bg-emerald-950/40 text-emerald-300 border border-emerald-700/30 px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1 hover:bg-emerald-900/40 transition-all"><i data-lucide="users" class="w-3.5 h-3.5"></i>Community</button>
                     </div>
                 </div>
 
                 <div id="linksContainer" class="space-y-3">
                     <% if (profile.socials && profile.socials.length > 0) { %>
                         <% profile.socials.forEach(function (link, index) {
-                            let badgeColor = 'bg-purple-500/15 text-purple-400';
+                            let badgeClass = 'bg-[#06457F]/60 text-[#A8C4EC] border border-[#5379AE]/30';
                             let badgeLabel = 'Social';
-                            if (link.type === 'donate') { badgeColor = 'bg-amber-500/15 text-amber-400'; badgeLabel = 'Donate'; }
-                            else if (link.type === 'community') { badgeColor = 'bg-sky-500/15 text-sky-400'; badgeLabel = 'Community'; }
+                            if (link.type === 'donate') { badgeClass = 'bg-[#06457F] text-[#A8C4EC] border border-[#5379AE]'; badgeLabel = 'Donate'; }
+                            else if (link.type === 'community') { badgeClass = 'bg-emerald-950/40 text-emerald-300 border border-emerald-700/30'; badgeLabel = 'Community'; }
                         %>
-                            <div class="social-link-item bg-slate-900/50 rounded-xl p-3 md:p-4 border border-slate-800" data-index="<%= index %>">
+                            <div class="social-link-item bg-[#161928] rounded-xl p-3 md:p-4 border border-[#2C444C]" data-index="<%= index %>">
                                 <div class="flex items-center gap-2 mb-3">
-                                    <span class="badge text-xs font-medium px-2.5 py-1 rounded-full <%= badgeColor %>"><%= badgeLabel %></span>
-                                    <select name="social_type_<%= index %>" class="type-select bg-slate-800/60 border border-slate-700 rounded-lg px-2 py-1 text-white text-xs focus:outline-none" onchange="updateBadge(this)">
+                                    <span class="badge text-xs font-bold px-2.5 py-0.5 rounded-full <%= badgeClass %>"><%= badgeLabel %></span>
+                                    <select name="social_type_<%= index %>" class="type-select bg-[#1b2033] border border-[#2C444C] rounded-lg px-2 py-1 text-white text-xs focus:outline-none" onchange="updateBadge(this)">
                                         <option value="social" <%= link.type === 'social' ? 'selected' : '' %>>Social</option>
                                         <option value="donate" <%= link.type === 'donate' ? 'selected' : '' %>>Donate</option>
                                         <option value="community" <%= link.type === 'community' ? 'selected' : '' %>>Community</option>
@@ -113,20 +119,20 @@
                                 </div>
                                 <div class="space-y-2 md:space-y-0 md:grid md:grid-cols-3 md:gap-3">
                                     <div>
-                                        <label class="text-slate-500 text-xs mb-1 block">Name</label>
-                                        <input type="text" name="social_name_<%= index %>" value="<%= link.name %>" placeholder="YouTube, Saweria..."
-                                               class="w-full bg-slate-800/60 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm focus:border-purple-500 focus:outline-none transition-colors">
+                                        <label class="text-slate-400 text-xs mb-1 block font-semibold">Nama Platform</label>
+                                        <input type="text" name="social_name_<%= index %>" value="<%= link.name %>" placeholder="YouTube, SociaBuzz..."
+                                               class="w-full bg-[#1b2033] border border-[#2C444C] rounded-lg px-3 py-2 text-white text-sm focus:border-[#0474C4] focus:outline-none transition-colors">
                                     </div>
                                     <div>
-                                        <label class="text-slate-500 text-xs mb-1 block">URL</label>
+                                        <label class="text-slate-400 text-xs mb-1 block font-semibold">URL Tautan</label>
                                         <input type="text" name="social_url_<%= index %>" value="<%= link.url %>" placeholder="https://..."
-                                               class="w-full bg-slate-800/60 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm focus:border-purple-500 focus:outline-none transition-colors">
+                                               class="w-full bg-[#1b2033] border border-[#2C444C] rounded-lg px-3 py-2 text-white text-sm focus:border-[#0474C4] focus:outline-none transition-colors">
                                     </div>
                                     <div>
-                                        <label class="text-slate-500 text-xs mb-1 block">Icon</label>
-                                        <select name="social_icon_<%= index %>" class="w-full bg-slate-800/60 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm focus:border-purple-500 focus:outline-none transition-colors">
+                                        <label class="text-slate-400 text-xs mb-1 block font-semibold">Icon</label>
+                                        <select name="social_icon_<%= index %>" class="w-full bg-[#1b2033] border border-[#2C444C] rounded-lg px-3 py-2 text-white text-sm focus:border-[#0474C4] focus:outline-none transition-colors">
                                             <%
-                                            const iconOpts = ['youtube','message-circle','music-2','instagram','twitter','twitch','facebook','github','music','send','phone','linkedin','globe','mail','heart','coffee','gift','star','crown','users','link'];
+                                             const iconOpts = ['youtube','message-circle','music-2','instagram','twitter','twitch','facebook','github','music','send','phone','linkedin','globe','mail','heart','coffee','gift','star','crown','users','link'];
                                             iconOpts.forEach(function (opt) { %>
                                                 <option value="<%= opt %>" <%= (link.icon === opt) ? 'selected' : '' %>><%= opt %></option>
                                             <% }); %>
@@ -138,30 +144,36 @@
                     <% } else { %>
                         <div class="text-center py-10" id="noLinksMsg">
                             <i data-lucide="link-2" class="w-10 h-10 text-slate-700 mx-auto mb-3"></i>
-                            <p class="text-slate-500">No links yet</p>
-                            <p class="text-slate-600 text-sm mt-1">Add your first link above</p>
+                            <p class="text-slate-400 font-bold">Belum ada link</p>
+                            <p class="text-slate-500 text-xs mt-1">Tambahkan link pertama kamu di atas</p>
                         </div>
                     <% } %>
                 </div>
             </div>
 
             <div class="flex gap-3 flex-wrap">
-                <button type="submit" class="btn-primary text-white px-6 py-3 rounded-xl font-semibold text-sm flex items-center gap-2"><i data-lucide="save" class="w-4 h-4"></i>Save Changes</button>
-                <a href="/admin" class="bg-slate-800/60 text-slate-300 px-6 py-3 rounded-xl font-semibold text-sm hover:bg-slate-800 transition-colors flex items-center gap-2"><i data-lucide="x" class="w-4 h-4"></i>Cancel</a>
+                <button type="submit" class="bg-[#0474C4] hover:bg-[#06457F] text-white px-6 py-3 rounded-xl font-bold text-sm flex items-center gap-2 transition-all shadow-lg shadow-[#0474C4]/20">
+                    <i data-lucide="save" class="w-4 h-4"></i> Simpan Perubahan
+                </button>
+                <a href="/admin" class="bg-[#1b2033] border border-[#2C444C] text-slate-300 px-6 py-3 rounded-xl font-semibold text-sm hover:bg-[#161928] transition-colors flex items-center gap-2">
+                    <i data-lucide="x" class="w-4 h-4"></i> Batal
+                </a>
             </div>
         </form>
     </main>
 
     <!-- Delete Avatar Modal -->
     <div id="deleteAvatarModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
-        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="document.getElementById('deleteAvatarModal').classList.add('hidden')"></div>
-        <div class="glass-card rounded-2xl p-6 max-w-sm w-full relative z-10 text-center">
-            <div class="w-14 h-14 rounded-full bg-red-500/10 flex items-center justify-center mx-auto mb-4"><i data-lucide="user-x" class="w-6 h-6 text-red-400"></i></div>
-            <h3 class="text-white font-bold text-lg mb-2">Remove Photo?</h3>
-            <p class="text-slate-400 text-sm mb-6">Profil kamu akan pakai avatar default.</p>
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="document.getElementById('deleteAvatarModal').classList.add('hidden')"></div>
+        <div class="bento-card rounded-2xl p-6 max-w-sm w-full relative z-10 text-center border border-[#2C444C] bg-[#262B40]">
+            <div class="w-14 h-14 rounded-full bg-red-500/10 flex items-center justify-center mx-auto mb-4 text-red-400">
+                <i data-lucide="user-x" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-white font-extrabold text-lg mb-2">Hapus Foto?</h3>
+            <p class="text-slate-400 text-xs mb-6">Profil kamu akan kembali memakai avatar default NuxyMC.</p>
             <div class="flex gap-2 justify-center">
-                <button onclick="document.getElementById('deleteAvatarModal').classList.add('hidden')" class="bg-slate-800 text-slate-300 px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-slate-700 transition-colors">Cancel</button>
-                <button onclick="document.getElementById('deleteAvatarForm').submit()" class="bg-red-500 text-white px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-red-600 transition-colors">Remove</button>
+                <button onclick="document.getElementById('deleteAvatarModal').classList.add('hidden')" class="bg-[#1b2033] border border-[#2C444C] text-slate-300 px-5 py-2.5 rounded-xl text-xs font-semibold hover:bg-[#161928] transition-colors">Batal</button>
+                <button onclick="document.getElementById('deleteAvatarForm').submit()" class="bg-red-500 hover:bg-red-600 text-white px-5 py-2.5 rounded-xl text-xs font-bold transition-colors">Hapus</button>
             </div>
         </div>
     </div>
@@ -173,11 +185,11 @@
         refreshIcons();
 
         function handleFileSelect(event) {
-            const file = event.target.files[0];
+            var file = event.target.files[0];
             if (!file) return;
             if (file.size > 5 * 1024 * 1024) { showToastAdmin('File terlalu besar! Max 5MB.', 'error'); return; }
-            const reader = new FileReader();
-            reader.onload = e => { document.getElementById('avatarPreview').src = e.target.result; };
+            var reader = new FileReader();
+            reader.onload = function(e) { document.getElementById('avatarPreview').src = e.target.result; };
             reader.readAsDataURL(file);
             document.getElementById('fileName').textContent = file.name;
             document.getElementById('fileInfo').classList.remove('hidden');
@@ -189,28 +201,28 @@
             document.getElementById('avatarPreview').src = '<%= profile.avatar_url || "/img/avatar.png" %>';
         }
 
-        const ICON_OPTIONS = ['youtube','message-circle','music-2','instagram','twitter','twitch','facebook','github','music','send','phone','linkedin','globe','mail','heart','coffee','gift','star','crown','users','link'];
+        var ICON_OPTIONS = ['youtube','message-circle','music-2','instagram','twitter','twitch','facebook','github','music','send','phone','linkedin','globe','mail','heart','coffee','gift','star','crown','users','link'];
 
         function addLink(type) {
-            const container = document.getElementById('linksContainer');
-            const noMsg = document.getElementById('noLinksMsg');
+            var container = document.getElementById('linksContainer');
+            var noMsg = document.getElementById('noLinksMsg');
             if (noMsg) noMsg.remove();
 
-            const index = container.querySelectorAll('.social-link-item').length;
-            let typeLabel = 'Social', typeBadge = 'bg-purple-500/15 text-purple-400';
-            if (type === 'donate') { typeLabel = 'Donate'; typeBadge = 'bg-amber-500/15 text-amber-400'; }
-            else if (type === 'community') { typeLabel = 'Community'; typeBadge = 'bg-sky-500/15 text-sky-400'; }
+            var index = container.querySelectorAll('.social-link-item').length;
+            var typeLabel = 'Social', typeBadge = 'bg-[#06457F]/60 text-[#A8C4EC] border border-[#5379AE]/30';
+            if (type === 'donate') { typeLabel = 'Donate'; typeBadge = 'bg-[#06457F] text-[#A8C4EC] border border-[#5379AE]'; }
+            else if (type === 'community') { typeLabel = 'Community'; typeBadge = 'bg-emerald-950/40 text-emerald-300 border border-emerald-700/30'; }
 
-            const iconOptionsHtml = ICON_OPTIONS.map(o => `<option value="${o}">${o}</option>`).join('');
+            var iconOptionsHtml = ICON_OPTIONS.map(function(o) { return '<option value="' + o + '">' + o + '</option>'; }).join('');
 
-            const div = document.createElement('div');
-            div.className = 'social-link-item bg-slate-900/50 rounded-xl p-3 md:p-4 border border-slate-800';
+            var div = document.createElement('div');
+            div.className = 'social-link-item bg-[#161928] rounded-xl p-3 md:p-4 border border-[#2C444C]';
             div.setAttribute('data-index', index);
             div.style.opacity = '0';
             div.innerHTML = `
                 <div class="flex items-center gap-2 mb-3">
-                    <span class="badge text-xs font-medium px-2.5 py-1 rounded-full ${typeBadge}">${typeLabel}</span>
-                    <select name="social_type_${index}" class="type-select bg-slate-800/60 border border-slate-700 rounded-lg px-2 py-1 text-white text-xs focus:outline-none" onchange="updateBadge(this)">
+                    <span class="badge text-xs font-bold px-2.5 py-0.5 rounded-full ${typeBadge}">${typeLabel}</span>
+                    <select name="social_type_${index}" class="type-select bg-[#1b2033] border border-[#2C444C] rounded-lg px-2 py-1 text-white text-xs focus:outline-none" onchange="updateBadge(this)">
                         <option value="social" ${type === 'social' ? 'selected' : ''}>Social</option>
                         <option value="donate" ${type === 'donate' ? 'selected' : ''}>Donate</option>
                         <option value="community" ${type === 'community' ? 'selected' : ''}>Community</option>
@@ -219,85 +231,86 @@
                 </div>
                 <div class="space-y-2 md:space-y-0 md:grid md:grid-cols-3 md:gap-3">
                     <div>
-                        <label class="text-slate-500 text-xs mb-1 block">Name</label>
-                        <input type="text" name="social_name_${index}" placeholder="${type === 'donate' ? 'Saweria, Sociabuzz...' : type === 'community' ? 'WhatsApp, Discord...' : 'YouTube, Instagram...'}"
-                               class="w-full bg-slate-800/60 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm focus:border-purple-500 focus:outline-none transition-colors">
+                        <label class="text-slate-400 text-xs mb-1 block font-semibold">Nama Platform</label>
+                        <input type="text" name="social_name_${index}" placeholder="${type === 'donate' ? 'SociaBuzz, Saweria...' : type === 'community' ? 'WhatsApp, Discord...' : 'YouTube, Instagram...'}"
+                               class="w-full bg-[#1b2033] border border-[#2C444C] rounded-lg px-3 py-2 text-white text-sm focus:border-[#0474C4] focus:outline-none transition-colors">
                     </div>
                     <div>
-                        <label class="text-slate-500 text-xs mb-1 block">URL</label>
+                        <label class="text-slate-400 text-xs mb-1 block font-semibold">URL Tautan</label>
                         <input type="text" name="social_url_${index}" placeholder="https://..."
-                               class="w-full bg-slate-800/60 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm focus:border-purple-500 focus:outline-none transition-colors">
+                               class="w-full bg-[#1b2033] border border-[#2C444C] rounded-lg px-3 py-2 text-white text-sm focus:border-[#0474C4] focus:outline-none transition-colors">
                     </div>
                     <div>
-                        <label class="text-slate-500 text-xs mb-1 block">Icon</label>
-                        <select name="social_icon_${index}" class="w-full bg-slate-800/60 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm focus:border-purple-500 focus:outline-none transition-colors">${iconOptionsHtml}</select>
+                        <label class="text-slate-400 text-xs mb-1 block font-semibold">Icon</label>
+                        <select name="social_icon_${index}" class="w-full bg-[#1b2033] border border-[#2C444C] rounded-lg px-3 py-2 text-white text-sm focus:border-[#0474C4] focus:outline-none transition-colors">${iconOptionsHtml}</select>
                     </div>
                 </div>
             `;
             container.appendChild(div);
-            requestAnimationFrame(() => { div.style.transition = 'opacity .3s'; div.style.opacity = '1'; });
+            requestAnimationFrame(function() { div.style.transition = 'opacity .3s'; div.style.opacity = '1'; });
             refreshIcons();
-            setTimeout(() => div.scrollIntoView({ behavior: 'smooth', block: 'center' }), 150);
+            setTimeout(function() { div.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 150);
         }
 
         function removeLink(btn) {
-            const item = btn.closest('.social-link-item');
+            var item = btn.closest('.social-link-item');
             item.style.transition = 'opacity .25s';
             item.style.opacity = '0';
-            setTimeout(() => { item.remove(); checkEmpty(); reindexLinks(); }, 250);
+            setTimeout(function() { item.remove(); checkEmpty(); reindexLinks(); }, 250);
         }
 
         function updateBadge(select) {
-            const badge = select.parentElement.querySelector('.badge');
+            var badge = select.parentElement.querySelector('.badge');
             if (!badge) return;
-            if (select.value === 'donate') { badge.className = 'badge text-xs font-medium px-2.5 py-1 rounded-full bg-amber-500/15 text-amber-400'; badge.textContent = 'Donate'; }
-            else if (select.value === 'community') { badge.className = 'badge text-xs font-medium px-2.5 py-1 rounded-full bg-sky-500/15 text-sky-400'; badge.textContent = 'Community'; }
-            else { badge.className = 'badge text-xs font-medium px-2.5 py-1 rounded-full bg-purple-500/15 text-purple-400'; badge.textContent = 'Social'; }
+            if (select.value === 'donate') { badge.className = 'badge text-xs font-bold px-2.5 py-0.5 rounded-full bg-[#06457F] text-[#A8C4EC] border border-[#5379AE]'; badge.textContent = 'Donate'; }
+            else if (select.value === 'community') { badge.className = 'badge text-xs font-bold px-2.5 py-0.5 rounded-full bg-emerald-950/40 text-emerald-300 border border-emerald-700/30'; badge.textContent = 'Community'; }
+            else { badge.className = 'badge text-xs font-bold px-2.5 py-0.5 rounded-full bg-[#06457F]/60 text-[#A8C4EC] border border-[#5379AE]/30'; badge.textContent = 'Social'; }
         }
 
         function checkEmpty() {
-            const container = document.getElementById('linksContainer');
+            var container = document.getElementById('linksContainer');
             if (container.querySelectorAll('.social-link-item').length === 0) {
-                container.innerHTML = `<div class="text-center py-10" id="noLinksMsg"><i data-lucide="link-2" class="w-10 h-10 text-slate-700 mx-auto mb-3"></i><p class="text-slate-500">No links yet</p><p class="text-slate-600 text-sm mt-1">Add your first link above</p></div>`;
+                container.innerHTML = '<div class="text-center py-10" id="noLinksMsg"><i data-lucide="link-2" class="w-10 h-10 text-slate-700 mx-auto mb-3"></i><p class="text-slate-400 font-bold">Belum ada link</p><p class="text-slate-500 text-xs mt-1">Tambahkan link pertama kamu di atas</p></div>';
                 refreshIcons();
             }
         }
 
         function reindexLinks() {
-            document.querySelectorAll('.social-link-item').forEach((item, newIndex) => {
+            document.querySelectorAll('.social-link-item').forEach(function(item, newIndex) {
                 item.setAttribute('data-index', newIndex);
-                item.querySelectorAll('input, select').forEach(input => {
-                    const name = input.getAttribute('name');
+                item.querySelectorAll('input, select').forEach(function(input) {
+                    var name = input.getAttribute('name');
                     if (name) input.setAttribute('name', name.replace(/_\d+$/, '_' + newIndex));
                 });
             });
         }
 
         function showToastAdmin(message, type) {
-            const existing = document.getElementById('flashToast');
+            var existing = document.getElementById('flashToast');
             if (existing) existing.remove();
-            const bg = type === 'error' ? 'bg-red-500/90' : 'bg-purple-500/90';
-            const icon = type === 'error' ? 'alert-circle' : 'check-circle';
-            const toast = document.createElement('div');
+            var border = type === 'error' ? 'border-red-500/50' : 'border-emerald-500/50';
+            var icon = type === 'error' ? 'alert-circle' : 'check-circle';
+            var iconColor = type === 'error' ? 'text-red-400' : 'text-emerald-400';
+            var toast = document.createElement('div');
             toast.id = 'flashToast';
-            toast.className = `fixed top-4 right-4 z-50 ${bg} backdrop-blur text-white px-5 py-3 rounded-xl shadow-lg flex items-center gap-2`;
-            toast.innerHTML = `<i data-lucide="${icon}" class="w-4 h-4"></i><span class="text-sm">${message}</span>`;
+            toast.className = 'fixed top-4 right-4 z-50 bg-[#0f141f] ' + border + ' border text-white px-5 py-3 rounded-xl shadow-2xl flex items-center gap-2';
+            toast.innerHTML = '<i data-lucide="' + icon + '" class="w-4 h-4 ' + iconColor + '"></i><span class="text-sm font-semibold">' + message + '</span>';
             document.body.appendChild(toast);
             refreshIcons();
-            setTimeout(() => { toast.style.transition = 'opacity .3s'; toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 3000);
+            setTimeout(function() { toast.style.transition = 'opacity .3s'; toast.style.opacity = '0'; setTimeout(function() { toast.remove(); }, 300); }, 3000);
         }
 
-        const bioArea = document.querySelector('textarea[name="bio"]');
-        const bioCount = document.getElementById('bioCount');
+        var bioArea = document.querySelector('textarea[name="bio"]');
+        var bioCount = document.getElementById('bioCount');
         if (bioArea && bioCount) {
-            bioArea.addEventListener('input', function () { bioCount.textContent = this.value.length; });
+            bioArea.addEventListener('input', function() { bioCount.textContent = this.value.length; });
         }
 
-        const uploadArea = document.getElementById('uploadArea');
+        var uploadArea = document.getElementById('uploadArea');
         if (uploadArea) {
-            ['dragenter', 'dragover'].forEach(e => uploadArea.addEventListener(e, ev => { ev.preventDefault(); uploadArea.style.borderColor = 'rgba(168, 85, 247,0.6)'; }));
-            ['dragleave', 'drop'].forEach(e => uploadArea.addEventListener(e, ev => { ev.preventDefault(); uploadArea.style.borderColor = ''; }));
-            uploadArea.addEventListener('drop', e => {
+            ['dragenter', 'dragover'].forEach(function(e) { uploadArea.addEventListener(e, function(ev) { ev.preventDefault(); uploadArea.style.borderColor = '#0284c7'; }); });
+            ['dragleave', 'drop'].forEach(function(e) { uploadArea.addEventListener(e, function(ev) { ev.preventDefault(); uploadArea.style.borderColor = ''; }); });
+            uploadArea.addEventListener('drop', function(e) {
                 if (e.dataTransfer.files.length > 0) {
                     document.getElementById('avatarUpload').files = e.dataTransfer.files;
                     handleFileSelect({ target: { files: e.dataTransfer.files } });
@@ -305,7 +318,7 @@
             });
         }
 
-        document.addEventListener('keydown', e => {
+        document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') document.getElementById('deleteAvatarModal').classList.add('hidden');
         });
     </script>

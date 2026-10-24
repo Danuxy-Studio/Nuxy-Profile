@@ -3,16 +3,16 @@
 <head>
     <%- include('partials/head') %>
 </head>
-<body class="min-h-screen">
+<body class="min-h-screen bg-[#161928] text-slate-100 pb-12">
     <%- include('partials/nav') %>
 
-    <main class="max-w-md mx-auto px-4 py-24 text-center">
-        <div class="w-20 h-20 rounded-2xl bg-slate-900/60 border border-slate-800 flex items-center justify-center mx-auto mb-5">
-            <i data-lucide="search-x" class="w-9 h-9 text-slate-600"></i>
+    <main class="max-w-md mx-auto px-4 py-20 text-center">
+        <div class="w-24 h-24 rounded-3xl bg-[#262B40] border border-[#2C444C] flex items-center justify-center mx-auto mb-5 overflow-hidden p-1 shadow-xl">
+            <img src="/img/expr_scream.png" alt="404 Panik" class="w-full h-full object-cover rounded-2xl">
         </div>
-        <h1 class="text-4xl font-bold gradient-text mb-2">404</h1>
-        <p class="text-slate-400 mb-6"><%= typeof title !== 'undefined' ? title.replace(/^\d+ - /, '') : 'Halaman tidak ditemukan' %></p>
-        <a href="/" class="btn-primary text-white px-6 py-3 rounded-xl inline-flex items-center gap-2 font-semibold text-sm">
+        <h1 class="text-5xl font-black text-white mb-2">404</h1>
+        <p class="text-slate-400 text-sm mb-6"><%= typeof title !== 'undefined' ? title.replace(/^\d+ - /, '') : 'Waduh! Halaman ini tidak ditemukan atau tersesat di The End Minecraft.' %></p>
+        <a href="/" class="btn-brand font-bold text-xs md:text-sm px-6 py-3 rounded-full inline-flex items-center gap-2">
             <i data-lucide="home" class="w-4 h-4"></i> Balik ke Home
         </a>
     </main>

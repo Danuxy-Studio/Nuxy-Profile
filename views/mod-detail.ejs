@@ -3,60 +3,63 @@
 <head>
     <%- include('partials/head') %>
 </head>
-<body class="min-h-screen">
+<body class="min-h-screen bg-[#161928] text-slate-100 pb-12">
     <%- include('partials/preloader') %>
     <%- include('partials/nav') %>
 
-    <main class="max-w-md mx-auto px-4 py-8">
-        <a href="/mods" class="inline-flex items-center gap-1.5 text-slate-400 hover:text-purple-400 transition-colors text-sm mb-5 animate-fade-up">
-            <i data-lucide="arrow-left" class="w-4 h-4"></i> Kembali ke Modpacks
-        </a>
-
-        <!-- Mod info -->
-        <div class="glass-card p-6 text-center mb-5 animate-fade-up" style="animation-delay:.05s">
-            <div class="w-16 h-16 rounded-2xl bg-purple-500/10 flex items-center justify-center mx-auto mb-4">
-                <i data-lucide="package" class="w-8 h-8 text-purple-400"></i>
-            </div>
-            <h1 class="text-xl font-bold text-white"><%= mod.name %></h1>
-            <div class="flex items-center justify-center gap-2 mt-2 text-xs text-slate-500">
-                <span class="bg-purple-500/15 text-purple-400 px-2.5 py-0.5 rounded-full font-semibold">MC <%= mod.mc_version %></span>
-                <span>•</span>
-                <span><%= mod.release_date %></span>
-            </div>
-            <p class="text-slate-400 text-sm mt-3"><%= mod.description %></p>
-        </div>
-
-        <!-- Transparent countdown card -->
-        <div class="glass-card p-6 text-center animate-fade-up" style="animation-delay:.1s">
-            <p class="text-[11px] font-semibold uppercase tracking-wider text-slate-500 mb-4">
-                Persiapan link download
-            </p>
-
-            <div class="relative w-24 h-24 mx-auto mb-4">
-                <svg class="w-24 h-24 -rotate-90" viewBox="0 0 96 96">
-                    <circle cx="48" cy="48" r="42" fill="none" stroke="rgba(168, 85, 247,0.15)" stroke-width="5"/>
-                    <circle id="progressCircle" cx="48" cy="48" r="42" fill="none" stroke="#a855f7" stroke-width="5"
-                            stroke-linecap="round" stroke-dasharray="263.9" stroke-dashoffset="0"
-                            style="transition: stroke-dashoffset 0.3s linear;"/>
-                </svg>
-                <div class="absolute inset-0 flex items-center justify-center">
-                    <span id="countdownNumber" class="text-3xl font-extrabold text-purple-400">5</span>
-                </div>
-            </div>
-
-            <p class="text-slate-400 text-sm mb-5" id="statusText">
-                Link akan aktif dalam <strong id="timeLeft" class="text-purple-400">5</strong> detik
-            </p>
-
-            <a href="#" id="downloadBtn"
-               class="w-full py-3.5 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 transition-all bg-slate-800 text-slate-500 pointer-events-none">
-                <i data-lucide="lock" class="w-4 h-4"></i>
-                <span>Mohon tunggu...</span>
+    <!-- Mobile-First Centered Container -->
+    <main class="w-full px-4 py-5 md:py-8">
+        <div class="max-w-xl mx-auto w-full space-y-4">
+            <a href="/mods" class="inline-flex items-center gap-1.5 text-slate-400 hover:text-white transition-colors text-xs font-semibold">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i> Kembali ke Modpacks
             </a>
 
-            <p class="text-slate-600 text-xs mt-3 flex items-center justify-center gap-1.5">
-                <i data-lucide="shield-check" class="w-3.5 h-3.5 text-purple-500"></i> Aman &amp; gratis, tanpa popup mengganggu
-            </p>
+            <!-- Mod info Bento Card -->
+            <div class="bento-card p-5 text-center">
+                <div class="w-14 h-14 rounded-2xl bg-[#1b2033] border border-[#2C444C] flex items-center justify-center mx-auto mb-3 text-[#A8C4EC]">
+                    <i data-lucide="package" class="w-7 h-7"></i>
+                </div>
+                <h1 class="text-xl font-black text-white"><%= mod.name %></h1>
+                <div class="flex items-center justify-center gap-2 mt-1.5 text-xs text-slate-400">
+                    <span class="pill-sky px-2.5 py-0.5 rounded-full font-bold text-[10px]">MC <%= mod.mc_version %></span>
+                    <span>&bull;</span>
+                    <span class="font-mono text-[11px]"><%= mod.release_date %></span>
+                </div>
+                <p class="text-slate-300 text-xs sm:text-sm mt-2.5 leading-relaxed"><%= mod.description %></p>
+            </div>
+
+            <!-- Countdown card -->
+            <div class="bento-card p-6 text-center">
+                <p class="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-3">
+                    Menyiapkan Link Download Resmi
+                </p>
+
+                <div class="relative w-20 h-20 mx-auto mb-3">
+                    <svg class="w-20 h-20 -rotate-90" viewBox="0 0 96 96">
+                        <circle cx="48" cy="48" r="42" fill="none" stroke="#2C444C" stroke-width="6"/>
+                        <circle id="progressCircle" cx="48" cy="48" r="42" fill="none" stroke="#0474C4" stroke-width="6"
+                                stroke-linecap="round" stroke-dasharray="263.9" stroke-dashoffset="0"
+                                style="transition: stroke-dashoffset 0.3s linear;"/>
+                    </svg>
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <span id="countdownNumber" class="text-2xl font-black text-white">5</span>
+                    </div>
+                </div>
+
+                <p class="text-slate-300 text-xs mb-4" id="statusText">
+                    Link akan aktif dalam <strong id="timeLeft" class="text-[#A8C4EC] font-bold">5</strong> detik
+                </p>
+
+                <a href="#" id="downloadBtn"
+                   class="w-full py-3 rounded-full font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all bg-[#1b2033] border border-[#2C444C] text-slate-400 pointer-events-none">
+                    <i data-lucide="lock" class="w-4 h-4"></i>
+                    <span>Mohon tunggu...</span>
+                </a>
+
+                <p class="text-slate-400 text-[10px] mt-3 flex items-center justify-center gap-1.5">
+                    <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-400"></i> Unduhan resmi, aman &amp; bebas malware
+                </p>
+            </div>
         </div>
     </main>
 
@@ -64,40 +67,38 @@
 
     <script>
         (function () {
-            refreshIcons();
-            const TOTAL = 5;
-            let timeLeft = TOTAL;
-            const circle = document.getElementById('progressCircle');
+            let timeLeft = 5;
+            const totalTime = 5;
             const circumference = 2 * Math.PI * 42;
-            circle.style.strokeDasharray = circumference;
 
-            function update() {
-                const offset = circumference * (1 - (TOTAL - timeLeft) / TOTAL);
-                circle.style.strokeDashoffset = offset;
-                document.getElementById('countdownNumber').textContent = timeLeft;
-                document.getElementById('timeLeft').textContent = timeLeft;
-            }
-            update();
+            const countdownNumber = document.getElementById('countdownNumber');
+            const timeLeftText = document.getElementById('timeLeft');
+            const progressCircle = document.getElementById('progressCircle');
+            const downloadBtn = document.getElementById('downloadBtn');
+            const statusText = document.getElementById('statusText');
 
             const timer = setInterval(() => {
                 timeLeft--;
+
+                if (countdownNumber) countdownNumber.textContent = timeLeft;
+                if (timeLeftText) timeLeftText.textContent = timeLeft;
+
+                if (progressCircle) {
+                    const offset = circumference * (1 - (timeLeft / totalTime));
+                    progressCircle.style.strokeDashoffset = offset;
+                }
+
                 if (timeLeft <= 0) {
                     clearInterval(timer);
-                    circle.style.stroke = '#a855f7';
-                    circle.style.strokeDashoffset = 0;
-                    document.getElementById('countdownNumber').textContent = '✓';
-                    document.getElementById('statusText').innerHTML =
-                        '<span class="text-purple-400 flex items-center justify-center gap-1.5"><svg width="14" height="14"></svg>Link download siap!</span>';
-
-                    const btn = document.getElementById('downloadBtn');
-                    btn.href = '/go/<%= mod.id %>';
-                    btn.classList.remove('bg-slate-800', 'text-slate-500', 'pointer-events-none');
-                    btn.classList.add('btn-primary', 'text-white');
-                    btn.innerHTML = '<i data-lucide="download" class="w-4 h-4"></i><span>Download Sekarang</span>';
-                    refreshIcons();
-                    return;
+                    if (statusText) statusText.innerHTML = '<span class="text-emerald-400 font-bold">Link download siap!</span>';
+                    if (downloadBtn) {
+                        downloadBtn.href = '/go/<%= mod.id %>';
+                        downloadBtn.className = 'w-full py-3 rounded-full font-bold text-xs sm:text-sm flex items-center justify-center gap-2 bg-[#0474C4] hover:bg-[#06457F] text-white border border-[#5379AE] shadow-md';
+                        downloadBtn.innerHTML = '<i data-lucide="download" class="w-4 h-4"></i><span>Download Sekarang</span>';
+                        downloadBtn.style.pointerEvents = 'auto';
+                        refreshIcons();
+                    }
                 }
-                update();
             }, 1000);
         })();
     </script>

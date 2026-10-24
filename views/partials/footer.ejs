@@ -1,25 +1,46 @@
-<!-- Footer -->
-<footer class="text-center py-8 mt-6 border-t border-slate-800/60">
-    <div class="max-w-md mx-auto px-4">
-        <p class="text-slate-500 text-xs">
-            &copy; <%= new Date().getFullYear() %> Nuxy MC ·
-            <a href="/mods" class="hover:text-purple-400 transition-colors">Modpacks</a> ·
-            <a href="/servers" class="hover:text-purple-400 transition-colors">Servers</a>
+<!-- Footer (Clean Reference Palette) -->
+<footer class="text-center py-10 mt-12 border-t border-[#2C444C] bg-[#161928]">
+    <div class="max-w-6xl mx-auto px-4">
+        <!-- Logo & Branding -->
+        <div class="flex items-center justify-center gap-2.5 mb-3">
+            <img src="/img/danuxy-logo.png" alt="Danuxy Studio Logo" class="w-5 h-5 object-contain">
+            <span class="font-extrabold text-white text-sm tracking-tight">NuxyMC</span>
+            <span class="text-[#5379AE] text-xs">&bull;</span>
+            <span class="text-[#A8C4EC] text-xs font-mono font-semibold">Danuxy Studio</span>
+        </div>
+
+        <!-- Navigation Links (Pill Style) -->
+        <div class="flex items-center justify-center flex-wrap gap-x-4 gap-y-2 text-xs text-slate-400">
+            <a href="/" class="hover:text-white transition-colors">Home</a>
+            <span class="text-[#2C444C]">&bull;</span>
+            <a href="/servers" class="hover:text-white transition-colors">Server Mabar</a>
+            <span class="text-[#2C444C]">&bull;</span>
+            <a href="/mods" class="hover:text-white transition-colors">Modpacks</a>
+            <span class="text-[#2C444C]">&bull;</span>
+            <a href="https://sociabuzz.com/nuxy_mc/tribe" target="_blank" rel="noopener noreferrer" class="hover:text-[#A8C4EC] text-[#A8C4EC] font-semibold transition-colors">Dukungan Stream</a>
+            <span class="text-[#2C444C]">&bull;</span>
+            <a href="https://discord.gg/P5ZtPXKv7m" target="_blank" rel="noopener noreferrer" class="hover:text-[#A8C4EC] text-[#A8C4EC] font-semibold transition-colors">Discord Mabar</a>
+        </div>
+
+        <!-- SEO Keyword / Business snippet -->
+        <p class="text-slate-400 text-[11px] mt-4 leading-relaxed max-w-lg mx-auto">
+            Portal resmi NuxyMC: Minecraft Streamer &bull; Showcase Server Mabar Sponsor &bull; Modpack Center &bull; Danuxy Studio.
         </p>
-        <p class="text-slate-700 text-[10px] mt-2">
-            Minecraft adalah trademark Mojang AB. Tidak ada afiliasi.
+
+        <p class="text-[#5379AE] text-[10px] mt-2 font-mono">
+            &copy; <%= new Date().getFullYear() %> NuxyMC by Danuxy Studio. Minecraft is a trademark of Mojang AB. Not affiliated.
         </p>
     </div>
 </footer>
 
-<!-- Global toast -->
-<div id="toast" class="fixed bottom-20 md:bottom-6 left-1/2 -translate-x-1/2 bg-slate-800/95 backdrop-blur border border-slate-700 text-white px-4 py-2.5 rounded-full text-sm hidden z-50 items-center gap-2 shadow-xl">
-    <i data-lucide="check-circle" class="w-4 h-4 text-purple-400"></i>
+<!-- Global Toast for Copy (Solid Slate) -->
+<div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-[#0f141f] border border-[#1e2638] text-white px-4 py-2.5 rounded-full text-xs font-semibold hidden z-50 items-center gap-2 shadow-2xl">
+    <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400 flex-shrink-0"></i>
     <span id="toastMsg">Disalin!</span>
 </div>
 
 <script>
-    function showToast(msg, type) {
+    function showToast(msg) {
         const toast = document.getElementById('toast');
         const msgEl = document.getElementById('toastMsg');
         if (!toast || !msgEl) return;
@@ -34,9 +55,24 @@
         }, 2200);
     }
 
-    function copyText(text) {
-        navigator.clipboard.writeText(text).then(() => showToast('Disalin: ' + text))
-            .catch(() => showToast('Gagal menyalin'));
+    function copyText(text, btnElement) {
+        if (!text) return;
+        navigator.clipboard.writeText(text).then(() => {
+            showToast('IP Berhasil Disalin! Siap dipaste di Minecraft 🚀');
+            if (btnElement) {
+                const icon = btnElement.querySelector('[data-lucide]');
+                if (icon) {
+                    icon.setAttribute('data-lucide', 'check');
+                    refreshIcons();
+                    setTimeout(() => {
+                        icon.setAttribute('data-lucide', 'copy');
+                        refreshIcons();
+                    }, 2000);
+                }
+            }
+        }).catch(() => {
+            showToast('Salin: ' + text);
+        });
     }
 
     refreshIcons();

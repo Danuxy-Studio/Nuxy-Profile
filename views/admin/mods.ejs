@@ -1,85 +1,93 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <%- include('../partials/head') %>
 </head>
-<body class="min-h-screen">
+<body class="min-h-screen bg-[#060b17] text-slate-100 pb-12">
     <%- include('partials/sidebar') %>
     <%- include('partials/toast') %>
 
     <main class="max-w-4xl mx-auto px-4 md:px-8 py-8">
         <div class="flex items-center justify-between mb-6 gap-3">
             <div>
-                <h1 class="text-2xl font-bold gradient-text mb-1">Manage Modpacks</h1>
-                <p class="text-slate-400 text-sm"><%= mods.length %> modpack terdaftar</p>
+                <h1 class="text-2xl font-black text-white mb-1">Manage Modpacks</h1>
+                <p class="text-slate-400 text-xs md:text-sm"><%= mods.length %> modpack terdaftar &bull; Download center untuk viewer</p>
             </div>
-            <button onclick="openAddModal()" class="btn-primary text-white px-4 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2 flex-shrink-0">
-                <i data-lucide="plus" class="w-4 h-4"></i> <span class="hidden sm:inline">Add Modpack</span>
+            <button onclick="openAddModal()" class="btn-brand text-white px-4 py-2.5 rounded-full text-xs md:text-sm font-bold flex items-center gap-2 flex-shrink-0">
+                <i data-lucide="plus" class="w-4 h-4"></i> <span>Tambah Modpack</span>
             </button>
         </div>
 
         <% if (mods && mods.length > 0) { %>
             <div class="space-y-3">
                 <% mods.forEach(function (mod) { %>
-                    <div class="glass-card p-4 flex items-center gap-4">
-                        <div class="w-11 h-11 rounded-xl bg-purple-500/10 flex items-center justify-center flex-shrink-0">
-                            <i data-lucide="package" class="w-5 h-5 text-purple-400"></i>
+                    <div class="bento-card p-4 flex items-center gap-4">
+                        <div class="w-11 h-11 rounded-xl bg-[#080f1e] border border-[#182949] flex items-center justify-center flex-shrink-0 text-sky-400">
+                            <i data-lucide="package" class="w-5 h-5"></i>
                         </div>
                         <div class="flex-1 min-w-0">
-                            <p class="text-white font-semibold text-sm truncate"><%= mod.name %></p>
-                            <p class="text-slate-500 text-xs truncate"><%= mod.description %></p>
-                            <div class="flex items-center gap-2 mt-1">
-                                <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-purple-500/15 text-purple-400">MC <%= mod.mc_version %></span>
-                                <span class="text-[10px] text-slate-600"><%= mod.release_date %></span>
+                            <p class="text-white font-bold text-sm truncate"><%= mod.name %></p>
+                            <p class="text-slate-400 text-xs truncate mt-0.5"><%= mod.description %></p>
+                            <div class="flex items-center gap-2 mt-1.5">
+                                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full pill-sky">MC <%= mod.mc_version %></span>
+                                <span class="text-[11px] text-slate-500 font-mono"><%= mod.release_date %></span>
                             </div>
                         </div>
-                        <div class="flex gap-1 flex-shrink-0">
-                            <button onclick='openEditModal(<%- JSON.stringify(mod) %>)' class="p-2 rounded-lg text-slate-400 hover:text-purple-400 hover:bg-purple-500/10 transition-colors"><i data-lucide="pencil" class="w-4 h-4"></i></button>
-                            <button onclick="confirmDelete('<%= mod.id %>', '<%= mod.name.replace(/'/g, `\\'`) %>')" class="p-2 rounded-lg text-slate-400 hover:text-red-400 hover:bg-red-500/10 transition-colors"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                        <div class="flex gap-1.5 flex-shrink-0">
+                            <button onclick='openEditModal(<%- JSON.stringify(mod) %>)' class="p-2.5 rounded-xl text-slate-400 hover:text-sky-400 hover:bg-[#080f1e] border border-transparent hover:border-[#182949] transition-colors" title="Edit">
+                                <i data-lucide="pencil" class="w-4 h-4"></i>
+                            </button>
+                            <button onclick="confirmDelete('<%= mod.id %>', '<%= mod.name.replace(/'/g, `\\'`) %>')" class="p-2.5 rounded-xl text-slate-400 hover:text-red-400 hover:bg-red-500/10 transition-colors" title="Hapus">
+                                <i data-lucide="trash-2" class="w-4 h-4"></i>
+                            </button>
                         </div>
                     </div>
                 <% }); %>
             </div>
         <% } else { %>
-            <div class="glass-card p-10 text-center">
+            <div class="bento-card p-10 text-center">
                 <i data-lucide="package-open" class="w-12 h-12 text-slate-600 mx-auto mb-3"></i>
-                <p class="text-slate-400">Belum ada modpack</p>
-                <p class="text-slate-600 text-sm mt-1">Klik "Add Modpack" untuk menambahkan</p>
+                <p class="text-slate-400 font-bold">Belum ada modpack</p>
+                <p class="text-slate-500 text-xs mt-1">Klik "Tambah Modpack" untuk menambahkan file rilis</p>
             </div>
         <% } %>
     </main>
 
-    <!-- Add/Edit Modal -->
+    <!-- Add/Edit Modal (Solid Theme) -->
     <div id="modModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
-        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeModModal()"></div>
-        <div class="glass-card rounded-2xl p-6 max-w-md w-full relative z-10 max-h-[90vh] overflow-y-auto">
-            <h3 class="text-white font-bold text-lg mb-4 flex items-center gap-2" id="modModalTitle">
-                <i data-lucide="package-plus" class="w-5 h-5 text-purple-400"></i> Add Modpack
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeModModal()"></div>
+        <div class="bento-card rounded-2xl p-6 max-w-md w-full relative z-10 max-h-[90vh] overflow-y-auto border border-[#182949] bg-[#0d172b]">
+            <h3 class="text-white font-extrabold text-lg mb-4 flex items-center gap-2" id="modModalTitle">
+                <i data-lucide="package-plus" class="w-5 h-5 text-sky-400"></i> Tambah Modpack
             </h3>
-            <form id="modForm" method="POST" class="space-y-3">
+            <form id="modForm" method="POST" class="space-y-3.5">
                 <div>
-                    <label class="block text-slate-400 text-xs font-medium mb-1.5">Nama Modpack <span class="text-red-400">*</span></label>
-                    <input type="text" name="name" id="modName" required placeholder="Mods Pack..." class="w-full bg-slate-900/60 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white text-sm focus:border-purple-500 focus:outline-none transition-colors">
+                    <label class="block text-slate-300 text-xs font-semibold mb-1">Nama Modpack <span class="text-red-400">*</span></label>
+                    <input type="text" name="name" id="modName" required placeholder="Nuxy Survival Pack v1.0" class="w-full bg-[#080f1e] border border-[#182949] rounded-xl px-3.5 py-2.5 text-white text-xs md:text-sm focus:border-sky-500 focus:outline-none transition-colors">
                 </div>
                 <div>
-                    <label class="block text-slate-400 text-xs font-medium mb-1.5">Versi Minecraft</label>
-                    <input type="text" name="mc_version" id="modVersion" placeholder="1.21.11 / All" class="w-full bg-slate-900/60 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white text-sm focus:border-purple-500 focus:outline-none transition-colors">
+                    <label class="block text-slate-300 text-xs font-semibold mb-1">Versi Minecraft</label>
+                    <input type="text" name="mc_version" id="modVersion" placeholder="1.21.x / All" class="w-full bg-[#080f1e] border border-[#182949] rounded-xl px-3.5 py-2.5 text-white text-xs md:text-sm focus:border-sky-500 focus:outline-none transition-colors">
                 </div>
                 <div>
-                    <label class="block text-slate-400 text-xs font-medium mb-1.5">Deskripsi</label>
-                    <textarea name="description" id="modDescription" rows="2" placeholder="Deskripsi singkat..." class="w-full bg-slate-900/60 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white text-sm focus:border-purple-500 focus:outline-none transition-colors resize-none"></textarea>
+                    <label class="block text-slate-300 text-xs font-semibold mb-1">Deskripsi</label>
+                    <textarea name="description" id="modDescription" rows="2" placeholder="Deskripsi singkat modpack..." class="w-full bg-[#080f1e] border border-[#182949] rounded-xl px-3.5 py-2.5 text-white text-xs md:text-sm focus:border-sky-500 focus:outline-none transition-colors resize-none"></textarea>
                 </div>
                 <div>
-                    <label class="block text-slate-400 text-xs font-medium mb-1.5">Download URL</label>
-                    <input type="text" name="download_url" id="modDownloadUrl" placeholder="https://..." class="w-full bg-slate-900/60 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white text-sm focus:border-purple-500 focus:outline-none transition-colors">
+                    <label class="block text-slate-300 text-xs font-semibold mb-1">Download URL</label>
+                    <input type="text" name="download_url" id="modDownloadUrl" placeholder="https://mediafire.com/... atau https://drive.google.com/..." class="w-full bg-[#080f1e] border border-[#182949] rounded-xl px-3.5 py-2.5 text-white text-xs md:text-sm focus:border-sky-500 focus:outline-none transition-colors">
                 </div>
                 <div>
-                    <label class="block text-slate-400 text-xs font-medium mb-1.5">Tanggal Rilis</label>
-                    <input type="date" name="release_date" id="modReleaseDate" class="w-full bg-slate-900/60 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white text-sm focus:border-purple-500 focus:outline-none transition-colors">
+                    <label class="block text-slate-300 text-xs font-semibold mb-1">Tanggal Rilis</label>
+                    <input type="date" name="release_date" id="modReleaseDate" class="w-full bg-[#080f1e] border border-[#182949] rounded-xl px-3.5 py-2.5 text-white text-xs md:text-sm focus:border-sky-500 focus:outline-none transition-colors">
                 </div>
                 <div class="flex gap-2 pt-2">
-                    <button type="submit" class="btn-primary text-white flex-1 py-2.5 rounded-xl text-sm font-semibold flex items-center justify-center gap-2"><i data-lucide="save" class="w-4 h-4"></i>Save</button>
-                    <button type="button" onclick="closeModModal()" class="bg-slate-800 text-slate-300 px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-slate-700 transition-colors">Cancel</button>
+                    <button type="submit" class="btn-brand text-white flex-1 py-2.5 rounded-full text-xs md:text-sm font-bold flex items-center justify-center gap-2">
+                        <i data-lucide="save" class="w-4 h-4"></i> Simpan
+                    </button>
+                    <button type="button" onclick="closeModModal()" class="bg-[#080f1e] border border-[#182949] text-slate-300 px-5 py-2.5 rounded-full text-xs md:text-sm font-semibold hover:bg-[#14223d] transition-colors">
+                        Batal
+                    </button>
                 </div>
             </form>
         </div>
@@ -87,14 +95,16 @@
 
     <!-- Delete confirm modal -->
     <div id="deleteModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
-        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeDeleteModal()"></div>
-        <div class="glass-card rounded-2xl p-6 max-w-sm w-full relative z-10 text-center">
-            <div class="w-14 h-14 rounded-full bg-red-500/10 flex items-center justify-center mx-auto mb-4"><i data-lucide="trash-2" class="w-6 h-6 text-red-400"></i></div>
-            <h3 class="text-white font-bold text-lg mb-2">Hapus modpack?</h3>
-            <p class="text-slate-400 text-sm mb-6">"<span id="deleteModName"></span>" akan dihapus permanen.</p>
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeDeleteModal()"></div>
+        <div class="bento-card rounded-2xl p-6 max-w-sm w-full relative z-10 text-center border border-red-500/30 bg-[#0f141f]">
+            <div class="w-14 h-14 rounded-full bg-red-500/10 flex items-center justify-center mx-auto mb-4 text-red-400">
+                <i data-lucide="trash-2" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-white font-extrabold text-lg mb-2">Hapus modpack?</h3>
+            <p class="text-slate-400 text-xs mb-6">"<span id="deleteModName" class="text-white font-semibold"></span>" akan dihapus secara permanen.</p>
             <div class="flex gap-2 justify-center">
-                <button onclick="closeDeleteModal()" class="bg-slate-800 text-slate-300 px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-slate-700 transition-colors">Cancel</button>
-                <a id="deleteConfirmLink" href="#" class="bg-red-500 text-white px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-red-600 transition-colors">Delete</a>
+                <button onclick="closeDeleteModal()" class="bg-[#141a29] border border-[#1e2638] text-slate-300 px-5 py-2.5 rounded-xl text-xs font-semibold hover:bg-[#1a2336] transition-colors">Batal</button>
+                <a id="deleteConfirmLink" href="#" class="bg-red-500 text-white px-5 py-2.5 rounded-xl text-xs font-bold hover:bg-red-600 transition-colors">Hapus</a>
             </div>
         </div>
     </div>
@@ -105,7 +115,7 @@
         refreshIcons();
 
         function openAddModal() {
-            document.getElementById('modModalTitle').innerHTML = '<i data-lucide="package-plus" class="w-5 h-5 text-purple-400"></i> Add Modpack';
+            document.getElementById('modModalTitle').innerHTML = '<i data-lucide="package-plus" class="w-5 h-5 text-sky-400"></i> Tambah Modpack';
             document.getElementById('modForm').action = '/admin/mods/add';
             document.getElementById('modForm').reset();
             document.getElementById('modModal').classList.remove('hidden');
@@ -113,7 +123,7 @@
         }
 
         function openEditModal(mod) {
-            document.getElementById('modModalTitle').innerHTML = '<i data-lucide="pencil" class="w-5 h-5 text-purple-400"></i> Edit Modpack';
+            document.getElementById('modModalTitle').innerHTML = '<i data-lucide="pencil" class="w-5 h-5 text-sky-400"></i> Edit Modpack';
             document.getElementById('modForm').action = '/admin/mods/edit/' + mod.id;
             document.getElementById('modName').value = mod.name || '';
             document.getElementById('modVersion').value = mod.mc_version || '';
@@ -133,7 +143,7 @@
         }
         function closeDeleteModal() { document.getElementById('deleteModal').classList.add('hidden'); }
 
-        document.addEventListener('keydown', e => {
+        document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') { closeModModal(); closeDeleteModal(); }
         });
     </script>

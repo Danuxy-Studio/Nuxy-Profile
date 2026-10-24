@@ -1,58 +1,145 @@
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
 
-<!-- Primary Meta Tags -->
-<title><%= typeof title !== 'undefined' && title !== 'Nuxy MC' ? title + ' - Nuxy MC' : 'Nuxy MC - Minecraft Streamer' %></title>
-<meta name="title" content="Nuxy MC - Minecraft Streamer">
-<meta name="description" content="Nuxy MC - Minecraft Streamer. Download modpack, join server, dan link komunitas.">
-<meta name="keywords" content="nuxy mc, minecraft, modpack, server minecraft, minecraft streamer, download mod minecraft">
-<meta name="author" content="Nuxy MC">
-<meta name="robots" content="index, follow">
+<!-- SEO Primary Meta Tags -->
+<% 
+  const defaultTitle = "NuxyMC — Minecraft Streamer & Gamer Indonesia | Official Site";
+  const pageTitle = (typeof title !== 'undefined' && title && title !== 'Nuxy MC' && title !== 'NuxyMC') 
+    ? `${title} — NuxyMC Minecraft Streamer` 
+    : defaultTitle;
+  const siteUrl = `https://${req ? req.get('host') : 'nuxymc.my.id'}`;
+  const currentPath = (typeof currentUrl !== 'undefined' && currentUrl) ? currentUrl.split('?')[0] : '/';
+  const canonicalUrl = `${siteUrl}${currentPath}`;
+  const ogImageUrl = `${siteUrl}/img/og-banner.jpg`;
+  const avatarUrl = `${siteUrl}/img/avatar.png`;
+  const metaDesc = "Website resmi NuxyMC, streamer Minecraft & gamer Indonesia dari Danuxy Studio. Cek server Minecraft sponsor minggu ini, mabar bareng, download modpack, dan support live stream!";
+%>
+<title><%= pageTitle %></title>
+<meta name="title" content="<%= pageTitle %>">
+<meta name="description" content="<%= metaDesc %>">
+<meta name="keywords" content="NuxyMC, Nuxy MC, Minecraft Streamer Indonesia, Server Minecraft Nuxy, Download Modpack Minecraft, GTH SMP, Danuxy Studio, Danuxy Store, VTuber Nuxy, Mabar Minecraft Indonesia, Mod Minecraft PE">
+<meta name="author" content="NuxyMC - Danuxy Studio">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<link rel="canonical" href="<%= canonicalUrl %>">
 
-<!-- Open Graph / Facebook -->
+<!-- Open Graph / Facebook / Discord / WhatsApp -->
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://<%= req ? req.get('host') : 'nuxymc.my.id' %>/">
-<meta property="og:title" content="Nuxy MC - Minecraft Streamer">
-<meta property="og:description" content="Download modpack Minecraft ku, join server, dan temukan link komunitasku!">
-<meta property="og:image" content="https://<%= req ? req.get('host') : 'nuxymc.my.id' %>/img/avatar.png">
-<meta property="og:site_name" content="Nuxy MC">
+<meta property="og:url" content="<%= canonicalUrl %>">
+<meta property="og:title" content="<%= pageTitle %>">
+<meta property="og:description" content="<%= metaDesc %>">
+<meta property="og:image" content="<%= ogImageUrl %>">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="NuxyMC - Minecraft Streamer & Content Creator">
+<meta property="og:site_name" content="NuxyMC Official">
 <meta property="og:locale" content="id_ID">
 
-<!-- Twitter Card -->
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Nuxy MC - Minecraft Streamer">
-<meta name="twitter:description" content="Download modpack Minecraft ku, join server, dan link komunitasku!">
-<meta name="twitter:image" content="https://<%= req ? req.get('host') : 'nuxymc.my.id' %>/img/avatar.png">
+<!-- Twitter Cards -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:url" content="<%= canonicalUrl %>">
+<meta name="twitter:title" content="<%= pageTitle %>">
+<meta name="twitter:description" content="<%= metaDesc %>">
+<meta name="twitter:image" content="<%= ogImageUrl %>">
+<meta name="twitter:image:alt" content="NuxyMC Official Website">
 
-<!-- Favicon -->
-<link rel="icon" type="image/png" href="/img/avatar.png">
-<link rel="shortcut icon" type="image/png" href="/img/avatar.png">
-<link rel="apple-touch-icon" type="image/png" href="/img/avatar.png">
+<!-- Favicon & Touch Icons -->
+<link rel="icon" type="image/png" sizes="128x128" href="/img/favicon.png">
+<link rel="icon" type="image/x-icon" href="/img/favicon.ico">
+<link rel="shortcut icon" type="image/x-icon" href="/img/favicon.ico">
+<link rel="apple-touch-icon" href="/img/avatar.png">
+<meta name="theme-color" content="#060b17">
 
-<!-- Anti white-flash background -->
-<style>
-    html, body { background-color: #020617; }
-</style>
+<!-- Preload Priority Assets -->
+<link rel="preload" href="/img/avatar.png" as="image" fetchpriority="high">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <!-- Tailwind CSS -->
 <script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <!-- Lucide Icons -->
 <script src="https://unpkg.com/lucide@latest"></script>
+
+<!-- Structured Data (JSON-LD) for Top 1 Google Search -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Person",
+      "@id": "<%= siteUrl %>/#nuxymc",
+      "name": "NuxyMC",
+      "alternateName": ["Nuxy MC", "Nuxy Gamer", "Nuxy Danuxy"],
+      "url": "<%= siteUrl %>",
+      "image": "<%= avatarUrl %>",
+      "description": "Streamer Minecraft & Konten Kreator Game Indonesia dari Danuxy Studio.",
+      "jobTitle": "Content Creator & Streamer",
+      "sameAs": [
+        "https://sociabuzz.com/nuxy_mc/tribe",
+        "https://discord.gg/P5ZtPXKv7m",
+        "https://whatsapp.com/channel/0029Vb8UiHp0waju0U0dJU0j"
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "<%= siteUrl %>/#website",
+      "url": "<%= siteUrl %>",
+      "name": "NuxyMC Official Website",
+      "description": "Pusat informasi server Minecraft, modpack, dan endorsement NuxyMC.",
+      "publisher": {
+        "@id": "<%= siteUrl %>/#nuxymc"
+      },
+      "inLanguage": "id-ID"
+    },
+    {
+      "@type": "ProfilePage",
+      "@id": "<%= canonicalUrl %>/#webpage",
+      "url": "<%= canonicalUrl %>",
+      "name": "<%= pageTitle %>",
+      "isPartOf": {
+        "@id": "<%= siteUrl %>/#website"
+      },
+      "about": {
+        "@id": "<%= siteUrl %>/#nuxymc"
+      },
+      "description": "<%= metaDesc %>"
+    }
+  ]
+}
+</script>
 
 <script>
     tailwind.config = {
         theme: {
             extend: {
                 colors: {
+                    palette: {
+                        primary: '#0474C4',
+                        slate: '#5379AE',
+                        border: '#2C444C',
+                        ice: '#A8C4EC',
+                        deep: '#06457F',
+                        card: '#262B40',
+                        base: '#161928'
+                    },
+                    dark: {
+                        base: '#161928',
+                        card: '#262B40',
+                        secondary: '#06457F',
+                        border: '#2C444C',
+                        subtle: '#1d2235'
+                    },
                     accent: {
-                        DEFAULT: '#a855f7',
-                        light: '#c084fc',
-                        dark: '#9333ea'
+                        brand: '#0474C4',
+                        hover: '#06457F',
+                        cyan: '#A8C4EC',
+                        slate: '#5379AE',
+                        emerald: '#10b981'
                     }
                 },
                 fontFamily: {
-                    sans: ['Inter', 'ui-sans-serif', 'system-ui']
+                    sans: ['"Plus Jakarta Sans"', 'Inter', 'ui-sans-serif', 'system-ui'],
+                    mono: ['"JetBrains Mono"', 'monospace']
                 }
             }
         }
@@ -63,71 +150,142 @@
     * { -webkit-tap-highlight-color: transparent; }
 
     body {
-        background-color: #020617; /* slate-950 */
-        background-image: radial-gradient(circle at 20% 0%, rgba(168, 85, 247,0.08), transparent 40%),
-                           radial-gradient(circle at 80% 100%, rgba(168, 85, 247,0.06), transparent 40%);
-        color: #e2e8f0; /* slate-200 */
-        font-family: 'Inter', sans-serif;
+        background-color: #161928;
+        color: #e2eaf5;
+        font-family: 'Plus Jakarta Sans', sans-serif;
     }
 
     html { scroll-behavior: smooth; }
 
-    /* Glassmorphism card */
-    .glass-card {
-        background: rgba(15, 23, 42, 0.6); /* slate-900/60 */
-        backdrop-filter: blur(14px);
-        -webkit-backdrop-filter: blur(14px);
-        border: 1px solid rgba(148, 163, 184, 0.1); /* slate-400/10 */
-        border-radius: 1rem;
-        transition: border-color 0.25s ease, transform 0.2s ease, box-shadow 0.25s ease;
+    /* Clean Solid Cards (Tepat memakai warna #262B40 & border #2C444C) */
+    .bento-card, .glass-card, .admin-card {
+        background-color: #262B40;
+        border: 1px solid #2C444C;
+        border-radius: 1.25rem;
+        transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
     }
-    .glass-card:hover {
-        border-color: rgba(168, 85, 247, 0.35);
+    .bento-card:hover, .glass-card:hover, .admin-card:hover {
+        border-color: #5379AE;
     }
 
-    .btn-primary {
-        background: linear-gradient(135deg, #a855f7, #9333ea);
+    /* Clean Pill Buttons (Tepat memakai warna #0474C4, #06457F, #A8C4EC) */
+    .btn-pill-primary, .btn-brand, .btn-primary {
+        background-color: #0474C4;
+        color: #ffffff;
+        border: 1px solid #5379AE;
+        font-weight: 700;
+        border-radius: 9999px;
         transition: all 0.2s ease;
     }
-    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(168, 85, 247,0.3); }
-    .btn-primary:active { transform: scale(0.98); }
-
-    .gradient-text {
-        background: linear-gradient(135deg, #d8b4fe, #c084fc, #a855f7);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
+    .btn-pill-primary:hover, .btn-brand:hover, .btn-primary:hover {
+        background-color: #06457F;
+        border-color: #A8C4EC;
+        transform: translateY(-1px);
     }
 
+    .btn-pill-secondary {
+        background-color: #06457F;
+        color: #A8C4EC;
+        border: 1px solid #5379AE;
+        font-weight: 600;
+        border-radius: 9999px;
+        transition: all 0.2s ease;
+    }
+    .btn-pill-secondary:hover {
+        background-color: #0474C4;
+        border-color: #A8C4EC;
+        color: #ffffff;
+        transform: translateY(-1px);
+    }
+
+    /* Action Circle Buttons */
+    .bento-arrow-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 9999px;
+        background: #1b2033;
+        border: 1px solid #2C444C;
+        color: #A8C4EC;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+        flex-shrink: 0;
+    }
+    .bento-arrow-btn:hover {
+        background: #0474C4;
+        border-color: #0474C4;
+        color: #ffffff;
+    }
+
+    /* Solid Clean Status Pills (Menggunakan warna foto referensi) */
+    .pill-blue, .pill-sky {
+        background-color: #06457F;
+        color: #A8C4EC;
+        border: 1px solid #5379AE;
+    }
+    .pill-green {
+        background-color: #1a2f38;
+        color: #34d399;
+        border: 1px solid #2C444C;
+    }
+    .pill-orange, .pill-amber {
+        background-color: #1f2a3a;
+        color: #A8C4EC;
+        border: 1px solid #5379AE;
+    }
+    .pill-rose {
+        background-color: #1f2738;
+        color: #A8C4EC;
+        border: 1px solid #5379AE;
+    }
+
+    /* Scrollbars */
     ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: #020617; }
-    ::-webkit-scrollbar-thumb { background: #a855f7; border-radius: 4px; }
+    ::-webkit-scrollbar-track { background: #161928; }
+    ::-webkit-scrollbar-thumb { background: #2C444C; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #5379AE; }
 
     [data-lucide] { display: inline-block; vertical-align: -3px; }
-
-    @keyframes fadeInUp {
-        from { opacity: 0; transform: translateY(14px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    .animate-fade-up { animation: fadeInUp 0.45s cubic-bezier(0.4,0,0.2,1) forwards; }
-    .stagger-item { opacity: 0; animation: fadeInUp 0.4s cubic-bezier(0.4,0,0.2,1) forwards; }
-
-    .skeleton {
-        background: linear-gradient(110deg, rgba(30,41,59,0.6) 8%, rgba(51,65,85,0.8) 18%, rgba(30,41,59,0.6) 33%);
-        background-size: 200% 100%;
-        animation: skeletonWave 1.5s linear infinite;
-        border-radius: 1rem;
-    }
-    @keyframes skeletonWave { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
-
-    .content-wrapper { opacity: 0; transition: opacity 0.25s ease; }
-    .content-wrapper.loaded { opacity: 1; }
 
     .safe-area-bottom { padding-bottom: env(safe-area-inset-bottom, 0px); }
 </style>
 
 <script>
-    // Re-render Lucide icons after DOM changes
     function refreshIcons() { if (window.lucide) lucide.createIcons(); }
     document.addEventListener('DOMContentLoaded', refreshIcons);
+
+    function copyText(text, btnElement) {
+        if (!text) return;
+        navigator.clipboard.writeText(text).then(() => {
+            showToast('IP Berhasil Disalin! Siap dipaste di Minecraft 🚀');
+            if (btnElement) {
+                const icon = btnElement.querySelector('[data-lucide="copy"]');
+                if (icon) {
+                    icon.setAttribute('data-lucide', 'check');
+                    refreshIcons();
+                    setTimeout(() => {
+                        icon.setAttribute('data-lucide', 'copy');
+                        refreshIcons();
+                    }, 2000);
+                }
+            }
+        }).catch(() => {
+            showToast('Salin: ' + text);
+        });
+    }
+
+    function showToast(message) {
+        let toast = document.getElementById('copyToast');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'copyToast';
+            toast.className = 'bento-card px-4 py-2.5 text-xs md:text-sm font-semibold text-white border border-white/20 shadow-2xl flex items-center gap-2';
+            document.body.appendChild(toast);
+        }
+        toast.innerHTML = `<i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400"></i> <span>${message}</span>`;
+        refreshIcons();
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2500);
+    }
 </script>

@@ -3,129 +3,216 @@
 <head>
     <%- include('partials/head') %>
 </head>
-<body class="min-h-screen">
+<body class="min-h-screen bg-[#161928] text-slate-100 pb-12">
     <%- include('partials/preloader') %>
     <%- include('partials/nav') %>
 
-    <main class="max-w-2xl mx-auto px-4 py-8">
-        <div class="text-center mb-6 animate-fade-up">
-            <h1 class="text-2xl md:text-3xl font-bold gradient-text mb-1 flex items-center justify-center gap-2">
-                <i data-lucide="server" class="w-7 h-7 text-purple-400"></i> Servers &amp; Community
-            </h1>
-            <p class="text-slate-400 text-sm">Join server kami atau gabung komunitas!</p>
-        </div>
+    <!-- Mobile-First Centered Container -->
+    <main class="w-full px-4 py-5 md:py-8">
+        <div class="max-w-xl mx-auto w-full space-y-4">
 
-        <!-- How to join -->
-        <div class="glass-card p-5 mb-5 animate-fade-up" style="animation-delay:.05s">
-            <p class="text-white font-semibold text-sm flex items-center gap-2 mb-3">
-                <i data-lucide="circle-help" class="w-4 h-4 text-purple-400"></i> Cara Join Server
-            </p>
-            <ol class="text-slate-300 text-xs space-y-2.5">
-                <li class="flex items-start gap-2.5">
-                    <span class="w-5 h-5 rounded-full bg-purple-500/15 text-purple-400 text-[10px] flex items-center justify-center flex-shrink-0 mt-0.5 font-bold">1</span>
-                    <span>Tap IP server di bawah untuk menyalin otomatis</span>
-                </li>
-                <li class="flex items-start gap-2.5">
-                    <span class="w-5 h-5 rounded-full bg-purple-500/15 text-purple-400 text-[10px] flex items-center justify-center flex-shrink-0 mt-0.5 font-bold">2</span>
-                    <span>Buka Minecraft → Multiplayer → Add Server</span>
-                </li>
-                <li class="flex items-start gap-2.5">
-                    <span class="w-5 h-5 rounded-full bg-purple-500/15 text-purple-400 text-[10px] flex items-center justify-center flex-shrink-0 mt-0.5 font-bold">3</span>
-                    <span>Tempel (paste) IP yang sudah disalin</span>
-                </li>
-                <li class="flex items-start gap-2.5">
-                    <span class="w-5 h-5 rounded-full bg-purple-500/15 text-purple-400 text-[10px] flex items-center justify-center flex-shrink-0 mt-0.5 font-bold">4</span>
-                    <span>Save &amp; Join! 🚀</span>
-                </li>
-            </ol>
-        </div>
+            <!-- Title & Breadcrumb -->
+            <div class="flex items-center justify-between gap-3">
+                <div>
+                    <h1 class="text-xl sm:text-2xl font-black text-white tracking-tight flex items-center gap-2">
+                        <i data-lucide="server" class="w-6 h-6 text-[#A8C4EC]"></i> Server Minecraft
+                    </h1>
+                    <p class="text-slate-400 text-xs mt-0.5">
+                        Daftar server resmi dan mabar bareng NuxyMC.
+                    </p>
+                </div>
+                <span class="px-2.5 py-1 rounded-full text-[10px] font-mono pill-green flex items-center gap-1.5 flex-shrink-0">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span>Live Ping</span>
+                </span>
+            </div>
 
-        <% if (servers && servers.length > 0) { %>
-            <div class="space-y-4">
-                <% servers.forEach(function (server, idx) { %>
-                    <div class="glass-card p-5 stagger-item" style="animation-delay: <%= 0.08 * idx %>s">
-                        <div class="flex items-center gap-3 mb-4">
-                            <div class="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center">
-                                <i data-lucide="server" class="w-5 h-5 text-purple-400"></i>
-                            </div>
-                            <h2 class="text-white font-bold text-lg"><%= server.name %></h2>
-                            <span class="ml-auto text-[10px] font-semibold px-2 py-1 rounded-full bg-purple-500/15 text-purple-400 flex items-center gap-1">
-                                <span class="w-1.5 h-1.5 rounded-full bg-purple-400"></span> Online
-                            </span>
-                        </div>
-
-                        <div class="space-y-3">
-                            <% if (server.has_java) { %>
-                                <div>
-                                    <p class="text-slate-400 text-xs font-medium mb-1.5 flex items-center gap-1.5">
-                                        <i data-lucide="coffee" class="w-3.5 h-3.5 text-amber-400"></i> Java Edition
-                                    </p>
-                                    <button onclick="copyText('<%= server.java_ip %>')"
-                                            class="w-full bg-slate-900/60 border border-slate-800 rounded-xl px-4 py-3 flex items-center justify-between gap-2 hover:border-purple-500/40 transition-colors text-left">
-                                        <code class="text-purple-400 font-mono text-sm break-all"><%= server.java_ip %></code>
-                                        <i data-lucide="copy" class="w-4 h-4 text-slate-500 flex-shrink-0"></i>
-                                    </button>
-                                </div>
-                            <% } %>
-
-                            <% if (server.has_bedrock) { %>
-                                <div class="grid grid-cols-2 gap-2">
-                                    <div>
-                                        <p class="text-slate-400 text-xs font-medium mb-1.5 flex items-center gap-1.5">
-                                            <i data-lucide="smartphone" class="w-3.5 h-3.5 text-sky-400"></i> Bedrock IP
-                                        </p>
-                                        <button onclick="copyText('<%= server.bedrock_ip %>')"
-                                                class="w-full bg-slate-900/60 border border-slate-800 rounded-xl px-3 py-3 flex items-center justify-between gap-2 hover:border-purple-500/40 transition-colors text-left">
-                                            <code class="text-purple-400 font-mono text-xs break-all"><%= server.bedrock_ip %></code>
-                                            <i data-lucide="copy" class="w-3.5 h-3.5 text-slate-500 flex-shrink-0"></i>
-                                        </button>
-                                    </div>
-                                    <div>
-                                        <p class="text-slate-400 text-xs font-medium mb-1.5">Port</p>
-                                        <button onclick="copyText('<%= server.bedrock_port %>')"
-                                                class="w-full bg-slate-900/60 border border-slate-800 rounded-xl px-3 py-3 flex items-center justify-between gap-2 hover:border-purple-500/40 transition-colors text-left">
-                                            <code class="text-purple-400 font-mono text-xs"><%= server.bedrock_port %></code>
-                                            <i data-lucide="copy" class="w-3.5 h-3.5 text-slate-500 flex-shrink-0"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            <% } %>
-
-                            <% if (server.community && (server.community.whatsapp || server.community.discord)) { %>
-                                <div class="pt-3 border-t border-slate-800/70">
-                                    <p class="text-slate-500 text-xs mb-2 flex items-center gap-1.5">
-                                        <i data-lucide="users" class="w-3.5 h-3.5"></i> Join Komunitas
-                                    </p>
-                                    <div class="flex gap-2 flex-wrap">
-                                        <% if (server.community.whatsapp) { %>
-                                            <a href="<%= server.community.whatsapp %>" target="_blank" rel="noopener noreferrer"
-                                               class="flex-1 min-w-[130px] bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/20 rounded-xl px-4 py-2.5 flex items-center justify-center gap-2 text-white text-sm font-medium transition-colors">
-                                                <i data-lucide="phone" class="w-4 h-4 text-purple-400"></i> WhatsApp
-                                            </a>
-                                        <% } %>
-                                        <% if (server.community.discord) { %>
-                                            <a href="<%= server.community.discord %>" target="_blank" rel="noopener noreferrer"
-                                               class="flex-1 min-w-[130px] bg-indigo-500/10 hover:bg-indigo-500/20 border border-indigo-500/20 rounded-xl px-4 py-2.5 flex items-center justify-center gap-2 text-white text-sm font-medium transition-colors">
-                                                <i data-lucide="message-circle" class="w-4 h-4 text-indigo-400"></i> Discord
-                                            </a>
-                                        <% } %>
-                                    </div>
-                                </div>
-                            <% } %>
-                        </div>
+            <!-- How to join Guide -->
+            <div class="bento-card p-4">
+                <p class="text-[#A8C4EC] font-bold text-xs flex items-center gap-1.5 mb-2.5">
+                    <i data-lucide="circle-help" class="w-3.5 h-3.5"></i> Cara Join Server
+                </p>
+                <div class="space-y-1.5 text-xs text-slate-300">
+                    <div class="flex items-start gap-2">
+                        <span class="w-4 h-4 rounded-full bg-[#06457F] text-[#A8C4EC] text-[10px] font-bold flex items-center justify-center flex-shrink-0 mt-0.5">1</span>
+                        <span>Klik box IP server di bawah untuk menyalin otomatis.</span>
                     </div>
-                <% }); %>
+                    <div class="flex items-start gap-2">
+                        <span class="w-4 h-4 rounded-full bg-[#06457F] text-[#A8C4EC] text-[10px] font-bold flex items-center justify-center flex-shrink-0 mt-0.5">2</span>
+                        <span>Buka Minecraft &rarr; Multiplayer / Add Server.</span>
+                    </div>
+                    <div class="flex items-start gap-2">
+                        <span class="w-4 h-4 rounded-full bg-[#06457F] text-[#A8C4EC] text-[10px] font-bold flex items-center justify-center flex-shrink-0 mt-0.5">3</span>
+                        <span>Paste IP &amp; Port (Bedrock), lalu klik Save &amp; Join! 🚀</span>
+                    </div>
+                </div>
             </div>
-        <% } else { %>
-            <div class="glass-card p-10 text-center">
-                <i data-lucide="server-off" class="w-12 h-12 text-slate-600 mx-auto mb-3"></i>
-                <p class="text-slate-400 font-medium">Belum ada server</p>
-                <p class="text-slate-600 text-sm mt-1">Cek lagi nanti ya!</p>
+
+            <!-- Server Cards List -->
+            <% if (servers && servers.length > 0) { %>
+                <div class="space-y-3.5">
+                    <% servers.forEach(function (server) { 
+                        const isSponsor = !!server.is_sponsored;
+                    %>
+                        <div class="bento-card p-4 sm:p-5 <%= isSponsor ? 'border-[#5379AE]' : '' %>" id="serverCard_<%= server.id %>">
+                            <!-- Top row: Server Header & Live Detection Badge -->
+                            <div class="flex items-center justify-between gap-2 mb-3.5 flex-wrap">
+                                <div class="flex items-center gap-2.5">
+                                    <div class="w-9 h-9 rounded-xl bg-[#1b2033] border border-[#2C444C] text-[#A8C4EC] flex items-center justify-center flex-shrink-0">
+                                        <i data-lucide="server" class="w-4 h-4"></i>
+                                    </div>
+                                    <div>
+                                        <div class="flex items-center gap-1.5 flex-wrap">
+                                            <h2 class="text-white font-black text-base"><%= server.name %></h2>
+                                            <% if (isSponsor) { %>
+                                                <span class="px-2 py-0.5 rounded-full text-[9px] font-extrabold pill-amber">
+                                                    ⭐ SPONSOR
+                                                </span>
+                                            <% } %>
+                                        </div>
+                                        <% if (server.sponsor_tagline) { %>
+                                            <p class="text-[11px] text-slate-400"><%= server.sponsor_tagline %></p>
+                                        <% } %>
+                                    </div>
+                                </div>
+
+                                <!-- Live Ping Badge -->
+                                <div class="server-ping-badge inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#1b2033] border border-[#2C444C] text-[11px] font-mono text-slate-400"
+                                     data-server-ip="<%= server.java_ip || server.bedrock_ip %>"
+                                     data-server-port="<%= server.bedrock_port || '' %>"
+                                     data-server-type="<%= server.has_java ? 'java' : 'bedrock' %>">
+                                    <span class="ping-dot w-1.5 h-1.5 rounded-full bg-slate-500"></span>
+                                    <span class="ping-text font-semibold text-[#A8C4EC]">Deteksi...</span>
+                                </div>
+                            </div>
+
+                            <% if (server.sponsor_description) { %>
+                                <p class="text-xs text-[#A8C4EC] mb-3 bg-[#1b2033] border border-[#2C444C] p-2.5 rounded-xl leading-relaxed">
+                                    <%= server.sponsor_description %>
+                                </p>
+                            <% } %>
+
+                            <!-- IP & Port Format (Tampilan Asli Dipertahankan) -->
+                            <div class="space-y-2 mb-3">
+                                <% if (server.has_java && server.java_ip) { %>
+                                    <div class="bg-[#1b2033] border border-[#2C444C] rounded-xl p-2.5">
+                                        <div class="flex items-center justify-between text-xs text-slate-400 font-semibold mb-1">
+                                            <span class="flex items-center gap-1 text-[#A8C4EC] text-[11px]">
+                                                <i data-lucide="coffee" class="w-3 h-3"></i> Java Edition IP
+                                            </span>
+                                            <span class="text-[9px] text-[#5379AE]">1-Click Copy</span>
+                                        </div>
+                                        <button onclick="copyText('<%= server.java_ip %>', this)" 
+                                                class="w-full bg-[#262B40] hover:bg-[#1b2033] border border-[#2C444C] hover:border-[#5379AE] rounded-lg px-3 py-2 flex items-center justify-between gap-2 transition-all text-left group">
+                                            <code class="text-[#A8C4EC] font-mono text-xs font-bold truncate"><%= server.java_ip %></code>
+                                            <i data-lucide="copy" class="w-3.5 h-3.5 text-[#5379AE] group-hover:text-[#A8C4EC] flex-shrink-0 transition-colors"></i>
+                                        </button>
+                                    </div>
+                                <% } %>
+
+                                <% if (server.has_bedrock && server.bedrock_ip) { %>
+                                    <div class="bg-[#1b2033] border border-[#2C444C] rounded-xl p-2.5">
+                                        <div class="flex items-center justify-between text-xs text-slate-400 font-semibold mb-1">
+                                            <span class="flex items-center gap-1 text-[#A8C4EC] text-[11px]">
+                                                <i data-lucide="smartphone" class="w-3 h-3"></i> Bedrock / MCPE Edition
+                                            </span>
+                                            <span class="text-[9px] text-[#5379AE]">1-Click Copy</span>
+                                        </div>
+                                        <div class="grid grid-cols-12 gap-2">
+                                            <div class="col-span-8">
+                                                <button onclick="copyText('<%= server.bedrock_ip %>', this)" 
+                                                        class="w-full bg-[#262B40] hover:bg-[#1b2033] border border-[#2C444C] hover:border-[#5379AE] rounded-lg px-2.5 py-1.5 flex items-center justify-between gap-1 transition-all text-left group">
+                                                    <div class="min-w-0">
+                                                        <span class="block text-[8px] text-[#5379AE] uppercase font-mono">IP</span>
+                                                        <code class="text-[#A8C4EC] font-mono text-xs font-bold truncate block"><%= server.bedrock_ip %></code>
+                                                    </div>
+                                                    <i data-lucide="copy" class="w-3 h-3 text-[#5379AE] group-hover:text-[#A8C4EC] flex-shrink-0"></i>
+                                                </button>
+                                            </div>
+                                            <div class="col-span-4">
+                                                <button onclick="copyText('<%= server.bedrock_port || 19132 %>', this)" 
+                                                        class="w-full bg-[#262B40] hover:bg-[#1b2033] border border-[#2C444C] hover:border-[#5379AE] rounded-lg px-2.5 py-1.5 flex items-center justify-between gap-1 transition-all text-left group">
+                                                    <div class="min-w-0">
+                                                        <span class="block text-[8px] text-[#5379AE] uppercase font-mono">Port</span>
+                                                        <code class="text-[#A8C4EC] font-mono text-xs font-bold truncate block"><%= server.bedrock_port || 19132 %></code>
+                                                    </div>
+                                                    <i data-lucide="copy" class="w-3 h-3 text-[#5379AE] group-hover:text-[#A8C4EC] flex-shrink-0"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <% } %>
+                            </div>
+
+                            <!-- Actions -->
+                            <div class="flex items-center gap-2 pt-2 border-t border-[#2C444C]">
+                                <button onclick="copyText('<%= server.java_ip || server.bedrock_ip %>', this)" 
+                                        class="flex-1 py-2.5 px-3 rounded-full btn-brand text-xs flex items-center justify-center gap-1.5">
+                                    <i data-lucide="copy" class="w-3.5 h-3.5"></i> Salin IP Server
+                                </button>
+                                <% if (server.community && server.community.discord) { %>
+                                    <a href="<%= server.community.discord %>" target="_blank" rel="noopener noreferrer" 
+                                       class="py-2.5 px-3 rounded-full bg-[#262B40] hover:bg-[#1b2033] border border-[#2C444C] text-[#A8C4EC] text-xs font-bold flex items-center gap-1 transition-all">
+                                        <i data-lucide="message-square" class="w-3.5 h-3.5 text-[#A8C4EC]"></i> Discord
+                                    </a>
+                                <% } %>
+                            </div>
+                        </div>
+                    <% }); %>
+                </div>
+            <% } else { %>
+                <div class="bento-card p-8 text-center">
+                    <i data-lucide="server-off" class="w-10 h-10 text-slate-500 mx-auto mb-2"></i>
+                    <p class="text-slate-300 font-bold text-sm">Belum ada server yang terdaftar</p>
+                    <p class="text-slate-400 text-xs mt-1">Cek kembali nanti ya!</p>
+                </div>
+            <% } %>
+
+            <!-- Back to Home -->
+            <div class="text-center pt-2">
+                <a href="/" class="inline-flex items-center gap-1.5 text-slate-400 hover:text-white text-xs font-semibold">
+                    <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i> Balik ke Home
+                </a>
             </div>
-        <% } %>
+
+        </div>
     </main>
 
     <%- include('partials/footer') %>
-    <script>refreshIcons();</script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            refreshIcons();
+
+            var badges = document.querySelectorAll('.server-ping-badge');
+            badges.forEach(function(badge) {
+                var ip = badge.getAttribute('data-server-ip');
+                var port = badge.getAttribute('data-server-port');
+                var type = badge.getAttribute('data-server-type');
+                var dot = badge.querySelector('.ping-dot');
+                var text = badge.querySelector('.ping-text');
+
+                if (!ip) return;
+
+                fetch('/api/server-ping?ip=' + encodeURIComponent(ip) + '&port=' + encodeURIComponent(port || '') + '&type=' + encodeURIComponent(type || 'java'))
+                    .then(function(res) { return res.json(); })
+                    .then(function(data) {
+                        if (data.online) {
+                            dot.className = 'ping-dot w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse';
+                            text.className = 'ping-text text-[#A8C4EC] font-bold';
+                            var onlineCount = data.players ? data.players.online : 0;
+                            text.textContent = onlineCount + ' Online';
+                        } else {
+                            dot.className = 'ping-dot w-1.5 h-1.5 rounded-full bg-slate-500';
+                            text.className = 'ping-text text-slate-400 font-semibold';
+                            text.textContent = 'Online';
+                        }
+                    })
+                    .catch(function() {
+                        text.textContent = 'Online';
+                    });
+            });
+        });
+    </script>
 </body>
 </html>

@@ -1,20 +1,13 @@
 {
   "avatar_url": "/img/avatar.png",
   "name": "Nuxy MC",
-  "bio": "Seorang pria yang suka bermain minecraft, Support aku terus ya bair semangat ngonten nya 🥰",
+  "bio": "Seorang pria yang suka bermain Minecraft, Roblox, Mobile Legends, dan game lainnya. Support aku terus ya biar semangat ngontennya 🥰",
   "socials": [
     {
-      "name": "Donation",
+      "name": "Donasi SociaBuzz Tribe",
       "url": "https://sociabuzz.com/nuxy_mc/tribe",
-      "icon": "youtube",
+      "icon": "heart",
       "type": "donate",
-      "icon_type": "lucide"
-    },
-    {
-      "name": "Discord GTH SMP",
-      "url": "https://discord.gg/P5ZtPXKv7m",
-      "icon": "youtube",
-      "type": "community",
       "icon_type": "lucide"
     },
     {
@@ -22,6 +15,13 @@
       "url": "https://whatsapp.com/channel/0029Vb8UiHp0waju0U0dJU0j",
       "icon": "youtube",
       "type": "community",
+      "icon_type": "lucide"
+    },
+    {
+      "name": "Channel YouTube NuxyMC",
+      "url": "https://www.youtube.com/@nuxymc",
+      "icon": "youtube",
+      "type": "social",
       "icon_type": "lucide"
     }
   ]

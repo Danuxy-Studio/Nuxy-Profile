@@ -1,15 +1,19 @@
 [
   {
     "id": "1787443776613",
-    "name": "GTH SMP",
+    "name": "Banana Smp",
     "has_java": true,
-    "java_ip": "gthsmp.my.id",
+    "java_ip": "nanasmp.xyz",
     "has_bedrock": true,
-    "bedrock_ip": "gthsmp.my.id",
-    "bedrock_port": 25575,
+    "bedrock_ip": "nanasmp.xyz",
+    "bedrock_port": 10515,
     "community": {
       "whatsapp": "",
-      "discord": "https://discord.gg/QCJzfmSWgF"
-    }
+      "discord": ""
+    },
+    "is_sponsored": true,
+    "sponsor_badge": "⭐ OFFICIAL SPONSORED SERVER OF THE WEEK",
+    "sponsor_description": "Server Minecraft resmi yang sedang dimainkan NuxyMC minggu ini! Yuk langsung login dan mabar bareng!",
+    "sponsor_tagline": "Survival SMP Multi-Platform (Java & Bedrock)"
   }
 ]

@@ -13,7 +13,10 @@ router.get('/login', (req, res) => {
 router.post('/login', (req, res) => {
     const { username, password } = req.body;
 
-    if (username === process.env.ADMIN_USERNAME && password === process.env.ADMIN_PASSWORD) {
+    const adminUser = process.env.ADMIN_USERNAME || 'admin';
+    const adminPass = process.env.ADMIN_PASSWORD || 'nuxypassword';
+
+    if (username === adminUser && password === adminPass) {
         req.session.user = { username };
         req.flash('success_msg', 'Login berhasil!');
         res.redirect('/admin');

@@ -1,102 +1,104 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <%- include('../partials/head') %>
 </head>
-<body class="min-h-screen">
+<body class="min-h-screen bg-[#161928] text-slate-100">
     <%- include('partials/sidebar') %>
-
     <%- include('partials/toast') %>
 
     <main class="max-w-5xl mx-auto px-4 md:px-8 py-8">
         <div class="mb-8">
-            <h1 class="text-2xl md:text-3xl font-bold gradient-text mb-1">Dashboard</h1>
-            <p class="text-slate-400 text-sm">Selamat datang kembali! Kelola profil Nuxy MC kamu di sini.</p>
+            <h1 class="text-2xl md:text-3xl font-extrabold text-white mb-1">Admin Dashboard</h1>
+            <p class="text-slate-400 text-sm">Selamat datang kembali! Kelola profil, server sponsor, dan modpack NuxyMC.</p>
         </div>
 
-        <!-- Stats -->
+        <!-- Stats Overview (Solid Cards) -->
         <div class="grid grid-cols-3 gap-3 md:gap-4 mb-8">
-            <div class="glass-card p-4 md:p-5">
-                <i data-lucide="link" class="w-5 h-5 text-purple-400 mb-2"></i>
-                <p class="text-2xl font-bold text-white"><%= stats.links %></p>
-                <p class="text-slate-500 text-xs">Links</p>
+            <div class="bento-card p-4 md:p-5">
+                <i data-lucide="link" class="w-5 h-5 text-[#A8C4EC] mb-2"></i>
+                <p class="text-2xl font-black text-white"><%= stats.links %></p>
+                <p class="text-slate-400 text-xs font-semibold">Tautan Profil</p>
             </div>
-            <div class="glass-card p-4 md:p-5">
-                <i data-lucide="boxes" class="w-5 h-5 text-purple-400 mb-2"></i>
-                <p class="text-2xl font-bold text-white"><%= stats.mods %></p>
-                <p class="text-slate-500 text-xs">Modpacks</p>
+            <div class="bento-card p-4 md:p-5">
+                <i data-lucide="boxes" class="w-5 h-5 text-[#A8C4EC] mb-2"></i>
+                <p class="text-2xl font-black text-white"><%= stats.mods %></p>
+                <p class="text-slate-400 text-xs font-semibold">Modpack Aktif</p>
             </div>
-            <div class="glass-card p-4 md:p-5">
-                <i data-lucide="server" class="w-5 h-5 text-purple-400 mb-2"></i>
-                <p class="text-2xl font-bold text-white"><%= stats.servers %></p>
-                <p class="text-slate-500 text-xs">Servers</p>
+            <div class="bento-card p-4 md:p-5">
+                <i data-lucide="server" class="w-5 h-5 text-[#A8C4EC] mb-2"></i>
+                <p class="text-2xl font-black text-white"><%= stats.servers %></p>
+                <p class="text-slate-400 text-xs font-semibold">Server Terdaftar</p>
             </div>
         </div>
 
-        <!-- Menu Grid -->
+        <!-- Menu Action Grid (Solid Theme) -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <a href="/admin/profile" class="glass-card rounded-2xl p-5 group hover:-translate-y-0.5 transition-all">
+            <a href="/admin/servers" class="bento-card p-5 group hover:border-[#5379AE] hover:-translate-y-0.5 transition-all sm:col-span-2 border-[#2C444C]">
                 <div class="flex items-start gap-4">
-                    <div class="w-11 h-11 rounded-xl bg-purple-500/10 flex items-center justify-center flex-shrink-0">
-                        <i data-lucide="user-circle" class="w-5 h-5 text-purple-400"></i>
+                    <div class="w-12 h-12 rounded-xl bg-[#0474C4] flex items-center justify-center flex-shrink-0 text-white shadow-lg shadow-[#0474C4]/20">
+                        <i data-lucide="star" class="w-6 h-6 fill-white"></i>
                     </div>
                     <div class="flex-1 min-w-0">
-                        <h3 class="text-base font-semibold text-white mb-0.5">Edit Profile</h3>
-                        <p class="text-slate-500 text-xs">Avatar, bio &amp; social links</p>
+                        <div class="flex items-center gap-2">
+                            <h3 class="text-base font-bold text-white mb-0.5">Kelola Server &amp; Sponsor Mingguan</h3>
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-[#06457F] text-[#A8C4EC] border border-[#5379AE]/40">FOKUS UTAMA</span>
+                        </div>
+                        <p class="text-slate-400 text-xs">Atur server Minecraft yang tampil di hero section spotlight &amp; mabar minggu ini</p>
                     </div>
-                    <i data-lucide="chevron-right" class="w-4 h-4 text-slate-600 self-center group-hover:text-purple-400 transition-colors"></i>
+                    <i data-lucide="chevron-right" class="w-5 h-5 text-slate-500 self-center group-hover:text-[#A8C4EC] transition-colors"></i>
                 </div>
             </a>
 
-            <a href="/admin/mods" class="glass-card rounded-2xl p-5 group hover:-translate-y-0.5 transition-all">
+            <a href="/admin/profile" class="bento-card p-5 group hover:border-[#5379AE] hover:-translate-y-0.5 transition-all">
                 <div class="flex items-start gap-4">
-                    <div class="w-11 h-11 rounded-xl bg-purple-500/10 flex items-center justify-center flex-shrink-0">
-                        <i data-lucide="boxes" class="w-5 h-5 text-purple-400"></i>
+                    <div class="w-11 h-11 rounded-xl bg-[#1b2033] border border-[#2C444C] flex items-center justify-center flex-shrink-0 text-[#A8C4EC]">
+                        <i data-lucide="user-circle" class="w-5 h-5"></i>
                     </div>
                     <div class="flex-1 min-w-0">
-                        <h3 class="text-base font-semibold text-white mb-0.5">Modpacks</h3>
-                        <p class="text-slate-500 text-xs">Tambah &amp; kelola modpack</p>
+                        <h3 class="text-base font-bold text-white mb-0.5">Edit Profil</h3>
+                        <p class="text-slate-400 text-xs">Avatar foto, bio streamer &amp; link sosial media</p>
                     </div>
-                    <i data-lucide="chevron-right" class="w-4 h-4 text-slate-600 self-center group-hover:text-purple-400 transition-colors"></i>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-slate-500 self-center group-hover:text-[#A8C4EC] transition-colors"></i>
                 </div>
             </a>
 
-            <a href="/admin/servers" class="glass-card rounded-2xl p-5 group hover:-translate-y-0.5 transition-all">
+            <a href="/admin/mods" class="bento-card p-5 group hover:border-[#5379AE] hover:-translate-y-0.5 transition-all">
                 <div class="flex items-start gap-4">
-                    <div class="w-11 h-11 rounded-xl bg-purple-500/10 flex items-center justify-center flex-shrink-0">
-                        <i data-lucide="server" class="w-5 h-5 text-purple-400"></i>
+                    <div class="w-11 h-11 rounded-xl bg-[#1b2033] border border-[#2C444C] flex items-center justify-center flex-shrink-0 text-[#A8C4EC]">
+                        <i data-lucide="boxes" class="w-5 h-5"></i>
                     </div>
                     <div class="flex-1 min-w-0">
-                        <h3 class="text-base font-semibold text-white mb-0.5">Servers</h3>
-                        <p class="text-slate-500 text-xs">Konfigurasi server game</p>
+                        <h3 class="text-base font-bold text-white mb-0.5">Modpack Center</h3>
+                        <p class="text-slate-400 text-xs">Tambah &amp; kelola link download modpack</p>
                     </div>
-                    <i data-lucide="chevron-right" class="w-4 h-4 text-slate-600 self-center group-hover:text-purple-400 transition-colors"></i>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-slate-500 self-center group-hover:text-[#A8C4EC] transition-colors"></i>
                 </div>
             </a>
 
-            <a href="/admin/overlay" class="glass-card rounded-2xl p-5 group hover:-translate-y-0.5 transition-all">
+            <a href="/admin/overlay" class="bento-card p-5 group hover:border-[#5379AE] hover:-translate-y-0.5 transition-all">
                 <div class="flex items-start gap-4">
-                    <div class="w-11 h-11 rounded-xl bg-purple-500/10 flex items-center justify-center flex-shrink-0">
-                        <i data-lucide="tv" class="w-5 h-5 text-purple-400"></i>
+                    <div class="w-11 h-11 rounded-xl bg-[#1b2033] border border-[#2C444C] flex items-center justify-center flex-shrink-0 text-[#A8C4EC]">
+                        <i data-lucide="tv" class="w-5 h-5"></i>
                     </div>
                     <div class="flex-1 min-w-0">
-                        <h3 class="text-base font-semibold text-white mb-0.5">Overlay Stream</h3>
-                        <p class="text-slate-500 text-xs">Atur challenge untuk live streaming</p>
+                        <h3 class="text-base font-bold text-white mb-0.5">Overlay Live Stream</h3>
+                        <p class="text-slate-400 text-xs">Atur list challenge donasi untuk OBS browser source</p>
                     </div>
-                    <i data-lucide="chevron-right" class="w-4 h-4 text-slate-600 self-center group-hover:text-purple-400 transition-colors"></i>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-slate-500 self-center group-hover:text-[#A8C4EC] transition-colors"></i>
                 </div>
             </a>
 
-            <a href="/" target="_blank" class="glass-card rounded-2xl p-5 group hover:-translate-y-0.5 transition-all sm:col-span-2">
-                <div class="flex items-center gap-4">
-                    <div class="w-11 h-11 rounded-xl bg-purple-500/10 flex items-center justify-center flex-shrink-0">
-                        <i data-lucide="external-link" class="w-5 h-5 text-purple-400"></i>
+            <a href="/" target="_blank" class="bento-card p-5 group hover:border-[#5379AE] hover:-translate-y-0.5 transition-all">
+                <div class="flex items-start gap-4">
+                    <div class="w-11 h-11 rounded-xl bg-[#1b2033] border border-[#2C444C] flex items-center justify-center flex-shrink-0 text-[#A8C4EC]">
+                        <i data-lucide="external-link" class="w-5 h-5"></i>
                     </div>
                     <div class="flex-1 min-w-0">
-                        <h3 class="text-base font-semibold text-white mb-0.5">View Site</h3>
-                        <p class="text-slate-500 text-xs">Lihat profil publik kamu</p>
+                        <h3 class="text-base font-bold text-white mb-0.5">Lihat Website Publik</h3>
+                        <p class="text-slate-400 text-xs">Cek tampilan terbaru website NuxyMC</p>
                     </div>
-                    <i data-lucide="chevron-right" class="w-4 h-4 text-slate-600 self-center group-hover:text-purple-400 transition-colors"></i>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-slate-500 self-center group-hover:text-[#A8C4EC] transition-colors"></i>
                 </div>
             </a>
         </div>

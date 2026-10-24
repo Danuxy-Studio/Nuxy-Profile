@@ -1,45 +1,45 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <%- include('../partials/head') %>
 </head>
-<body class="min-h-screen">
+<body class="min-h-screen bg-[#161928] text-slate-100 pb-12">
     <%- include('partials/sidebar') %>
     <%- include('partials/toast') %>
 
     <main class="max-w-3xl mx-auto px-4 md:px-8 py-8">
         <div class="flex items-center justify-between mb-6 gap-3">
             <div>
-                <h1 class="text-2xl font-bold gradient-text mb-1">Overlay Stream</h1>
-                <p class="text-slate-400 text-sm">Atur challenge donasi untuk overlay OBS</p>
+                <h1 class="text-2xl font-black text-white mb-1">Overlay Stream</h1>
+                <p class="text-slate-400 text-xs md:text-sm">Atur challenge donasi untuk overlay live streaming OBS</p>
             </div>
-            <a href="/overlay" target="_blank" class="bg-slate-800/60 text-slate-300 px-3 py-2 rounded-lg text-xs hover:bg-slate-800 transition-colors flex items-center gap-1.5 flex-shrink-0">
-                <i data-lucide="external-link" class="w-3.5 h-3.5"></i> Preview
+            <a href="/overlay" target="_blank" class="bg-[#1b2033] border border-[#2C444C] text-slate-300 px-3.5 py-2 rounded-xl text-xs hover:text-white transition-colors flex items-center gap-1.5 flex-shrink-0">
+                <i data-lucide="external-link" class="w-3.5 h-3.5 text-[#A8C4EC]"></i> Preview Overlay
             </a>
         </div>
 
-        <div class="glass-card p-4 mb-5 flex items-center gap-3 text-xs text-slate-400">
-            <i data-lucide="info" class="w-4 h-4 text-purple-400 flex-shrink-0"></i>
-            Tambahkan URL <code class="text-purple-400">/overlay</code> sebagai Browser Source di OBS. Ukuran dasar 400px, otomatis menyesuaikan.
+        <div class="bento-card p-4 mb-5 flex items-center gap-3 text-xs text-slate-400">
+            <i data-lucide="info" class="w-4 h-4 text-[#A8C4EC] flex-shrink-0"></i>
+            Tambahkan URL <code class="text-[#A8C4EC] font-mono font-bold bg-[#161928] px-2 py-0.5 rounded border border-[#2C444C]">/overlay</code> sebagai Browser Source di OBS Studio. Lebar dasar 400px.
         </div>
 
         <div id="challengeList" class="space-y-3 mb-5">
             <% challenges.forEach(function (c, idx) { %>
-                <div class="challenge-row glass-card p-4 flex items-center gap-3" data-idx="<%= idx %>">
+                <div class="challenge-row bento-card p-4 flex items-center gap-3" data-idx="<%= idx %>">
                     <input type="color" value="<%= c.color %>" class="c-color w-10 h-10 rounded-lg border-0 bg-transparent cursor-pointer flex-shrink-0">
-                    <input type="text" value="<%= c.amount %>" placeholder="5K" class="c-amount w-20 bg-slate-900/60 border border-slate-700 rounded-lg px-2.5 py-2 text-white text-sm font-bold focus:border-purple-500 focus:outline-none">
-                    <input type="text" value="<%= c.action %>" placeholder="Buang 1 Item" class="c-action flex-1 min-w-0 bg-slate-900/60 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm focus:border-purple-500 focus:outline-none">
-                    <button onclick="this.closest('.challenge-row').remove()" class="p-2 rounded-lg text-slate-400 hover:text-red-400 hover:bg-red-500/10 transition-colors flex-shrink-0"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                    <input type="text" value="<%= c.amount %>" placeholder="5K" class="c-amount w-20 bg-[#1b2033] border border-[#2C444C] rounded-lg px-2.5 py-2 text-white text-sm font-bold focus:border-[#0474C4] focus:outline-none">
+                    <input type="text" value="<%= c.action %>" placeholder="Buang 1 Item" class="c-action flex-1 min-w-0 bg-[#1b2033] border border-[#2C444C] rounded-lg px-3 py-2 text-white text-sm focus:border-[#0474C4] focus:outline-none">
+                    <button onclick="this.closest('.challenge-row').remove()" class="p-2 rounded-lg text-slate-400 hover:text-red-400 hover:bg-red-500/10 transition-colors flex-shrink-0" title="Hapus"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
                 </div>
             <% }); %>
         </div>
 
-        <button onclick="addRow()" class="w-full py-3 rounded-xl border-2 border-dashed border-slate-700 text-slate-400 hover:border-purple-500/50 hover:text-purple-400 transition-colors text-sm font-medium flex items-center justify-center gap-2 mb-5">
-            <i data-lucide="plus" class="w-4 h-4"></i> Tambah Challenge
+        <button onclick="addRow()" class="w-full py-3.5 rounded-xl border-2 border-dashed border-[#2C444C] text-slate-400 hover:border-[#5379AE] hover:text-[#A8C4EC] transition-colors text-sm font-bold flex items-center justify-center gap-2 mb-5">
+            <i data-lucide="plus" class="w-4 h-4"></i> Tambah Challenge Baru
         </button>
 
-        <button onclick="saveChallenges()" class="btn-primary text-white w-full py-3.5 rounded-xl font-semibold text-sm flex items-center justify-center gap-2">
-            <i data-lucide="save" class="w-4 h-4"></i> Simpan Perubahan
+        <button onclick="saveChallenges()" class="w-full py-3.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2 bg-[#0474C4] hover:bg-[#06457F] text-white transition-all shadow-lg shadow-[#0474C4]/20">
+            <i data-lucide="save" class="w-4 h-4"></i> Simpan Perubahan Overlay
         </button>
     </main>
 
@@ -49,13 +49,13 @@
         refreshIcons();
 
         function addRow() {
-            const list = document.getElementById('challengeList');
-            const div = document.createElement('div');
-            div.className = 'challenge-row glass-card p-4 flex items-center gap-3';
+            var list = document.getElementById('challengeList');
+            var div = document.createElement('div');
+            div.className = 'challenge-row bento-card p-4 flex items-center gap-3';
             div.innerHTML = `
-                <input type="color" value="#A855F7" class="c-color w-10 h-10 rounded-lg border-0 bg-transparent cursor-pointer flex-shrink-0">
-                <input type="text" placeholder="5K" class="c-amount w-20 bg-slate-900/60 border border-slate-700 rounded-lg px-2.5 py-2 text-white text-sm font-bold focus:border-purple-500 focus:outline-none">
-                <input type="text" placeholder="Buang 1 Item" class="c-action flex-1 min-w-0 bg-slate-900/60 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm focus:border-purple-500 focus:outline-none">
+                <input type="color" value="#0474C4" class="c-color w-10 h-10 rounded-lg border-0 bg-transparent cursor-pointer flex-shrink-0">
+                <input type="text" placeholder="10K" class="c-amount w-20 bg-[#1b2033] border border-[#2C444C] rounded-lg px-2.5 py-2 text-white text-sm font-bold focus:border-[#0474C4] focus:outline-none">
+                <input type="text" placeholder="Aksi challenge..." class="c-action flex-1 min-w-0 bg-[#1b2033] border border-[#2C444C] rounded-lg px-3 py-2 text-white text-sm focus:border-[#0474C4] focus:outline-none">
                 <button onclick="this.closest('.challenge-row').remove()" class="p-2 rounded-lg text-slate-400 hover:text-red-400 hover:bg-red-500/10 transition-colors flex-shrink-0"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
             `;
             list.appendChild(div);
@@ -63,21 +63,23 @@
         }
 
         async function saveChallenges() {
-            const rows = document.querySelectorAll('.challenge-row');
-            const challenges = Array.from(rows).map((row, idx) => ({
-                id: idx + 1,
-                amount: row.querySelector('.c-amount').value.trim(),
-                action: row.querySelector('.c-action').value.trim(),
-                color: row.querySelector('.c-color').value
-            })).filter(c => c.amount && c.action);
+            var rows = document.querySelectorAll('.challenge-row');
+            var challenges = Array.from(rows).map(function(row, idx) {
+                return {
+                    id: idx + 1,
+                    amount: row.querySelector('.c-amount').value.trim(),
+                    action: row.querySelector('.c-action').value.trim(),
+                    color: row.querySelector('.c-color').value
+                };
+            }).filter(function(c) { return c.amount && c.action; });
 
             try {
-                const res = await fetch('/api/overlay/update', {
+                var res = await fetch('/api/overlay/update', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ challenges })
+                    body: JSON.stringify({ challenges: challenges })
                 });
-                const data = await res.json();
+                var data = await res.json();
                 if (data.success) {
                     showToastAdmin('Overlay berhasil disimpan!', 'success');
                 } else {
@@ -89,17 +91,18 @@
         }
 
         function showToastAdmin(message, type) {
-            const existing = document.getElementById('flashToast');
+            var existing = document.getElementById('flashToast');
             if (existing) existing.remove();
-            const bg = type === 'error' ? 'bg-red-500/90' : 'bg-purple-500/90';
-            const icon = type === 'error' ? 'alert-circle' : 'check-circle';
-            const toast = document.createElement('div');
+            var border = type === 'error' ? 'border-red-500/50' : 'border-emerald-500/50';
+            var icon = type === 'error' ? 'alert-circle' : 'check-circle';
+            var iconColor = type === 'error' ? 'text-red-400' : 'text-emerald-400';
+            var toast = document.createElement('div');
             toast.id = 'flashToast';
-            toast.className = `fixed top-4 right-4 z-50 ${bg} backdrop-blur text-white px-5 py-3 rounded-xl shadow-lg flex items-center gap-2`;
-            toast.innerHTML = `<i data-lucide="${icon}" class="w-4 h-4"></i><span class="text-sm">${message}</span>`;
+            toast.className = 'fixed top-4 right-4 z-50 bg-[#262B40] ' + border + ' border text-white px-5 py-3 rounded-xl shadow-2xl flex items-center gap-2';
+            toast.innerHTML = '<i data-lucide="' + icon + '" class="w-4 h-4 ' + iconColor + '"></i><span class="text-sm font-semibold">' + message + '</span>';
             document.body.appendChild(toast);
             refreshIcons();
-            setTimeout(() => { toast.style.transition = 'opacity .3s'; toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 3000);
+            setTimeout(function() { toast.style.transition = 'opacity .3s'; toast.style.opacity = '0'; setTimeout(function() { toast.remove(); }, 300); }, 3000);
         }
     </script>
 </body>
