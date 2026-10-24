@@ -132,7 +132,7 @@
                                         <label class="text-slate-400 text-xs mb-1 block font-semibold">Icon</label>
                                         <select name="social_icon_<%= index %>" class="w-full bg-[#1b2033] border border-[#2C444C] rounded-lg px-3 py-2 text-white text-sm focus:border-[#0474C4] focus:outline-none transition-colors">
                                             <%
-                                             const iconOpts = ['youtube','message-circle','music-2','instagram','twitter','twitch','facebook','github','music','send','phone','linkedin','globe','mail','heart','coffee','gift','star','crown','users','link'];
+                                             const iconOpts = ['whatsapp','youtube','message-circle','music-2','instagram','twitter','twitch','facebook','github','music','send','phone','linkedin','globe','mail','heart','coffee','gift','star','crown','users','link'];
                                             iconOpts.forEach(function (opt) { %>
                                                 <option value="<%= opt %>" <%= (link.icon === opt) ? 'selected' : '' %>><%= opt %></option>
                                             <% }); %>
@@ -201,7 +201,7 @@
             document.getElementById('avatarPreview').src = '<%= profile.avatar_url || "/img/avatar.png" %>';
         }
 
-        var ICON_OPTIONS = ['youtube','message-circle','music-2','instagram','twitter','twitch','facebook','github','music','send','phone','linkedin','globe','mail','heart','coffee','gift','star','crown','users','link'];
+        var ICON_OPTIONS = ['whatsapp','youtube','message-circle','music-2','instagram','twitter','twitch','facebook','github','music','send','phone','linkedin','globe','mail','heart','coffee','gift','star','crown','users','link'];
 
         function addLink(type) {
             var container = document.getElementById('linksContainer');
