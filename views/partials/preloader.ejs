@@ -1,29 +1,49 @@
-<div class="fixed inset-0 z-[9999] bg-slate-950 flex items-center justify-center transition-opacity duration-500" id="preloader">
-    <div class="flex flex-col items-center gap-3">
-        <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center animate-pulse">
-            <i data-lucide="box" class="w-6 h-6 text-white"></i>
+<!-- Page Preloader (Danuxy Studio / NuxyMC Dark Blue Palette) -->
+<div class="fixed inset-0 z-[9999] bg-[#161928] flex items-center justify-center transition-opacity duration-300 pointer-events-auto" id="preloader">
+    <div class="flex flex-col items-center gap-3.5">
+        <!-- Brand Logo with Subtle Pulse -->
+        <div class="relative">
+            <div class="w-14 h-14 rounded-2xl bg-[#262B40] border border-[#2C444C] flex items-center justify-center p-3 shadow-xl shadow-[#0474C4]/20 animate-pulse">
+                <img src="/img/danuxy-logo.png" alt="Danuxy Studio Logo" class="w-full h-full object-contain brightness-150">
+            </div>
+            <!-- Live Indicator Ping -->
+            <span class="absolute -top-1 -right-1 flex h-3 w-3">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#0474C4] opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-3 w-3 bg-[#0474C4]"></span>
+            </span>
         </div>
-        <div class="w-24 h-1 rounded-full bg-slate-800 overflow-hidden">
-            <div class="h-full w-1/2 bg-purple-500 rounded-full animate-[loaderbar_1s_ease-in-out_infinite]"></div>
+
+        <!-- Brand Text -->
+        <div class="text-center">
+            <p class="text-sm font-black text-white tracking-wide">NuxyMC</p>
+            <p class="text-[10px] font-mono font-semibold text-[#A8C4EC] tracking-wider uppercase mt-0.5">Danuxy Studio</p>
+        </div>
+
+        <!-- Sleek Loading Bar -->
+        <div class="w-28 h-1 rounded-full bg-[#1b2033] border border-[#2C444C] overflow-hidden">
+            <div class="h-full w-1/2 bg-[#0474C4] rounded-full animate-[loaderbar_0.9s_ease-in-out_infinite] shadow-sm shadow-[#0474C4]"></div>
         </div>
     </div>
 </div>
+
 <style>
     @keyframes loaderbar {
         0% { transform: translateX(-100%); }
         100% { transform: translateX(200%); }
     }
 </style>
+
 <script>
     (function () {
         function hidePreloader() {
             const p = document.getElementById('preloader');
             if (!p) return;
             p.style.opacity = '0';
-            setTimeout(() => { p.style.display = 'none'; }, 400);
+            p.style.pointerEvents = 'none';
+            setTimeout(function () { p.style.display = 'none'; }, 300);
         }
         if (document.readyState === 'complete') hidePreloader();
         else window.addEventListener('load', hidePreloader);
-        setTimeout(hidePreloader, 1200);
+        setTimeout(hidePreloader, 800);
     })();
 </script>
